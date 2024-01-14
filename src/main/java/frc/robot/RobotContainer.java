@@ -4,13 +4,20 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.drivetrain.Mk4SwerveModule;
+import frc.robot.subsystems.drivetrain.Pigeon2Gyroscope;
+
+import static frc.robot.Constants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,14 +29,46 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
+    private final Drivetrain drivetrain = new Drivetrain(
+            new Pigeon2Gyroscope(new Pigeon2(DRIVETRAIN_PIGEON2_ID, DRIVETRAIN_CANBUS_NAME)),
+            new Mk4SwerveModule(
+                    new TalonFX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new TalonFX(DRIVETRAIN_FRONT_LEFT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new CANcoder(DRIVETRAIN_FRONT_LEFT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
+                    DRIVETRAIN_FRONT_LEFT_ENCODER_OFFSET),
+            new Mk4SwerveModule(
+                    new TalonFX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new TalonFX(DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new CANcoder(DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
+                    DRIVETRAIN_FRONT_RIGHT_ENCODER_OFFSET),
+            new Mk4SwerveModule(
+                    new TalonFX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new TalonFX(DRIVETRAIN_BACK_LEFT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new CANcoder(DRIVETRAIN_BACK_LEFT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
+                    DRIVETRAIN_BACK_LEFT_ENCODER_OFFSET),
+            new Mk4SwerveModule(
+                    new TalonFX(DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new TalonFX(DRIVETRAIN_BACK_RIGHT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
+                    new CANcoder(DRIVETRAIN_BACK_RIGHT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
+                    DRIVETRAIN_BACK_RIGHT_ENCODER_OFFSET)
+    );
+
     // Replace with CommandPS4Controller or CommandJoystick if needed
-    private final CommandXboxController m_driverController =
-            new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    private final CommandXboxController driverController =
+            new CommandXboxController(DRIVER_CONTROLLER_PORT);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        drivetrain.setDefaultCommand(
+                drivetrain.drive(
+                        () -> -driverController.getLeftY(),
+                        () -> -driverController.getLeftX(),
+                        () -> -driverController.getRightX()
+                )
+        );
+
         // Configure the trigger bindings
         configureBindings();
     }
@@ -44,13 +83,16 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        driverController.start()
+                .onTrue(drivetrain.zeroGyroscope());
+
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         new Trigger(m_exampleSubsystem::exampleCondition)
                 .onTrue(new ExampleCommand(m_exampleSubsystem));
 
         // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
         // cancelling on release.
-        m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+        driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     }
 
     /**
