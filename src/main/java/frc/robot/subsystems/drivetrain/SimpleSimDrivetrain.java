@@ -2,6 +2,7 @@ package frc.robot.subsystems.drivetrain;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.*;
 
 import static edu.wpi.first.units.Units.*;
@@ -31,6 +32,16 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
         rotation.mut_plus((Measure<Angle>) rotationalVelocity.times(updatePeriod));
 
         inputs.pose = new Pose2d(x.in(Meters), y.in(Meters), Rotation2d.fromRadians(rotation.in(Radians)));
+    }
+
+    @Override
+    public void drive(ChassisSpeeds chassisSpeeds) {
+        ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+                chassisSpeeds,
+                Rotation2d.fromRadians(rotation.in(Radians))
+        );
+
+        driveFieldOriented(fieldRelativeSpeeds.vxMetersPerSecond, fieldRelativeSpeeds.vyMetersPerSecond, fieldRelativeSpeeds.omegaRadiansPerSecond);
     }
 
     @Override

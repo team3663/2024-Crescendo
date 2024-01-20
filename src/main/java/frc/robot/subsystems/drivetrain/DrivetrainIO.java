@@ -1,12 +1,15 @@
 package frc.robot.subsystems.drivetrain;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface DrivetrainIO {
     void updateInputs(Inputs inputs);
+
+    void drive(ChassisSpeeds chassisSpeeds);
 
     void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity);
 

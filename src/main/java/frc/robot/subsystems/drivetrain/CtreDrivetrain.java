@@ -5,6 +5,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 
@@ -15,6 +16,7 @@ public class CtreDrivetrain implements DrivetrainIO {
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
+    private final SwerveRequest.ApplyChassisSpeeds applyChassisSpeedsRequest = new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.FieldCentric fieldCentricRequest = new SwerveRequest.FieldCentric();
     private final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
@@ -36,6 +38,11 @@ public class CtreDrivetrain implements DrivetrainIO {
         inputs.pose = state.Pose;
         inputs.moduleStates = state.ModuleStates;
         inputs.moduleTargets = state.ModuleTargets;
+    }
+
+    @Override
+    public void drive(ChassisSpeeds chassisSpeeds) {
+        drivetrain.setControl(applyChassisSpeedsRequest.withSpeeds(chassisSpeeds));
     }
 
     @Override
