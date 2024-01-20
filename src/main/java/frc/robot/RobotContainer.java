@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.Pigeon2;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -15,8 +12,9 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.drivetrain.SimpleSimDrivetrain;
 
-import static frc.robot.Constants.*;
+import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,13 +27,15 @@ public class RobotContainer {
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     private final Drivetrain drivetrain = new Drivetrain(
-            new CtreDrivetrain(
-                    Constants.DrivetrainConstants.DrivetrainConstants,
-                    Constants.DrivetrainConstants.FrontLeft,
-                    Constants.DrivetrainConstants.FrontRight,
-                    Constants.DrivetrainConstants.BackLeft,
-                    Constants.DrivetrainConstants.BackRight
-            )
+            Robot.isReal() ?
+                    new CtreDrivetrain(
+                            Constants.DrivetrainConstants.DrivetrainConstants,
+                            Constants.DrivetrainConstants.FrontLeft,
+                            Constants.DrivetrainConstants.FrontRight,
+                            Constants.DrivetrainConstants.BackLeft,
+                            Constants.DrivetrainConstants.BackRight
+                    ) :
+                    new SimpleSimDrivetrain()
     );
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
