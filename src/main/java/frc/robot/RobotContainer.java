@@ -13,9 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.Drivetrain;
-import frc.robot.subsystems.drivetrain.Mk4SwerveModule;
-import frc.robot.subsystems.drivetrain.Pigeon2Gyroscope;
 
 import static frc.robot.Constants.*;
 
@@ -30,27 +29,13 @@ public class RobotContainer {
     private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     private final Drivetrain drivetrain = new Drivetrain(
-            new Pigeon2Gyroscope(new Pigeon2(DRIVETRAIN_PIGEON2_ID, DRIVETRAIN_CANBUS_NAME)),
-            new Mk4SwerveModule(
-                    new TalonFX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new TalonFX(DRIVETRAIN_FRONT_LEFT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new CANcoder(DRIVETRAIN_FRONT_LEFT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
-                    DRIVETRAIN_FRONT_LEFT_ENCODER_OFFSET),
-            new Mk4SwerveModule(
-                    new TalonFX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new TalonFX(DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new CANcoder(DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
-                    DRIVETRAIN_FRONT_RIGHT_ENCODER_OFFSET),
-            new Mk4SwerveModule(
-                    new TalonFX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new TalonFX(DRIVETRAIN_BACK_LEFT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new CANcoder(DRIVETRAIN_BACK_LEFT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
-                    DRIVETRAIN_BACK_LEFT_ENCODER_OFFSET),
-            new Mk4SwerveModule(
-                    new TalonFX(DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new TalonFX(DRIVETRAIN_BACK_RIGHT_STEER_MOTOR_ID, DRIVETRAIN_CANBUS_NAME),
-                    new CANcoder(DRIVETRAIN_BACK_RIGHT_STEER_ENCODER_ID, DRIVETRAIN_CANBUS_NAME),
-                    DRIVETRAIN_BACK_RIGHT_ENCODER_OFFSET)
+            new CtreDrivetrain(
+                    Constants.DrivetrainConstants.DrivetrainConstants,
+                    Constants.DrivetrainConstants.FrontLeft,
+                    Constants.DrivetrainConstants.FrontRight,
+                    Constants.DrivetrainConstants.BackLeft,
+                    Constants.DrivetrainConstants.BackRight
+            )
     );
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -63,8 +48,8 @@ public class RobotContainer {
     public RobotContainer() {
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
-                        () -> -driverController.getLeftY(),
-                        () -> -driverController.getLeftX(),
+                        () -> -driverController.getLeftY() * Constants.DrivetrainConstants.kSpeedAt12VoltsMps,
+                        () -> -driverController.getLeftX() * Constants.DrivetrainConstants.kSpeedAt12VoltsMps,
                         () -> -driverController.getRightX()
                 )
         );
