@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7218780539255992,
+      "y": 6.678749628685698
+    },
+    "rotation": 60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot into speaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 piece right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot into speaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "adding 3rd note right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot into speaker"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
