@@ -4,74 +4,62 @@
     {
       "anchor": {
         "x": 5.41787388659523,
-        "y": 6.783105091633912
+        "y": 6.319303034086294
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.754283051277967,
-        "y": 6.7169458519708005
+        "x": 6.751304802044632,
+        "y": 6.516418908544032
       },
       "isLocked": false,
-      "linkedName": "endpoint3"
+      "linkedName": "endpoint4"
     },
     {
       "anchor": {
-        "x": 8.281851591951773,
-        "y": 5.774335616467843
+        "x": 8.235471386197009,
+        "y": 4.13943336361249
       },
       "prevControl": {
-        "x": 7.5629584027529635,
-        "y": 6.0874020053124855
+        "x": 7.309775596934934,
+        "y": 5.219411784418227
       },
       "nextControl": {
-        "x": 8.547620258313804,
-        "y": 5.658597648858571
+        "x": 8.374612003461296,
+        "y": 3.977102643470824
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.41787388659523,
-        "y": 6.319303034086294
+        "x": 4.536649977254757,
+        "y": 5.043847375830345
       },
       "prevControl": {
-        "x": 6.6353542876577265,
-        "y": 6.1917574682607
+        "x": 5.487444195227373,
+        "y": 4.0002927463482045
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "endpoint4"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": -20.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 2.0,
-      "rotationDegrees": 0,
+      "waypointRelativePos": 1,
+      "rotationDegrees": -44.99999999999984,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.75,
+      "name": "intake",
+      "waypointRelativePos": 0.85,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     }
@@ -84,7 +72,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -2.4024989905778593,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
