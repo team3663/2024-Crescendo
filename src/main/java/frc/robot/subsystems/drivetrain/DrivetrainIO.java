@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drivetrain;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.LogTable;
@@ -9,10 +10,34 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public interface DrivetrainIO {
     void updateInputs(Inputs inputs);
 
+    /**
+     * Drives using a WPILib chassis speeds.
+     *
+     * @param chassisSpeeds The chassis speeds to follow.
+     */
     void drive(ChassisSpeeds chassisSpeeds);
 
+    /**
+     * Drives field-oriented with the ability to specify an X, Y, and rotational velocity.
+     *
+     * @param xVelocity          The target X (downfield) velocity in meters per second.
+     * @param yVelocity          The target Y (toward the left side of the field) velocity in meters per second.
+     * @param rotationalVelocity The target rotational (counter-clockwise positive) velocity in radians per second.
+     */
     void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity);
 
+    /**
+     * Drives field-oriented at a specified angle with the ability to specify an X, Y velocity.
+     *
+     * @param xVelocity The target X (downfield) velocity in meters per second.
+     * @param yVelocity The target Y (toward the left side of the field) velocity in meters per second.
+     * @param angle     The target angle to face while driving.
+     */
+    void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle);
+
+    /**
+     * Stops the drivetrain.
+     */
     void stop();
 
     void zeroGyroscope();
