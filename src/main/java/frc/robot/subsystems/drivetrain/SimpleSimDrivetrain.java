@@ -1,5 +1,8 @@
 package frc.robot.subsystems.drivetrain;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -31,7 +34,14 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
         y.mut_plus((Measure<Distance>) yVelocity.times(updatePeriod));
         rotation.mut_plus((Measure<Angle>) rotationalVelocity.times(updatePeriod));
 
+
         inputs.pose = new Pose2d(x.in(Meters), y.in(Meters), Rotation2d.fromRadians(rotation.in(Radians)));
+        inputs.chassisSpeeds= ChassisSpeeds.fromFieldRelativeSpeeds(
+                xVelocity,
+                yVelocity,
+                rotationalVelocity,
+                inputs.pose.getRotation()
+        );
     }
 
     @Override
@@ -56,6 +66,26 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
         xVelocity.mut_replace(0, MetersPerSecond);
         yVelocity.mut_replace(0, MetersPerSecond);
         rotationalVelocity.mut_replace(0, RadiansPerSecond);
+    }
+
+    @Override
+    public HolonomicPathFollowerConfig getPathFollowerConfig() {
+        return new HolonomicPathFollowerConfig(
+                new PIDConstants(1.0, 0.0, 0.0), // Translation PID constants
+                new PIDConstants(1.0, 0.0, 0.0), // Rotation PID constants
+                4.5, // Max module speed, in m/s
+                0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                new ReplanningConfig()
+                );
+    }
+
+    @Override
+    public void resetPose(Pose2d pose) {
+        x.mut_plus(pose.getX(), Meters);
+        y.mut_plus(pose.getY(), Meters);
+        rotation.mut_plus(pose.getRotation().getRadians(), Radians);
+
+
     }
 
     @Override
