@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.66,
-      "y": 4.4
+      "x": 1.359605883053574,
+      "y": 5.530839536255343
     },
-    "rotation": -60.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3 piece left path"
+            "pathName": "4 piece center path"
           }
         }
       ]
