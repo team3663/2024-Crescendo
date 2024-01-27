@@ -1,0 +1,200 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.359605883053574,
+        "y": 5.530839536255343
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8697881463559536,
+        "y": 5.507649433377963
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9017477243994034,
+        "y": 5.530839536255343
+      },
+      "prevControl": {
+        "x": 2.3335902039035714,
+        "y": 5.472864279061892
+      },
+      "nextControl": {
+        "x": 4.010323344990159,
+        "y": 5.64395949754011
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.6381798639303495,
+        "y": 6.319303034086294
+      },
+      "prevControl": {
+        "x": 5.138690080852214,
+        "y": 6.378766103500359
+      },
+      "nextControl": {
+        "x": 6.125172024355349,
+        "y": 6.261327776892841
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.281851591951773,
+        "y": 5.785930667906534
+      },
+      "prevControl": {
+        "x": 8.434732492290134,
+        "y": 5.696750142709156
+      },
+      "nextControl": {
+        "x": 7.307867271101775,
+        "y": 6.3540881884023666
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.745360903151185,
+        "y": 6.319303034086294
+      },
+      "prevControl": {
+        "x": 5.815782773156761,
+        "y": 6.561011198281102
+      },
+      "nextControl": {
+        "x": 4.0264677139523775,
+        "y": 6.156972313944628
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.281851591951773,
+        "y": 4.1046482092964185
+      },
+      "prevControl": {
+        "x": 8.565898540658546,
+        "y": 7.447662297922271
+      },
+      "nextControl": {
+        "x": 8.131115923248796,
+        "y": 2.3306053391767803
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.5974508107208303,
+        "y": 5.414889021868439
+      },
+      "prevControl": {
+        "x": 6.699127070570526,
+        "y": 3.2640069799913607
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 2.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 4.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 4.95,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 6.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}
