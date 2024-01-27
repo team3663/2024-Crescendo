@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface IntakeIO {
     default void updateInputs(Inputs inputs) {}
-    default void setMotorVoltage(double percentOutput) {}
+    default void setVoltage(double percentOutput) {}
     class Inputs implements LoggableInputs {
         public double angularVelocity;
         public double appliedVolts;
@@ -23,10 +23,10 @@ public interface IntakeIO {
 
         @Override
         public void fromLog(LogTable table) {
-           angularVelocity = table.get("AngularVelocity", 0.0);
-           appliedVolts = table.get("AppliedVolts", 0.0);
-           currentDrawAmps = table.get("CurrentDrawAmps", 0.0);
-           motorTemp = table.get("MotorTemp", 0.0);
+            angularVelocity = table.get("AngularVelocity", 0.0);
+            appliedVolts = table.get("AppliedVolts", 0.0);
+            currentDrawAmps = table.get("CurrentDrawAmps", 0.0);
+            motorTemp = table.get("MotorTemp", 0.0);
         }
     }
 
