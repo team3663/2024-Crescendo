@@ -5,6 +5,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -18,6 +19,7 @@ public class CtreDrivetrain implements DrivetrainIO {
 
     private final SwerveRequest.ApplyChassisSpeeds applyChassisSpeedsRequest = new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.FieldCentric fieldCentricRequest = new SwerveRequest.FieldCentric();
+    private final SwerveRequest.FieldCentricFacingAngle fieldCentricFacingAngleRequest = new SwerveRequest.FieldCentricFacingAngle();
     private final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
     public CtreDrivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
@@ -52,6 +54,16 @@ public class CtreDrivetrain implements DrivetrainIO {
                         .withVelocityX(xVelocity)
                         .withVelocityY(yVelocity)
                         .withRotationalRate(rotationalVelocity)
+        );
+    }
+
+    @Override
+    public void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle) {
+        drivetrain.setControl(
+                fieldCentricFacingAngleRequest
+                        .withVelocityX(xVelocity)
+                        .withVelocityY(yVelocity)
+                        .withTargetDirection(angle)
         );
     }
 
