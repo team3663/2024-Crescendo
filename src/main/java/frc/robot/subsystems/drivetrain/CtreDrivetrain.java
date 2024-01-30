@@ -9,13 +9,12 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.Constants;
 
 public class CtreDrivetrain implements DrivetrainIO {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
@@ -29,6 +28,7 @@ public class CtreDrivetrain implements DrivetrainIO {
     private HolonomicPathFollowerConfig pathFollowerConfig;
     private final SwerveRequest.ApplyChassisSpeeds applyChassisSpeedsRequest = new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.FieldCentric fieldCentricRequest = new SwerveRequest.FieldCentric();
+    private final SwerveRequest.FieldCentricFacingAngle fieldCentricFacingAngleRequest = new SwerveRequest.FieldCentricFacingAngle();
     private final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
     public CtreDrivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
@@ -85,6 +85,16 @@ public class CtreDrivetrain implements DrivetrainIO {
                         .withVelocityX(xVelocity)
                         .withVelocityY(yVelocity)
                         .withRotationalRate(rotationalVelocity)
+        );
+    }
+
+    @Override
+    public void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle) {
+        drivetrain.setControl(
+                fieldCentricFacingAngleRequest
+                        .withVelocityX(xVelocity)
+                        .withVelocityY(yVelocity)
+                        .withTargetDirection(angle)
         );
     }
 
