@@ -15,48 +15,61 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 
 public class CtreDrivetrain implements DrivetrainIO {
-    private static final double kSimLoopPeriod = 0.005; // 5 ms
+    private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
+    private final Drivetrain.Constants constants;
     private final SwerveDrivetrain drivetrain;
 
-    private Notifier m_simNotifier = null;
-    private double m_lastSimTime;
-    private double maxModuleSpeed;
-    private double driveBaseRadius;
+    private Notifier simNotifier = null;
+    private double lastSimTime;
     private SwerveDriveKinematics kinematics;
-    private HolonomicPathFollowerConfig pathFollowerConfig;
     private final SwerveRequest.ApplyChassisSpeeds applyChassisSpeedsRequest = new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.FieldCentric fieldCentricRequest = new SwerveRequest.FieldCentric();
     private final SwerveRequest.FieldCentricFacingAngle fieldCentricFacingAngleRequest = new SwerveRequest.FieldCentricFacingAngle();
     private final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
-    public CtreDrivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
+    public CtreDrivetrain(
+            Constants constants,
+            SwerveDrivetrainConstants drivetrainConstants,
+            SwerveModuleConstants... moduleConstants) {
+        Translation2d[] modulePositions = new Translation2d[moduleConstants.length];
+        double maxModuleVelocity = Double.MAX_VALUE;
+        double maxDriveBaseRadius = 0.0;
+        for (int index = 0; index < moduleConstants.length; index++) {
+            double x = moduleConstants[index].LocationX;
+            double y = moduleConstants[index].LocationY;
+            double moduleVelocity = moduleConstants[index].SpeedAt12VoltsMps;
+            double driveBaseRadius = Math.hypot(x, y);
+
+            modulePositions[index] = new Translation2d(x, y);
+            maxModuleVelocity = Math.min(maxModuleVelocity, moduleVelocity);
+            maxDriveBaseRadius = Math.max(maxDriveBaseRadius, driveBaseRadius);
+        }
+
+        this.constants = new Drivetrain.Constants(
+                maxModuleVelocity,
+                maxDriveBaseRadius,
+                new HolonomicPathFollowerConfig(
+                        constants.translationFollowerConstants(),
+                        constants.rotationFollowerConstants(),
+                        maxModuleVelocity,
+                        maxDriveBaseRadius,
+                        new ReplanningConfig())
+        );
+
         drivetrain = new SwerveDrivetrain(drivetrainConstants, moduleConstants);
         if (Utils.isSimulation()) {
             startSimThread();
         }
 
-        Translation2d[] modulePositions = new Translation2d[moduleConstants.length];
-        maxModuleSpeed = moduleConstants[0].SpeedAt12VoltsMps;
-        for(int input = 0; input < moduleConstants.length; input++){
-            double x = moduleConstants[input].LocationX;
-            double y = moduleConstants[input].LocationY;
-            modulePositions[input] = new Translation2d(x,y);
-            double moduleSpeed = moduleConstants[input].SpeedAt12VoltsMps;
-            maxModuleSpeed = Math.min(moduleSpeed,maxModuleSpeed);
-            double driveBase = Math.hypot(x,y);
-            driveBaseRadius= Math.max(driveBase, driveBaseRadius);
-        }
+        kinematics = new SwerveDriveKinematics(modulePositions);
+    }
 
-        pathFollowerConfig = new HolonomicPathFollowerConfig(
-                new PIDConstants(5.0, 0.0, 0.0),
-                new PIDConstants(5.0, 0.0, 0.0),
-                maxModuleSpeed,
-                driveBaseRadius,
-                new ReplanningConfig()
-        );
-        kinematics= new SwerveDriveKinematics(modulePositions);
+    @Override
+    public Drivetrain.Constants getConstants() {
+        return constants;
     }
 
     @Override
@@ -104,11 +117,6 @@ public class CtreDrivetrain implements DrivetrainIO {
     }
 
     @Override
-    public HolonomicPathFollowerConfig getPathFollowerConfig() {
-        return pathFollowerConfig;
-    }
-
-    @Override
     public void resetPose(Pose2d pose) {
         drivetrain.seedFieldRelative(pose);
     }
@@ -119,17 +127,23 @@ public class CtreDrivetrain implements DrivetrainIO {
     }
 
     private void startSimThread() {
-        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        lastSimTime = Timer.getFPGATimestamp();
 
         /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier = new Notifier(() -> {
-            final double currentTime = Utils.getCurrentTimeSeconds();
-            double deltaTime = currentTime - m_lastSimTime;
-            m_lastSimTime = currentTime;
+        simNotifier = new Notifier(() -> {
+            final double currentTime = Timer.getFPGATimestamp();
+            double deltaTime = currentTime - lastSimTime;
+            lastSimTime = currentTime;
 
             /* use the measured time delta, get battery voltage from WPILib */
             drivetrain.updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
-        m_simNotifier.startPeriodic(kSimLoopPeriod);
+        simNotifier.startPeriodic(SIM_LOOP_PERIOD);
+    }
+
+    public record Constants(
+            PIDConstants translationFollowerConstants,
+            PIDConstants rotationFollowerConstants
+    ) {
     }
 }

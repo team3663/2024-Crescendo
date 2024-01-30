@@ -4,14 +4,13 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.drivetrain.CtreDrivetrain;
+import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.drivetrain.Drivetrain;
-import frc.robot.subsystems.drivetrain.SimpleSimDrivetrain;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIO;
 
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
@@ -22,19 +21,8 @@ import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
-    private final Drivetrain drivetrain = new Drivetrain(
-            Robot.isReal() ?
-                    new CtreDrivetrain(
-                            Constants.DrivetrainConstants.DrivetrainConstants,
-                            Constants.DrivetrainConstants.FrontLeft,
-                            Constants.DrivetrainConstants.FrontRight,
-                            Constants.DrivetrainConstants.BackLeft,
-                            Constants.DrivetrainConstants.BackRight
-                    ) :
-                    new SimpleSimDrivetrain()
-    );
-    private final Intake intake = new Intake(new IntakeIO() {});
+    private final Drivetrain drivetrain;
+    private final Intake intake;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
@@ -43,12 +31,15 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer() {
+    public RobotContainer(RobotFactory robotFactory) {
+        drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
+        intake = new Intake(robotFactory.createIntakeIO());
+
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
-                        () -> -driverController.getLeftY() * Constants.DrivetrainConstants.kSpeedAt12VoltsMps,
-                        () -> -driverController.getLeftX() * Constants.DrivetrainConstants.kSpeedAt12VoltsMps,
-                        () -> -driverController.getRightX()
+                        () -> -driverController.getLeftY() * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -driverController.getLeftX() * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -driverController.getRightX() * drivetrain.getConstants().maxRotationalVelocity()
                 )
         );
 
@@ -77,6 +68,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-       return null;
+       return AutoBuilder.buildAuto("New Auto");
     }
 }

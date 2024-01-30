@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drivetrain;
 
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -8,15 +9,29 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
+import static edu.wpi.first.math.util.Units.feetToMeters;
+import static edu.wpi.first.math.util.Units.inchesToMeters;
+
 public interface DrivetrainIO {
-    void updateInputs(Inputs inputs);
+    default Drivetrain.Constants getConstants() {
+        double maxModuleVelocity = feetToMeters(16.0);
+        double driveBaseRadius = inchesToMeters(24.0);
+
+        return new Drivetrain.Constants(
+                maxModuleVelocity,
+                maxModuleVelocity / driveBaseRadius,
+                new HolonomicPathFollowerConfig(maxModuleVelocity, driveBaseRadius, new ReplanningConfig())
+        );
+    }
+
+    default void updateInputs(Inputs inputs) {}
 
     /**
      * Drives using a WPILib chassis speeds.
      *
      * @param chassisSpeeds The chassis speeds to follow.
      */
-    void drive(ChassisSpeeds chassisSpeeds);
+    default void drive(ChassisSpeeds chassisSpeeds) {}
 
     /**
      * Drives field-oriented with the ability to specify an X, Y, and rotational velocity.
@@ -25,7 +40,7 @@ public interface DrivetrainIO {
      * @param yVelocity          The target Y (toward the left side of the field) velocity in meters per second.
      * @param rotationalVelocity The target rotational (counter-clockwise positive) velocity in radians per second.
      */
-    void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity);
+    default void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity) {}
 
     /**
      * Drives field-oriented at a specified angle with the ability to specify an X, Y velocity.
@@ -34,16 +49,15 @@ public interface DrivetrainIO {
      * @param yVelocity The target Y (toward the left side of the field) velocity in meters per second.
      * @param angle     The target angle to face while driving.
      */
-    void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle);
+    default void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle) {}
 
     /**
      * Stops the drivetrain.
      */
-    void stop();
-    HolonomicPathFollowerConfig getPathFollowerConfig();
+    default void stop() {}
 
-    void resetPose(Pose2d pose);
-    void zeroGyroscope();
+    default void resetPose(Pose2d pose) {}
+    default void zeroGyroscope() {}
 
     class Inputs implements LoggableInputs {
         public int successfulDaqs = 0;
