@@ -1,6 +1,5 @@
 package frc.robot.subsystems.pivot;
 
-import edu.wpi.first.math.controller.PIDController;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
