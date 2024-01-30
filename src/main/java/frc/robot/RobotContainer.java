@@ -14,6 +14,8 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.drivetrain.SimpleSimDrivetrain;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
@@ -38,6 +40,7 @@ public class RobotContainer {
                     ) :
                     new SimpleSimDrivetrain()
     );
+    private final Intake intake = new Intake(new IntakeIO() {});
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =

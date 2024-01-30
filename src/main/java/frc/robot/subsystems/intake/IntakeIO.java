@@ -1,12 +1,12 @@
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface IntakeIO {
     default void updateInputs(Inputs inputs) {}
-    default void setVoltage(double percentOutput) {}
+    default void setVoltage(double voltage) {}
+
     class Inputs implements LoggableInputs {
         public double angularVelocity;
         public double appliedVolts;
@@ -29,5 +29,4 @@ public interface IntakeIO {
             motorTemp = table.get("MotorTemp", 0.0);
         }
     }
-
 }
