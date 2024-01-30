@@ -4,13 +4,9 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.drivetrain.SimpleSimDrivetrain;
@@ -26,8 +22,6 @@ import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    // The robot's subsystems and commands are defined here...
-    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     private final Drivetrain drivetrain = new Drivetrain(
             Robot.isReal() ?
@@ -74,14 +68,6 @@ public class RobotContainer {
     private void configureBindings() {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
-
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        new Trigger(m_exampleSubsystem::exampleCondition)
-                .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-        // cancelling on release.
-        driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     }
 
     /**
@@ -91,6 +77,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-       return AutoBuilder.buildAuto("New Auto");
+       return null;
     }
 }
