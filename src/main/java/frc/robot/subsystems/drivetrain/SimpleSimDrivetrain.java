@@ -1,5 +1,8 @@
 package frc.robot.subsystems.drivetrain;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,8 +39,7 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
     public void updateInputs(Inputs inputs) {
         x.mut_plus((Measure<Distance>) xVelocity.times(updatePeriod));
         y.mut_plus((Measure<Distance>) yVelocity.times(updatePeriod));
-        if (targetAngle != null)
-        {
+        if (targetAngle != null) {
             rotationalVelocity.mut_replace(
                     rotationController.calculate(rotation.in(Radians), targetAngle.getRadians()),
                     RadiansPerSecond
@@ -47,6 +49,12 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
         rotation.mut_plus((Measure<Angle>) rotationalVelocity.times(updatePeriod));
 
         inputs.pose = new Pose2d(x.in(Meters), y.in(Meters), Rotation2d.fromRadians(rotation.in(Radians)));
+        inputs.chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                xVelocity,
+                yVelocity,
+                rotationalVelocity,
+                inputs.pose.getRotation()
+        );
     }
 
     @Override
@@ -80,6 +88,26 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
         yVelocity.mut_replace(0, MetersPerSecond);
         rotationalVelocity.mut_replace(0, RadiansPerSecond);
         targetAngle = null;
+    }
+
+    @Override
+    public HolonomicPathFollowerConfig getPathFollowerConfig() {
+        return new HolonomicPathFollowerConfig(
+                new PIDConstants(1.0, 0.0, 0.0), // Translation PID constants
+                new PIDConstants(1.0, 0.0, 0.0), // Rotation PID constants
+                4.5, // Max module speed, in m/s
+                0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                new ReplanningConfig()
+        );
+    }
+
+    @Override
+    public void resetPose(Pose2d pose) {
+        x.mut_plus(pose.getX(), Meters);
+        y.mut_plus(pose.getY(), Meters);
+        rotation.mut_plus(pose.getRotation().getRadians(), Radians);
+
+
     }
 
     @Override

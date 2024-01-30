@@ -1,6 +1,8 @@
 package frc.robot.subsystems.drivetrain;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +17,22 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain(DrivetrainIO io) {
         this.io = io;
+        AutoBuilder.configureHolonomic(
+                () -> inputs.pose,
+                io::resetPose,
+                () -> inputs.chassisSpeeds,
+                io::drive,
+                io.getPathFollowerConfig(),
+                () -> {
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
+
     }
 
     @Override

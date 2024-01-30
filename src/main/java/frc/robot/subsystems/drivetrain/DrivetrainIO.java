@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drivetrain;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -39,7 +40,9 @@ public interface DrivetrainIO {
      * Stops the drivetrain.
      */
     void stop();
+    HolonomicPathFollowerConfig getPathFollowerConfig();
 
+    void resetPose(Pose2d pose);
     void zeroGyroscope();
 
     class Inputs implements LoggableInputs {
@@ -48,6 +51,9 @@ public interface DrivetrainIO {
         public double odometryPeriod = 0;
 
         public Pose2d pose = new Pose2d();
+
+        public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
+
         public SwerveModuleState[] moduleStates = new SwerveModuleState[0];
         public SwerveModuleState[] moduleTargets = new SwerveModuleState[0];
 
