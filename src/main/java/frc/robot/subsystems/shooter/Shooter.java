@@ -17,6 +17,11 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
+    @Override
+    public void setDefaultCommand(Command defaultCommand) {
+        super.setDefaultCommand(defaultCommand);
+    }
+
     public Command shootWithVoltage(double voltage) {
         return runEnd(
                 () -> io.setVoltage(voltage),
