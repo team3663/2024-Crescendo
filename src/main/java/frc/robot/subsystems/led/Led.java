@@ -1,17 +1,16 @@
 package frc.robot.subsystems.led;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.led.LEDIO;
 
 
-public class LED extends SubsystemBase {
-    private final LEDIO io;
+public class Led extends SubsystemBase {
+    private final LedIO io;
 
-    private final LEDIO.Inputs inputs = new LEDIO.Inputs();
+    private final LedIO.Inputs inputs = new LedIO.Inputs();
 
-    private LEDState desiredLEDState = new LEDState(0, 0, 0);
+    private LedState desiredLEDState = new LedState(0, 0, 0);
 
-    public LED(LEDIO io) {
+    public Led(LedIO io) {
         this.io = io;
     }
 

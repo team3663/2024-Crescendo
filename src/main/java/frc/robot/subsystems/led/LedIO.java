@@ -1,10 +1,8 @@
 package frc.robot.subsystems.led;
 
 import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public interface LEDIO {
+public interface LedIO {
     default void updateInputs(Inputs inputs, int red, int green, int blue) {
         inputs.red = red;
         inputs.green = green;
