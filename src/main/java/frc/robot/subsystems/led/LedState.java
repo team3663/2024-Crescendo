@@ -7,8 +7,6 @@ public class LedState {
     public static final LedState LOW_BATTERY = new LedState(255, 0, 0); // The LED lights are red
     public static final LedState CLIMB = new LedState(155, 0, 255); // The LED lights are purple
 
-6
-
     private LedState() {}
 
     public LedState(int red, int green, int blue) {

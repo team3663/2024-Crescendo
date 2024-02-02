@@ -1,22 +1,22 @@
 package frc.robot.subsystems.led;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.led.LedIo;
 
 
 public class Led extends SubsystemBase {
-    private final LedIO io;
+    private final LedIo io;
 
-    private final LedIO.Inputs inputs = new LedIO.Inputs();
+    private final LedIo.Inputs inputs = new LedIo.Inputs();
 
-    private LedState desiredLEDState = new LedState(0, 0, 0);
+    private LedState desiredLedState = new LedState(0, 0, 0);
 
-    public Led(LedIO io) {
+    public Led(LedIo io) {
         this.io = io;
     }
 
     public void periodic() {
-        io.updateInputs(inputs, desiredLEDState.red, desiredLEDState.green, desiredLEDState.blue);
-        io.setLEDs(desiredLEDState.red, desiredLEDState.green, desiredLEDState.blue);
+        io.updateInputs(inputs, desiredLedState.red, desiredLedState.green, desiredLedState.blue);
+        io.setLEDs(desiredLedState.red, desiredLedState.green, desiredLedState.blue);
     }
-
 }
