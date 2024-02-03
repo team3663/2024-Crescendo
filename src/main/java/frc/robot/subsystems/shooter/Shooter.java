@@ -29,13 +29,6 @@ public class Shooter extends SubsystemBase {
         );
     }
 
-    public Command shootWithAngle(double angle) {
-        return runEnd(
-                () -> io.setAngle(angle),
-                () -> io.setAngle(0.0)
-        );
-    }
-
     public Command shootIntoSpeaker(double voltage) {
         return runEnd(
                 () -> io.setVoltage(voltage),
