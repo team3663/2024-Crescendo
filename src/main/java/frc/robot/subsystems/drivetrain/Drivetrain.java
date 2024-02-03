@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drivetrain;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,15 +15,17 @@ import java.util.function.Supplier;
 public class Drivetrain extends SubsystemBase {
     private final DrivetrainIO io;
     private final DrivetrainIO.Inputs inputs = new DrivetrainIO.Inputs();
+    private final Constants constants;
 
     public Drivetrain(DrivetrainIO io) {
         this.io = io;
+        this.constants = io.getConstants();
         AutoBuilder.configureHolonomic(
                 () -> inputs.pose,
                 io::resetPose,
                 () -> inputs.chassisSpeeds,
                 io::drive,
-                io.getPathFollowerConfig(),
+                constants.pathFollowerConfig(),
                 () -> {
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
@@ -32,7 +35,10 @@ public class Drivetrain extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+    }
 
+    public Constants getConstants() {
+        return constants;
     }
 
     @Override
@@ -77,5 +83,19 @@ public class Drivetrain extends SubsystemBase {
 
     public Command zeroGyroscope() {
         return Commands.runOnce(io::zeroGyroscope);
+    }
+
+    public record Constants(
+            double maxModuleVelocity,
+            double driveBaseRadius,
+            HolonomicPathFollowerConfig pathFollowerConfig
+    ) {
+        public double maxTranslationalVelocity() {
+            return maxModuleVelocity;
+        }
+
+        public double maxRotationalVelocity() {
+            return maxModuleVelocity / driveBaseRadius;
+        }
     }
 }
