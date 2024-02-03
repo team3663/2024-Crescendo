@@ -1,24 +1,27 @@
 package frc.robot.subsystems.shooter;
 
+import com.ctre.phoenix6.StatusSignal;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public interface ShooterIO {
+public interface ShooterIo  {
     default void updateInputs(Inputs inputs) {}
     default void setVoltage(double voltage) {}
-    default void setAngle(double angle) {}
+
+    void setMotorVoltage(double voltage);
 
     class Inputs implements LoggableInputs {
         public double angularVelocity;
-        public double appliedVolts;
-        public double currentDrawAmps;
+        public StatusSignal<Double> appliedVolts;
+        public StatusSignal<Double> currentDrawAmps;
         public double motorTemp;
+        public double beamBreakVoltage;
 
         @Override
         public void toLog(LogTable table) {
             table.put("AngularVelocity", angularVelocity);
-            table.put("AppliedVolts", appliedVolts);
-            table.put("CurrentDrawAmps", currentDrawAmps);
+            table.put("AppliedVolts", (appliedVolts));
+            table.put("CurrentDrawAmps", (currentDrawAmps));
             table.put("MotorTemp", motorTemp);
         }
 

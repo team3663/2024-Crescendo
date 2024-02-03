@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
-    private final ShooterIO io;
-    private final ShooterIO.Inputs inputs = new ShooterIO.Inputs();
+    private final ShooterIo io;
+    private final ShooterIo.Inputs inputs = new ShooterIo.Inputs();
 
-    public Shooter(ShooterIO io) {
+    public Shooter(ShooterIo io) {
         this.io = io;
     }
     @Override
@@ -17,26 +17,7 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
-    @Override
-    public void setDefaultCommand(Command defaultCommand) {
-        super.setDefaultCommand(defaultCommand);
-    }
-
     public Command shootWithVoltage(double voltage) {
-        return runEnd(
-                () -> io.setVoltage(voltage),
-                () -> io.setVoltage(0.0)
-        );
-    }
-
-    public Command shootIntoSpeaker(double voltage) {
-        return runEnd(
-                () -> io.setVoltage(voltage),
-                () -> io.setVoltage(0.0)
-        );
-    }
-
-    public Command shootIntoAmp(double voltage) {
         return runEnd(
                 () -> io.setVoltage(voltage),
                 () -> io.setVoltage(0.0)
