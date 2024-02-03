@@ -1,8 +1,5 @@
 package frc.robot.subsystems.drivetrain;
 
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -91,23 +88,10 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
     }
 
     @Override
-    public HolonomicPathFollowerConfig getPathFollowerConfig() {
-        return new HolonomicPathFollowerConfig(
-                new PIDConstants(1.0, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(1.0, 0.0, 0.0), // Rotation PID constants
-                4.5, // Max module speed, in m/s
-                0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                new ReplanningConfig()
-        );
-    }
-
-    @Override
     public void resetPose(Pose2d pose) {
         x.mut_plus(pose.getX(), Meters);
         y.mut_plus(pose.getY(), Meters);
         rotation.mut_plus(pose.getRotation().getRadians(), Radians);
-
-
     }
 
     @Override
