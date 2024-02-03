@@ -147,4 +147,8 @@ public final class Constants {
                 kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
     }
+
+    public class PivotConstants {
+        private static final double pivotMotorID = 12345;
+    }
 }

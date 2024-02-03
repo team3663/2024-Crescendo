@@ -10,19 +10,26 @@ public interface PivotIO {
     default void setTargetAngle(double rad) {}
 
     class Inputs implements LoggableInputs {
-        public double voltage = 0;
-        public double angleRad = 0;
+        public double inputVoltage = 0;
+        public double outputVoltage = 0;
+        public double targetAngleRad = 0;
+        public double currentAngleRad = 0;
+
 
         @Override
         public void toLog(LogTable table) {
-            table.put("Voltage", voltage);
-            table.put("AngleRad", angleRad);
+            table.put("inputVoltage", inputVoltage);
+            table.put("outputVoltage", outputVoltage);
+            table.put("targetAngleRad", targetAngleRad);
+            table.put("currentAngleRad", currentAngleRad);
         }
 
         @Override
         public void fromLog(LogTable table) {
-            voltage = table.get("Voltage", voltage);
-            angleRad = table.get("AngleRad", angleRad);
+            inputVoltage = table.get("inputVoltage", inputVoltage);
+            outputVoltage = table.get("outputVoltage", outputVoltage);
+            targetAngleRad = table.get("targetAngleRad", targetAngleRad);
+            currentAngleRad = table.get("currentAngleRad", currentAngleRad);
         }
     }
 }
