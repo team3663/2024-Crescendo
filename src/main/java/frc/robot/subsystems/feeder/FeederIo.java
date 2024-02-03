@@ -8,8 +8,6 @@ public interface FeederIo {
     default void updateInputs(Inputs inputs) {}
     default void setVoltage(double voltage)  {}
 
-    void setMotorVoltage(double voltage);
-
     class Inputs implements LoggableInputs {
         public double angularVelocity;
         public double appliedVolts;
