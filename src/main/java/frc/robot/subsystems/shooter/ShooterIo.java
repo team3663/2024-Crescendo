@@ -12,8 +12,8 @@ public interface ShooterIo  {
 
     class Inputs implements LoggableInputs {
         public double angularVelocity;
-        public StatusSignal<Double> appliedVolts;
-        public StatusSignal<Double> currentDrawAmps;
+        public double appliedVolts;
+        public double currentDrawAmps;
         public double motorTemp;
         public double beamBreakVoltage;
 
