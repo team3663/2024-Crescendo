@@ -1,12 +1,11 @@
-package frc.robot.subsystems.Climber;
+package frc.robot.subsystems.climber;
 
-import frc.robot.subsystems.intake.IntakeIO;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public interface ClimberIO {
+public interface ClimberIo {
 
-    default void updateInputs(ClimberIO.Inputs inputs) {}
+    default void updateInputs(ClimberIo.Inputs inputs) {}
     void stop();
     void resetPosition();
     void setTargetPosition();
