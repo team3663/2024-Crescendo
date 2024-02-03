@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Feeder extends SubsystemBase {
-    private final FeederIO io;
-    private final FeederIO.Inputs inputs = new FeederIO.Inputs();
+    private final FeederIo io;
+    private final FeederIo.Inputs inputs = new FeederIo.Inputs();
 
-    public Feeder(FeederIO io) {
+    public Feeder(FeederIo io) {
         this.io = io;
     }
 
