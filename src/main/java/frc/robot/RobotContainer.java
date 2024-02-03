@@ -33,7 +33,7 @@ public class RobotContainer {
      */
     public RobotContainer(RobotFactory robotFactory) {
         drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
-        intake = new Intake(robotFactory.createIntakeIO());
+        intake = new Intake(robotFactory.createIntakeIo());
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(

@@ -3,7 +3,7 @@ package frc.robot.subsystems.intake;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public interface IntakeIO {
+public interface IntakeIo {
     default void updateInputs(Inputs inputs) {}
     default void setVoltage(double voltage) {}
 
