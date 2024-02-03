@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
-    private final IntakeIO io;
-    private final IntakeIO.Inputs inputs = new IntakeIO.Inputs();
+    private final frc.robot.subsystems.intake.IntakeIo io;
+    private final IntakeIo.Inputs inputs = new IntakeIo.Inputs();
 
-    public Intake(IntakeIO io) {
+    public Intake(IntakeIo io) {
         this.io = io;
     }
 
