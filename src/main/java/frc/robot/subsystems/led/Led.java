@@ -3,7 +3,6 @@ package frc.robot.subsystems.led;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-
 public class Led extends SubsystemBase {
     private final LedIo io;
 
@@ -18,6 +17,6 @@ public class Led extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Led", inputs);
-        io.setLeds(desiredLedState.red, desiredLedState.green, desiredLedState.blue);
+        io.setColor(desiredLedState.red, desiredLedState.green, desiredLedState.blue);
     }
 }
