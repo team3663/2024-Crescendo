@@ -3,11 +3,11 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class VisionSubsystem extends SubsystemBase {
+public class Vision extends SubsystemBase {
     private final VisionIO io;
     private VisionIO.Inputs inputs = new VisionIO.Inputs();
 
-    public VisionSubsystem(VisionIO io) {
+    public Vision(VisionIO io) {
         this.io = io;
     }
 
