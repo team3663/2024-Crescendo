@@ -11,6 +11,12 @@ public class LedCandleIo implements LedIo {
     }
 
     @Override
+    public void updateInputs(LedInputs inputs) {
+        inputs.current = candle.getCurrent();
+        inputs.temperature = candle.getTemperature();
+    }
+
+    @Override
     public void setColor(LedColor color) {
         candle.setLEDs(color.red, color.green, color.blue);
     }
