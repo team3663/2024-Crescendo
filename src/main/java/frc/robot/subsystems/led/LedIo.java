@@ -5,12 +5,11 @@ import org.littletonrobotics.junction.AutoLog;
 public interface LedIo {
     default void updateInputs(LedInputs inputs) {}
 
-    default void setColor(int red, int green, int blue) {}
+    default void setColor(LedColor color) {}
 
     @AutoLog
     class LedInputs {
-        public int red;
-        public int green;
-        public int blue;
+        public double current;
+        public double temperature;
     }
 }
