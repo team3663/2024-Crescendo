@@ -3,7 +3,7 @@ package frc.robot.subsystems.vision;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public interface VisionIO {
+public interface VisionIo {
     void updateInputs(Inputs inputs);
 
     class Inputs implements LoggableInputs {

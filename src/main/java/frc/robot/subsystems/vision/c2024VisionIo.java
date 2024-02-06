@@ -7,7 +7,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.List;
 
-public class c2024Vision implements VisionIO{
+public class c2024VisionIo implements VisionIo {
 
     private final PhotonCamera camera;
 
@@ -15,7 +15,7 @@ public class c2024Vision implements VisionIO{
 
     private double lastTargetYawDeg;
 
-    public c2024Vision(PhotonCamera camera) {
+    public c2024VisionIo(PhotonCamera camera) {
         this.camera = camera;
     }
 

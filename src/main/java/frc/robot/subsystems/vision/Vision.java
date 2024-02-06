@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
-    private final VisionIO io;
-    private VisionIO.Inputs inputs = new VisionIO.Inputs();
+    private final VisionIo io;
+    private VisionIo.Inputs inputs = new VisionIo.Inputs();
 
-    public Vision(VisionIO io) {
+    public Vision(VisionIo io) {
         this.io = io;
     }
 
