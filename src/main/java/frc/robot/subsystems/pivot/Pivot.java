@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Pivot extends SubsystemBase {
-   private final PivotIO io;
-   private final PivotIO.Inputs inputs = new PivotIO.Inputs();
+   private final PivotIo io;
+   private final PivotIo.Inputs inputs = new PivotIo.Inputs();
 
-    public Pivot(PivotIO io) {
+    public Pivot(PivotIo io) {
         this.io = io;
     }
 
