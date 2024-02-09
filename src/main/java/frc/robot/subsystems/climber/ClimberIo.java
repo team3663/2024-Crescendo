@@ -1,42 +1,31 @@
 package frc.robot.subsystems.climber;
 
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface ClimberIo {
 
-    default void updateInputs(ClimberIo.Inputs inputs) {}
+    default void updateInputs(ClimberInputs inputs) {}
     void stop();
     void resetPosition();
-    void setTargetPosition();
+    void setTargetPosition( double leftHeight, double rightHeight);
     void setVoltage(double voltageLeft,double voltageRight);
     void setLocked(boolean lockedLeft, boolean lockedRight);
-
-    class Inputs implements LoggableInputs {
-        public double position;
-        public double appliedVolts;
-        public double currentDrawAmps;
-        public double motorTemp;
-        public boolean isLocked;
-
-        @Override
-        public void toLog(LogTable table) {
-            table.put("Position", position);
-            table.put("AppliedVolts", appliedVolts);
-            table.put("CurrentDrawAmps", currentDrawAmps);
-            table.put("MotorTemp", motorTemp);
-            table.put("Locked:", isLocked);
-        }
-
-        @Override
-        public void fromLog(LogTable table) {
-            position = table.get("Position", 0.0);
-            appliedVolts = table.get("AppliedVolts", 0.0);
-            currentDrawAmps = table.get("CurrentDrawAmps", 0.0);
-            motorTemp = table.get("MotorTemp", 0.0);
-            isLocked = table.get("Locked:", false);
-        }
-
+    @AutoLog
+    class ClimberInputs{
+        public double leftPosition;
+        public double leftAppliedVolts;
+        public double leftCurrentDrawAmps;
+        public double leftMotorTemp;
+        public boolean leftLocked;
+        public double leftVelocity;
+        public double rightPosition;
+        public double rightAppliedVolts;
+        public double rightCurrentDrawAmps;
+        public double rightMotorTemp;
+        public boolean rightLocked;
+        public double rightVelocity;
 
     }
 }
