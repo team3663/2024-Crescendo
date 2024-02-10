@@ -7,6 +7,7 @@ public interface IntakeIo {
     default void updateInputs(Inputs inputs) {}
     default void setVoltage(double voltage) {}
 
+
     class Inputs implements LoggableInputs {
         public double angularVelocity;
         public double appliedVolts;

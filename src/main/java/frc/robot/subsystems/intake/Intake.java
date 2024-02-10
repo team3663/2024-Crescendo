@@ -24,4 +24,5 @@ public class Intake extends SubsystemBase {
                 () -> io.setVoltage(0.0)
         );
     }
+
 }
