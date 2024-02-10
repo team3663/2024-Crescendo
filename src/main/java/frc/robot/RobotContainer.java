@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -13,6 +14,7 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
+import frc.robot.subsystems.vision.Vision;
 
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
@@ -27,6 +29,7 @@ public class RobotContainer {
     private final Intake intake;
     private final Led led;
     private final Pivot pivot;
+    private final Vision vision;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
@@ -40,6 +43,7 @@ public class RobotContainer {
         intake = new Intake(robotFactory.createIntakeIo());
         led = new Led(robotFactory.createLedIo());
         pivot = new Pivot(robotFactory.createPivotIo());
+        vision = new Vision(robotFactory.createVisionIo());
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
@@ -65,6 +69,14 @@ public class RobotContainer {
     private void configureBindings() {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
+        /*
+        driverController.a().whileTrue(
+                drivetrain.driveWithAngle(
+                        () -> -driverController.getLeftY(),
+                        () -> -driverController.getLeftX(),
+                        () -> drivetrain.getPose().getRotation()
+                                .plus(Rotation2d.fromRadians(vision.getTargetYaw()))));
+         */
     }
 
     /**

@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface VisionIo {
-    void updateInputs(Inputs inputs);
+    default void updateInputs(Inputs inputs) {}
 
     class Inputs implements LoggableInputs {
         public double tagYawRad = 0;

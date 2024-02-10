@@ -4,6 +4,7 @@ import frc.robot.subsystems.drivetrain.DrivetrainIO;
 import frc.robot.subsystems.intake.IntakeIo;
 import frc.robot.subsystems.led.LedIo;
 import frc.robot.subsystems.pivot.PivotIo;
+import frc.robot.subsystems.vision.VisionIo;
 
 public interface RobotFactory {
     default DrivetrainIO createDrivetrainIO() {
@@ -23,6 +24,11 @@ public interface RobotFactory {
 
     default PivotIo createPivotIo() {
         return new PivotIo() {
+        };
+    }
+
+    default VisionIo createVisionIo() {
+        return new VisionIo() {
         };
     }
 }
