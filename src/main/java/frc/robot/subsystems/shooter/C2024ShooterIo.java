@@ -30,15 +30,15 @@ public class C2024ShooterIo implements ShooterIo {
 
     @Override
     public void updateInputs(Inputs inputs) {
-        inputs.angularVelocity = upperMotor.getRotorVelocity().getValueAsDouble() * VELOCITY_COEFFICIENT;
-        inputs.currentDrawAmps = upperMotor.getSupplyCurrent().getValueAsDouble();
-        inputs.appliedVolts = upperMotor.getMotorVoltage().getValueAsDouble();
-        inputs.motorTemp = upperMotor.getExpiration();
+        inputs.upperAngularVelocity = upperMotor.getRotorVelocity().getValueAsDouble() * VELOCITY_COEFFICIENT;
+        inputs.upperCurrentDrawAmps = upperMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.upperAppliedVolts = upperMotor.getMotorVoltage().getValueAsDouble();
+        inputs.upperMotorTemp = upperMotor.getDeviceTemp().getValueAsDouble();
 
-        inputs.angularVelocity = lowerMotor.getRotorVelocity().getValueAsDouble() * VELOCITY_COEFFICIENT;
-        inputs.currentDrawAmps = lowerMotor.getSupplyCurrent().getValueAsDouble();
-        inputs.appliedVolts = lowerMotor.getMotorVoltage().getValueAsDouble();
-        inputs.motorTemp = lowerMotor.getExpiration();
+        inputs.lowerAngularVelocity = lowerMotor.getRotorVelocity().getValueAsDouble() * VELOCITY_COEFFICIENT;
+        inputs.lowerCurrentDrawAmps = lowerMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.lowerAppliedVolts = lowerMotor.getMotorVoltage().getValueAsDouble();
+        inputs.lowerMotorTemp = lowerMotor.getDeviceTemp().getValueAsDouble();
 
     }
 
