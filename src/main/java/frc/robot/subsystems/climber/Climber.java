@@ -1,9 +1,7 @@
 package frc.robot.subsystems.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.drivetrain.Drivetrain;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
@@ -14,6 +12,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 public class Climber extends SubsystemBase {
     private static final double WAIT_TIME = 0.1;
     private static final double VELOCITY_THRESHOLD = 0.01;
+
     private final ClimberIo io;
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
@@ -65,8 +64,8 @@ public class Climber extends SubsystemBase {
     public Command zero() {
         return waitSeconds(WAIT_TIME)
                 .andThen(waitUntil(
-                        () -> Math.abs(inputs.leftCurrentVelocity) < VELOCITY_THRESHOLD
-                                && Math.abs(inputs.rightCurrentVelocity) < VELOCITY_THRESHOLD))
+                        () -> Math.abs(inputs.leftVelocity) < VELOCITY_THRESHOLD
+                                && Math.abs(inputs.rightVelocity) < VELOCITY_THRESHOLD))
                 .deadlineWith(runEnd(
                         () -> io.setVoltage(constants.armResetVoltage, constants.armResetVoltage),
                         io::stop))
