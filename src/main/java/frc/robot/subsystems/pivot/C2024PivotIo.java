@@ -50,24 +50,21 @@ public class C2024PivotIo implements PivotIo {
         inputs.currentVelocityRadPerSec = primaryMotor.getVelocity().getValueAsDouble();
     }
 
-    // Sets a desired pivot angle
     @Override
     public void setTargetAngle(double targetRad) {
         primaryMotor.setControl(positionRequest.withPosition(targetRad));
     }
 
-    // Sets the sensor position
     @Override
     public void resetPosition(double position) {
         primaryMotor.setPosition(position);
     }
 
-    // Runs the motor at given voltage    @Override
+    @Override
     public void setVoltage(double voltage) {
         primaryMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
-    // Brakes the pivot at position
     @Override
     public void stop() {
         primaryMotor.setControl(brakeRequest);
