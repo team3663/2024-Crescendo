@@ -73,6 +73,14 @@ public class c2024ClimberIo implements ClimberIo{
 
     @Override
     public void setLocked(boolean leftLocked, boolean rightLocked) {
+        double value;
+        if (leftLocked) {
+            value = 1.0;
+        } else {
+            value = 0.0;
+        }
+
+
         leftServo.setPosition(leftLocked ? 1.0 : 0.0);
         rightServo.setPosition(rightLocked ? 1.0 : 0.0);
     }
