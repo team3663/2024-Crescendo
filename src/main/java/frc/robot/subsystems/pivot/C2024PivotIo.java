@@ -3,6 +3,8 @@ package frc.robot.subsystems.pivot;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class C2024PivotIo implements PivotIo {
@@ -11,8 +13,10 @@ public class C2024PivotIo implements PivotIo {
     private final TalonFX primaryMotor;
     private final TalonFX secondaryMotor;
 
+    private final VoltageOut voltageRequest = new VoltageOut(0);
     // Uses Slot 0 PID constants
     private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
+    private final StaticBrake brakeRequest = new StaticBrake();
 
     public C2024PivotIo(TalonFX primaryMotor, TalonFX secondaryMotor) {
         this.primaryMotor = primaryMotor;
@@ -25,6 +29,7 @@ public class C2024PivotIo implements PivotIo {
         config.Slot0.kI = 0.0;
         config.Slot0.kD = 0.0;
 
+        // Applies config configuration onto the motors
         primaryMotor.getConfigurator().apply(config);
         secondaryMotor.getConfigurator().apply(config);
 
@@ -35,18 +40,36 @@ public class C2024PivotIo implements PivotIo {
 
     @Override
     public void updateInputs(PivotInputs inputs) {
-        inputs.inputVoltageRight = secondaryMotor.getSupplyVoltage().getValueAsDouble();
-        inputs.inputVoltageLeft = primaryMotor.getSupplyVoltage().getValueAsDouble();
-        inputs.outputVoltageRight = secondaryMotor.getMotorVoltage().getValueAsDouble();
-        inputs.outputVoltageLeft = primaryMotor.getMotorVoltage().getValueAsDouble();
+        inputs.inputVoltagePrimary = secondaryMotor.getSupplyVoltage().getValueAsDouble();
+        inputs.inputVoltageSecondary = primaryMotor.getSupplyVoltage().getValueAsDouble();
+        inputs.outputVoltagePrimary = secondaryMotor.getMotorVoltage().getValueAsDouble();
+        inputs.outputVoltageSecondary = primaryMotor.getMotorVoltage().getValueAsDouble();
 
         // Motor Rotations * Gear Ratio * 2π = Pivot Radians
         inputs.currentAngleRad = primaryMotor.getPosition().getValueAsDouble();
         inputs.currentVelocityRadPerSec = primaryMotor.getVelocity().getValueAsDouble();
     }
 
+    // Sets a desired pivot angle
     @Override
     public void setTargetAngle(double targetRad) {
         primaryMotor.setControl(positionRequest.withPosition(targetRad));
+    }
+
+    // Sets the sensor position
+    @Override
+    public void resetPosition(double position) {
+        primaryMotor.setPosition(position);
+    }
+
+    // Runs the motor at given voltage    @Override
+    public void setVoltage(double voltage) {
+        primaryMotor.setControl(voltageRequest.withOutput(voltage));
+    }
+
+    // Brakes the pivot at position
+    @Override
+    public void stop() {
+        primaryMotor.setControl(brakeRequest);
     }
 }
