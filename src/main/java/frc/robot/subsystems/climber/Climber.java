@@ -12,9 +12,9 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 
 public class Climber extends SubsystemBase {
+    private static final double WAIT_TIME = 0.1;
+    private static final double VELOCITY_THRESHOLD = 0.01;
     private final ClimberIo io;
-    private static final double waitTime = 0.1;
-    private static final double velocityThreshold = 0.01;
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
 
@@ -63,10 +63,10 @@ public class Climber extends SubsystemBase {
     }
 
     public Command zero() {
-        return waitSeconds(waitTime)
+        return waitSeconds(WAIT_TIME)
                 .andThen(waitUntil(
-                        () -> Math.abs(inputs.leftCurrentVelocity) < velocityThreshold
-                                && Math.abs(inputs.rightCurrentVelocity) < velocityThreshold))
+                        () -> Math.abs(inputs.leftCurrentVelocity) < VELOCITY_THRESHOLD
+                                && Math.abs(inputs.rightCurrentVelocity) < VELOCITY_THRESHOLD))
                 .deadlineWith(runEnd(
                         () -> io.setVoltage(constants.armResetVoltage, constants.armResetVoltage),
                         io::stop))

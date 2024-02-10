@@ -7,19 +7,22 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.Servo;
 
-public class c2024ClimberIo implements ClimberIo{
+public class C2024ClimberIo implements ClimberIo{
 
     private static final double GEAR_RATIO = 1.0;
     private static final double PULLEY_RADIUS = 1.0;
-    private static final double LOCKEDTHRESHOLD = 0.5;
+    private static final double LOCKED_THRESHOLD = 0.5;
+
     private final TalonFX rightMotor;
     private final TalonFX leftMotor;
     private final Servo leftServo;
     private final Servo rightServo;
+
     private final StaticBrake brakeRequest = new StaticBrake();
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0.0);
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
-    public c2024ClimberIo(TalonFX leftMotor, TalonFX rightMotor, Servo leftServo, Servo rightServo){
+
+    public C2024ClimberIo(TalonFX leftMotor, TalonFX rightMotor, Servo leftServo, Servo rightServo){
         this.leftMotor = leftMotor;
         this.rightMotor= rightMotor;
         this.leftServo= leftServo;
@@ -40,13 +43,13 @@ public class c2024ClimberIo implements ClimberIo{
         inputs.leftCurrentDrawAmps= leftMotor.getSupplyCurrent().getValueAsDouble();
         inputs.leftMotorTemp = leftMotor.getDeviceTemp().getValueAsDouble();
         inputs.leftVelocity = leftMotor.getVelocity().getValueAsDouble();
-        inputs.leftLocked = leftServo.getPosition()>= LOCKEDTHRESHOLD;
+        inputs.leftLocked = leftServo.getPosition()>= LOCKED_THRESHOLD;
         inputs.rightPosition = rightMotor.getPosition().getValueAsDouble();
         inputs.rightAppliedVolts = rightMotor.getMotorVoltage().getValueAsDouble();
         inputs.rightCurrentDrawAmps= rightMotor.getSupplyCurrent().getValueAsDouble();
         inputs.rightMotorTemp = rightMotor.getDeviceTemp().getValueAsDouble();
         inputs.rightVelocity = rightMotor.getVelocity().getValueAsDouble();
-        inputs.rightLocked = rightServo.getPosition()>= LOCKEDTHRESHOLD;
+        inputs.rightLocked = rightServo.getPosition()>= LOCKED_THRESHOLD;
     }
     @Override
     public void stop() {
@@ -73,14 +76,6 @@ public class c2024ClimberIo implements ClimberIo{
 
     @Override
     public void setLocked(boolean leftLocked, boolean rightLocked) {
-        double value;
-        if (leftLocked) {
-            value = 1.0;
-        } else {
-            value = 0.0;
-        }
-
-
         leftServo.setPosition(leftLocked ? 1.0 : 0.0);
         rightServo.setPosition(rightLocked ? 1.0 : 0.0);
     }

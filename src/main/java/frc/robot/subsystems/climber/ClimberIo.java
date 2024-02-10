@@ -1,14 +1,6 @@
 package frc.robot.subsystems.climber;
 
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
-import frc.robot.subsystems.drivetrain.Drivetrain;
 import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
-
-import static edu.wpi.first.math.util.Units.feetToMeters;
-import static edu.wpi.first.math.util.Units.inchesToMeters;
 
 public interface ClimberIo {
     default Climber.Constants getConstants() {
