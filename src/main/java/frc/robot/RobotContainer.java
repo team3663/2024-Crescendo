@@ -12,6 +12,7 @@ import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
+import frc.robot.subsystems.pivot.Pivot;
 
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
@@ -36,6 +37,8 @@ public class RobotContainer {
     public RobotContainer(RobotFactory robotFactory) {
         drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
         intake = new Intake(robotFactory.createIntakeIo());
+        led = new Led(robotFactory.createLedIo());
+        pivot = new Pivot(robotFactory.createPivotIo());
         led = new Led(robotFactory.createLedIo());
 
         drivetrain.setDefaultCommand(
