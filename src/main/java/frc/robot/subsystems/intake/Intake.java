@@ -20,8 +20,8 @@ public class Intake extends SubsystemBase {
 
     public Command runWithVoltage(double voltage) {
         return runEnd(
-                () -> io.setVoltage(voltage),
-                () -> io.setVoltage(0.0)
+                () -> {io.setIntakeVoltage(voltage); io.setCenteringVoltage(voltage);},
+                () -> {io.setIntakeVoltage(0.0); io.setCenteringVoltage(0.0);}
         );
     }
 
