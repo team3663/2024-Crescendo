@@ -14,9 +14,7 @@ public interface PivotIo {
         public double inputVoltageLeft = 0;
         public double outputVoltageRight = 0;
         public double outputVoltageLeft = 0;
-        public double currentAngleRadRight = 0;
-        public double currentAngleRadLeft = 0;
-        public double targetAngleRad = 0;
+        public double currentAngleRad = 0;
 
 
         @Override
@@ -25,10 +23,7 @@ public interface PivotIo {
             table.put("inputVoltageLeft", inputVoltageLeft);
             table.put("outputVoltageRight", outputVoltageRight);
             table.put("outputVoltageLeft", outputVoltageLeft);
-            table.put("currentAngleRadRight", currentAngleRadRight);
-            table.put("currentAngleRadLeft", currentAngleRadLeft);
-            table.put("targetAngleRad", targetAngleRad);
-
+            table.put("currentAngleRad", currentAngleRad);
         }
 
         @Override
@@ -37,9 +32,7 @@ public interface PivotIo {
             inputVoltageLeft = table.get("inputVoltageLeft", inputVoltageLeft);
             outputVoltageRight = table.get("outputVoltageRight", outputVoltageRight);
             outputVoltageLeft = table.get("outputVoltageLeft", outputVoltageLeft);
-            currentAngleRadRight = table.get("currentAngleRadRight", currentAngleRadRight);
-            currentAngleRadLeft = table.get("currentAngleRadLeft", currentAngleRadLeft);
-            targetAngleRad = table.get("targetAngleRad", targetAngleRad);
+            currentAngleRad = table.get("currentAngleRad", currentAngleRad);
         }
     }
 }

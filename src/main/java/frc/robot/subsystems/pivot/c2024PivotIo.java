@@ -7,18 +7,16 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class c2024PivotIo implements PivotIo {
 
-    private double targetRad = 0;
     private final TalonFX l_motor;
     private final TalonFX r_motor;
     private static final double gearRatio = 1.0;
 
+    // Uses SLot 0 PID constants
+    PositionVoltage request = new PositionVoltage(radToRot(0)).withSlot(0);
+
     public c2024PivotIo(TalonFX l_motor, TalonFX r_motor){
         this.l_motor = l_motor;
         this.r_motor = r_motor;
-
-        // Uses SLot 0 PID constants
-        PositionVoltage request =
-                new PositionVoltage(radToRot(targetRad)).withSlot(0);
 
         // PID constants
         Slot0Configs pid = new Slot0Configs();
@@ -27,9 +25,9 @@ public class c2024PivotIo implements PivotIo {
         pid.kD = 0;
 
         // Follower request for right motor
-        Follower followRequest = new Follower(l_motor.getDeviceID(), true);
+        Follower followRequest = new Follower(l_motor.getDeviceID(), false);
 
-        l_motor.setControl(request);
+        l_motor.getConfigurator().apply(pid);
         r_motor.setControl(followRequest);
     }
 
@@ -41,16 +39,12 @@ public class c2024PivotIo implements PivotIo {
         inputs.outputVoltageLeft = l_motor.getMotorVoltage().getValueAsDouble();
 
         // Motor Rotations * Gear Ratio * 2π = Pivot Radians
-        inputs.currentAngleRadRight = -r_motor.getPosition().getValueAsDouble() * gearRatio * 2 * Math.PI;
-        inputs.currentAngleRadLeft = l_motor.getPosition().getValueAsDouble() * gearRatio * 2 * Math.PI;
-
-        inputs.targetAngleRad = targetRad;
+        inputs.currentAngleRad = l_motor.getPosition().getValueAsDouble() * gearRatio * 2 * Math.PI;
     }
 
     @Override
     public void setTargetAngle(double targetRad) {
-        this.targetRad = targetRad;
-        l_motor.setPosition(radToRot(targetRad));
+        l_motor.setControl(request.withPosition(radToRot(targetRad)));
     }
 
     // Motor Rotations = Pivot Radians / (Gear Ratio * 2π)

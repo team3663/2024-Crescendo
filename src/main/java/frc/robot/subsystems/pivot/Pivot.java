@@ -19,9 +19,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public Command setTargetAngle(double angle) {
-        return runEnd(
-                () -> io.setTargetAngle(angle),
-                () -> io.setTargetAngle(0.0)
+        Logger.recordOutput("TargetAngleRad", angle);
+        return run(
+                () -> io.setTargetAngle(angle)
+        ).until(
+                () -> Math.abs(angle - inputs.currentAngleRad) < 0.5
         );
     }
 }
