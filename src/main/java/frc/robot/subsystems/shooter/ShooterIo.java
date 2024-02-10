@@ -8,25 +8,41 @@ public interface ShooterIo  {
     default void setTargetVelocity(double voltage) {}
 
     class Inputs implements LoggableInputs {
-        public double angularVelocity;
-        public double appliedVolts;
-        public double currentDrawAmps;
-        public double motorTemp;
+        public double upperAngularVelocity;
+        public double upperAppliedVolts;
+        public double upperCurrentDrawAmps;
+        public double upperMotorTemp;
+
+        public double lowerAngularVelocity;
+        public double lowerAppliedVolts;
+        public double lowerCurrentDrawAmps;
+        public double lowerMotorTemp;
 
         @Override
         public void toLog(LogTable table) {
-            table.put("AngularVelocity", angularVelocity);
-            table.put("AppliedVolts", (appliedVolts));
-            table.put("CurrentDrawAmps", (currentDrawAmps));
-            table.put("MotorTemp", motorTemp);
+            table.put("UpperAngularVelocity", upperAngularVelocity);
+            table.put("UpperAppliedVolts", (upperAppliedVolts));
+            table.put("UpperCurrentDrawAmps", (upperCurrentDrawAmps));
+            table.put("UpperMotorTemp", upperMotorTemp);
+
+
+            table.put("LowerAngularVelocity", lowerAngularVelocity);
+            table.put("LowerAppliedVolts", (lowerAppliedVolts));
+            table.put("LowerCurrentDrawAmps", (lowerCurrentDrawAmps));
+            table.put("LowerMotorTemp", lowerMotorTemp);
         }
 
         @Override
         public void fromLog(LogTable table) {
-            angularVelocity = table.get("AngularVelocity", 0.0);
-            appliedVolts = table.get("AppliedVolts", 0.0);
-            currentDrawAmps = table.get("CurrentDrawAmps", 0.0);
-            motorTemp = table.get("MotorTemp", 0.0);
+            upperAngularVelocity = table.get("UpperAngularVelocity", 0.0);
+            upperAppliedVolts = table.get("UpperAppliedVolts", 0.0);
+            upperCurrentDrawAmps = table.get("UpperCurrentDrawAmps", 0.0);
+            upperMotorTemp = table.get("UpperMotorTemp", 0.0);
+
+            lowerAngularVelocity = table.get("LowerAngularVelocity", 0.0);
+            lowerAppliedVolts = table.get("LowerAppliedVolts", 0.0);
+            lowerCurrentDrawAmps = table.get("LowerCurrentDrawAmps", 0.0);
+            lowerMotorTemp = table.get("LowerMotorTemp", 0.0);
         }
     }
 }
