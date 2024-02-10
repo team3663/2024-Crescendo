@@ -26,10 +26,15 @@ public class C2024IntakeIo implements IntakeIo {
 
     @Override
     public void updateInputs(IntakeIo.Inputs inputs) {
-        inputs.angularVelocity = intakeMotor.getRotorVelocity().getValueAsDouble();
-        inputs.currentDrawAmps = intakeMotor.getSupplyCurrent().getValueAsDouble();
-        inputs.appliedVolts = intakeMotor.getMotorVoltage().getValueAsDouble();
-        inputs.motorTemp = intakeMotor.getExpiration();
+        inputs.intakeAngularVelocity = intakeMotor.getRotorVelocity().getValueAsDouble();
+        inputs.intakeCurrentDrawAmps = intakeMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.intakeAppliedVolts = intakeMotor.getMotorVoltage().getValueAsDouble();
+        inputs.intakeMotorTemp = intakeMotor.getDeviceTemp().getValueAsDouble();
+
+        inputs.centeringAngularVelocity = centeringMotor.getActiveTrajectoryVelocity();
+        inputs.centeringCurrentDrawAmps = centeringMotor.getSupplyCurrent();
+        inputs.centeringAppliedVolts = centeringMotor.getMotorOutputVoltage();
+        inputs.centeringMotorTemp = centeringMotor.getTemperature();
     }
 
     @Override
