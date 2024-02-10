@@ -5,23 +5,29 @@ import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
     private final VisionIo io;
-    private VisionIo.Inputs inputs = new VisionIo.Inputs();
+    private final VisionIo.Inputs inputs = new VisionIo.Inputs();
 
     public Vision(VisionIo io) {
         this.io = io;
     }
 
-    // Returns
+    /**
+     * @return A boolean statement on whether the target tag is found or not
+     */
     public boolean getTargetFound() {
         return inputs.tagFound;
     }
 
-    // Returns target tag yaw in radians
+    /**
+     * @return The yaw value between cameras and desired target in radians
+     */
     public double getTargetYaw() {
         return inputs.tagYawRad;
     }
 
-    // Get the target ID
+    /**
+     * @return The ID of the desired target
+     */
     public int getTargetID() {
         return inputs.tagID;
     }

@@ -38,12 +38,17 @@ public class c2024VisionIo implements VisionIo {
     }
 
 
-    // Set the target ID
+    /**
+     * Sets the desired target to the one containing given ID
+     * @param targetID The ID of the desired apriltag target
+     */
     public void setTargetID(int targetID) {
         this.targetID = targetID;
     }
 
-    // Get list of targets
+    /**
+     * @return List of apriltag targets
+     */
     public List<PhotonTrackedTarget> getTargetList() {
         PhotonPipelineResult result = camera.getLatestResult();
         if (result.hasTargets()) {
