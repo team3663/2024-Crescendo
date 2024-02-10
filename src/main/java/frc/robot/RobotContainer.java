@@ -25,6 +25,7 @@ import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 public class RobotContainer {
     private final Drivetrain drivetrain;
     private final Intake intake;
+    private final Pivot pivot;
     private final Led led;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -37,7 +38,6 @@ public class RobotContainer {
     public RobotContainer(RobotFactory robotFactory) {
         drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
         intake = new Intake(robotFactory.createIntakeIo());
-        led = new Led(robotFactory.createLedIo());
         pivot = new Pivot(robotFactory.createPivotIo());
         led = new Led(robotFactory.createLedIo());
 
