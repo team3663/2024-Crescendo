@@ -5,7 +5,9 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface IntakeIo {
     default void updateInputs(Inputs inputs) {}
-    default void setVoltage(double voltage) {}
+    default void setIntakeVoltage(double voltage) {}
+    default void setCenteringVoltage(double voltage) {}
+
 
     class Inputs implements LoggableInputs {
         public double angularVelocity;
