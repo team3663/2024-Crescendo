@@ -3,16 +3,13 @@ package frc.robot.subsystems.led;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface LedIo {
-    default void updateInputs(LedInputs inputs) {
-    }
+    default void updateInputs(LedInputs inputs) {}
 
-    default void setLeds(int red, int green, int blue) {
-    }
+    default void setColor(LedColor color) {}
 
     @AutoLog
     class LedInputs {
-        public long red;
-        public long green;
-        public long blue;
+        public double current;
+        public double temperature;
     }
 }
