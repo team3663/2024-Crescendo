@@ -12,6 +12,7 @@ import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
+import frc.robot.subsystems.pivot.Pivot;
 
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
@@ -25,6 +26,7 @@ public class RobotContainer {
     private final Drivetrain drivetrain;
     private final Intake intake;
     private final Led led;
+    private final Pivot pivot;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
@@ -37,6 +39,7 @@ public class RobotContainer {
         drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
         intake = new Intake(robotFactory.createIntakeIo());
         led = new Led(robotFactory.createLedIo());
+        pivot = new Pivot(robotFactory.createPivotIo());
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
