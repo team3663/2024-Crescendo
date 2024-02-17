@@ -17,10 +17,9 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
-    public Command shootWithVoltage(double voltage) {
-        return runEnd(
-                () -> io.setVoltage(voltage),
-                () -> io.setVoltage(0.0)
+    public Command setTargetVelocity(double velocity) {
+        return run(
+                () -> io.setTargetVelocity(velocity)
         );
     }
 
