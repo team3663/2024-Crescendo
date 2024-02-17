@@ -9,10 +9,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.config.RobotFactory;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
+import frc.robot.subsystems.shooter.Shooter;
 
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
@@ -27,6 +30,9 @@ public class RobotContainer {
     private final Intake intake;
     private final Pivot pivot;
     private final Led led;
+    private final Shooter shooter;
+    private final Feeder feeder;
+    private final Climber climber;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
@@ -40,6 +46,9 @@ public class RobotContainer {
         intake = new Intake(robotFactory.createIntakeIo());
         pivot = new Pivot(robotFactory.createPivotIo());
         led = new Led(robotFactory.createLedIo());
+        shooter = new Shooter(robotFactory.createShooterIo());
+        feeder = new Feeder(robotFactory.createFeederIo());
+        climber = new Climber(robotFactory.createClimberIo());
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(

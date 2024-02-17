@@ -10,15 +10,15 @@ public interface ClimberIo {
     default void updateInputs(ClimberInputs inputs) {
     }
 
-    void stop();
+    default void stop(){}
 
-    void resetPosition();
+    default void resetPosition(){}
 
-    void setTargetPosition(double leftHeight, double rightHeight);
+    default void setTargetPosition(double leftHeight, double rightHeight){}
 
-    void setVoltage(double voltageLeft, double voltageRight);
+    default void setVoltage(double voltageLeft, double voltageRight){}
 
-    void setLocked(boolean lockedLeft, boolean lockedRight);
+    default void setLocked(boolean lockedLeft, boolean lockedRight){}
 
     @AutoLog
     class ClimberInputs {
