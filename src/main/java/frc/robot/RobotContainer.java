@@ -5,16 +5,21 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.config.RobotFactory;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.shooter.Shooter;
 
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
@@ -25,25 +30,35 @@ import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+    private final Climber climber;
     private final Drivetrain drivetrain;
+    private final Feeder feeder;
     private final Intake intake;
     private final Led led;
     private final Pivot pivot;
-    private final Vision vision;
+    private final Shooter shooter;
+
+    private final CommandFactory commandFactory;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
             new CommandXboxController(DRIVER_CONTROLLER_PORT);
 
+    private final SendableChooser<Command> autoChooser;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer(RobotFactory robotFactory) {
+        climber = new Climber(robotFactory.createClimberIo());
         drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
+        feeder = new Feeder(robotFactory.createFeederIo());
         intake = new Intake(robotFactory.createIntakeIo());
         led = new Led(robotFactory.createLedIo());
         pivot = new Pivot(robotFactory.createPivotIo());
-        vision = new Vision(robotFactory.createVisionIo());
+        shooter = new Shooter(robotFactory.createShooterIo());
+
+        commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter);
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
@@ -55,8 +70,16 @@ public class RobotContainer {
 
         // Configure the trigger bindings
         configureBindings();
-    }
 
+        // Build an auto chooser. This will use Commands.none() as the default option.
+        autoChooser = AutoBuilder.buildAutoChooser();
+        Shuffleboard.getTab("Driver")
+                .add("Auto Chooser", autoChooser)
+                .withPosition(0, 0)
+                .withSize(3, 1)
+                .withWidget(BuiltInWidgets.kComboBoxChooser);
+    }
+//DriverTab
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -70,12 +93,8 @@ public class RobotContainer {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
 
-//        driverController.a().whileTrue(
-//                drivetrain.driveWithAngle(
-//                        () -> -driverController.getLeftY(),
-//                        () -> -driverController.getLeftX(),
-//                        () -> drivetrain.getPose().getRotation()
-//                                .plus(Rotation2d.fromRadians(vision.getTargetYaw()))));
+        driverController.leftTrigger()
+                .whileTrue(commandFactory.intakeAndLoad());
     }
 
     /**
@@ -85,6 +104,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-       return AutoBuilder.buildAuto("New Auto");
+       return autoChooser.getSelected();
     }
 }
