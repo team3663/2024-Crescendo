@@ -26,13 +26,15 @@ import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private final Drivetrain drivetrain;
-    private final Intake intake;
-    private final Pivot pivot;
-    private final Led led;
-    private final Shooter shooter;
-    private final Feeder feeder;
     private final Climber climber;
+    private final Drivetrain drivetrain;
+    private final Feeder feeder;
+    private final Intake intake;
+    private final Led led;
+    private final Pivot pivot;
+    private final Shooter shooter;
+
+    private final CommandFactory commandFactory;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
@@ -42,13 +44,15 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer(RobotFactory robotFactory) {
-        drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
-        intake = new Intake(robotFactory.createIntakeIo());
-        pivot = new Pivot(robotFactory.createPivotIo());
-        led = new Led(robotFactory.createLedIo());
-        shooter = new Shooter(robotFactory.createShooterIo());
-        feeder = new Feeder(robotFactory.createFeederIo());
         climber = new Climber(robotFactory.createClimberIo());
+        drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
+        feeder = new Feeder(robotFactory.createFeederIo());
+        intake = new Intake(robotFactory.createIntakeIo());
+        led = new Led(robotFactory.createLedIo());
+        pivot = new Pivot(robotFactory.createPivotIo());
+        shooter = new Shooter(robotFactory.createShooterIo());
+
+        commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter);
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
@@ -74,6 +78,9 @@ public class RobotContainer {
     private void configureBindings() {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
+
+        driverController.leftTrigger()
+                .whileTrue(commandFactory.intakeAndLoad());
     }
 
     /**

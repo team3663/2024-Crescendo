@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Feeder extends SubsystemBase {
     private final FeederIo io;
-    private final FeederIo.Inputs inputs = new FeederIo.Inputs();
+    private final FeederInputsAutoLogged inputs = new FeederInputsAutoLogged();
 
     public Feeder(FeederIo io) {
         this.io = io;
@@ -16,6 +16,10 @@ public class Feeder extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Feeder", inputs);
+    }
+
+    public boolean isDetected() {
+        return inputs.beamBreakSignaled;
     }
 
     public Command runWithVoltage(double voltage) {
