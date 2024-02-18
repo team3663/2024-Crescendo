@@ -29,7 +29,7 @@ public class C2024ShooterIo implements ShooterIo {
     }
 
     @Override
-    public void updateInputs(Inputs inputs) {
+    public void updateInputs(ShooterInputs inputs) {
         inputs.upperAngularVelocity = upperMotor.getRotorVelocity().getValueAsDouble() * VELOCITY_COEFFICIENT;
         inputs.upperCurrentDrawAmps = upperMotor.getSupplyCurrent().getValueAsDouble();
         inputs.upperAppliedVolts = upperMotor.getMotorVoltage().getValueAsDouble();
