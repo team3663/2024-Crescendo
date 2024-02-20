@@ -1,7 +1,13 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
+import java.util.List;
 
 public class Vision extends SubsystemBase {
     private final VisionIo left_cam_io;
@@ -17,22 +23,26 @@ public class Vision extends SubsystemBase {
     /**
      * @return A boolean statement on whether the target tag is found or not
      */
-    public boolean[] getTargetFound() {
-        return new boolean[]{left_cam_inputs.tagFound, right_cam_inputs.tagFound};
+    public boolean getTargetFound() {
+        return left_cam_inputs.tagFound || right_cam_inputs.tagFound;
     }
 
     /**
      * @return The yaw value between cameras and desired target in radians
      */
-    public double[] getTargetYaw() {
-        return new double[]{left_cam_inputs.tagYawRad, right_cam_inputs.tagYawRad};
+    public double getTargetYaw() {
+        return (left_cam_inputs.tagYawRad + right_cam_inputs.tagYawRad) / 2;
     }
 
     /**
-     * @return The ID of the desired target
+     * @return The ID of the desired target if both cameras have the same target; 0 if none are found
      */
-    public int[] getTargetID() {
-        return new int[]{left_cam_inputs.tagID, right_cam_inputs.tagID};
+    public int getTargetID() {
+        if (left_cam_inputs.tagID == right_cam_inputs.tagID) {
+            return left_cam_inputs.tagID;
+        } else {
+            return 0;
+        }
     }
 
     @Override

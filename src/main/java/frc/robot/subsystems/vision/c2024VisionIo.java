@@ -1,11 +1,18 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.List;
+import java.util.Optional;
 
 public class c2024VisionIo implements VisionIo {
 
@@ -15,8 +22,18 @@ public class c2024VisionIo implements VisionIo {
 
     private double lastTargetYawDeg;
 
-    public c2024VisionIo(PhotonCamera camera) {
+    private final AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+    private final Transform3d cameraOffsets;
+
+    private final PhotonPoseEstimator estimator;
+
+    public c2024VisionIo(PhotonCamera camera, Transform3d cameraOffsets) {
         this.camera = camera;
+        this.cameraOffsets = cameraOffsets;
+
+        estimator = new PhotonPoseEstimator(fieldLayout,
+                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, cameraOffsets);
     }
 
     public void updateInputs(Inputs inputs) {
@@ -56,5 +73,10 @@ public class c2024VisionIo implements VisionIo {
         } else {
             return List.of();
         }
+    }
+
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+        estimator.setReferencePose(prevEstimatedRobotPose);
+        return estimator.update();
     }
 }
