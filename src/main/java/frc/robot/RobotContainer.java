@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -67,6 +68,9 @@ public class RobotContainer {
                         () -> -driverController.getRightX() * drivetrain.getConstants().maxRotationalVelocity()
                 )
         );
+
+        NamedCommands.registerCommand( "shootNote", shooter.shootCommand();
+        NamedCommands.registerCommand("intakeNote", intake.intakeCommand();
 
         // Configure the trigger bindings
         configureBindings();
