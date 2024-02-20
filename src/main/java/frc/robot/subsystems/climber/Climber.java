@@ -6,11 +6,13 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
 
+import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 
 public class Climber extends SubsystemBase {
-    private static final double WAIT_TIME = 0.1;
+    private static final double WAIT_TIME = 0.25;
+    private static final double POSITION_THRESHOLD = inchesToMeters(1.0);
     private static final double VELOCITY_THRESHOLD = 0.01;
 
     private final ClimberIo io;
@@ -18,7 +20,7 @@ public class Climber extends SubsystemBase {
     private final Constants constants;
 
     public Climber(ClimberIo io) {
-        this.io = io;
+        this.io = new LoggingClimberIo(io);
         this.constants = io.getConstants();
     }
 
@@ -28,7 +30,6 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         io.updateInputs(inputs);
         Logger.processInputs("Climber", inputs);
     }
@@ -36,7 +37,7 @@ public class Climber extends SubsystemBase {
     public Command follow(DoubleSupplier leftPositionSupplier, DoubleSupplier rightPositionSupplier) {
         return run(
                 () -> io.setTargetPosition(leftPositionSupplier.getAsDouble(), rightPositionSupplier.getAsDouble())
-        );
+        ).handleInterrupt(io::stop);
     }
 
     public Command follow(DoubleSupplier motorSupplier) {
@@ -44,7 +45,10 @@ public class Climber extends SubsystemBase {
     }
 
     public Command moveTo(double leftHeight, double rightHeight) {
-        return follow(() -> leftHeight, () -> rightHeight);
+        return
+                follow(() -> leftHeight, () -> rightHeight)
+                        .until(() -> Math.abs(inputs.leftPosition - leftHeight) < POSITION_THRESHOLD &&
+                                Math.abs(inputs.rightPosition - rightHeight) < POSITION_THRESHOLD);
     }
 
     public Command moveTo(double motorHeight) {
@@ -62,14 +66,21 @@ public class Climber extends SubsystemBase {
     }
 
     public Command zero() {
-        return waitSeconds(WAIT_TIME)
-                .andThen(waitUntil(
-                        () -> Math.abs(inputs.leftVelocity) < VELOCITY_THRESHOLD
-                                && Math.abs(inputs.rightVelocity) < VELOCITY_THRESHOLD))
+        // Wait until the climber stops moving
+        return waitUntil(() -> Math.abs(inputs.leftVelocity) < VELOCITY_THRESHOLD
+                && Math.abs(inputs.rightVelocity) < VELOCITY_THRESHOLD)
+                // Then reset the climber position
+                .andThen(io::resetPosition)
+                // Before we check if we're at the bottom hard stop, wait a little
+                .beforeStarting(waitSeconds(WAIT_TIME))
+                // Retract while we haven't found the bottom hard stop
                 .deadlineWith(runEnd(
                         () -> io.setVoltage(constants.armResetVoltage, constants.armResetVoltage),
                         io::stop))
-                .andThen(io::resetPosition);
+                // Before we move, unlock the climber
+                .beforeStarting(unlock())
+                // After we finish, lock the climber
+                .andThen(lock());
     }
 
     public record Constants(double maxArmHeight, double armResetVoltage) {
