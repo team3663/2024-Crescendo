@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": null
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center 2 note path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center 3 note path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center 4 note path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center 5 note path"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
