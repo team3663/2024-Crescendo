@@ -10,6 +10,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Robot;
+import frc.robot.utility.SimUtil;
 
 public class SimShooterIo implements ShooterIo {
     private static final DCMotor MOTOR = DCMotor.getKrakenX60(1);
@@ -31,7 +32,6 @@ public class SimShooterIo implements ShooterIo {
 
     @Override
     public void updateInputs(ShooterInputs inputs) {
-        sim.update(Robot.defaultPeriodSecs);
         double voltage = MathUtil.clamp(switch (state) {
             case STOPPED -> 0;
             case VELOCITY -> {
@@ -47,13 +47,7 @@ public class SimShooterIo implements ShooterIo {
                 // Current limiting
                 // If the estimated current draw is going to be larger than the limit, calculate what voltage
                 // would be exactly at our limit and use that.
-                double estCurrentDraw = MOTOR.getCurrent(sim.getAngularVelocityRadPerSec() * GEAR_RATIO, resultVoltage);
-                if (Math.abs(estCurrentDraw) > CURRENT_LIMIT) {
-                    double limitedTorque = MOTOR.getTorque(Math.copySign(CURRENT_LIMIT, estCurrentDraw)) * GEAR_RATIO;
-                    resultVoltage = MOTOR.getVoltage(limitedTorque, sim.getAngularVelocityRadPerSec() * GEAR_RATIO);
-                }
-
-                yield resultVoltage;
+                yield SimUtil.applyCurrentLimit(MOTOR, sim.getAngularVelocityRadPerSec()*GEAR_RATIO, resultVoltage, CURRENT_LIMIT);
             }
         }, -12.0, 12.0);
 
