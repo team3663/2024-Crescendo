@@ -9,7 +9,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,6 +21,7 @@ import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 
+import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
 /**
@@ -41,14 +41,13 @@ public class RobotContainer {
 
     private final CommandFactory commandFactory;
 
-    // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
             new CommandXboxController(DRIVER_CONTROLLER_PORT);
 
     private final SendableChooser<Command> autoChooser;
 
     /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
+     * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer(RobotFactory robotFactory) {
         climber = new Climber(robotFactory.createClimberIo());
@@ -83,7 +82,7 @@ public class RobotContainer {
                 .withSize(3, 1)
                 .withWidget(BuiltInWidgets.kComboBoxChooser);
     }
-//DriverTab
+
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -96,6 +95,10 @@ public class RobotContainer {
     private void configureBindings() {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
+
+        driverController.a()
+                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)))
+                .onFalse(shooter.stop());
 
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());

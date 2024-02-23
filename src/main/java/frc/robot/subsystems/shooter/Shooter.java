@@ -6,11 +6,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
     private final ShooterIo io;
-    private final ShooterIo.Inputs inputs = new ShooterIo.Inputs();
+    private final ShooterInputsAutoLogged inputs = new ShooterInputsAutoLogged();
 
     public Shooter(ShooterIo io) {
         this.io = io;
     }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
@@ -23,4 +24,7 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    public Command stop() {
+        return runOnce(io::stop);
+    }
 }
