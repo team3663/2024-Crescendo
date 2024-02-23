@@ -6,8 +6,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -98,6 +98,18 @@ public class RobotContainer {
 
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());
+
+        // Climber controls
+        driverController.back()
+                .onTrue(climber.zero());
+        driverController.povUp()
+                .onTrue(climber.moveTo(climber.getConstants().maxArmHeight())
+                        .beforeStarting(climber.unlock())
+                        .andThen(climber.lock()));
+        driverController.povDown()
+                .onTrue(climber.moveTo(0.0)
+                        .beforeStarting(climber.unlock())
+                        .andThen(climber.lock()));
     }
 
     /**
@@ -107,6 +119,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-       return autoChooser.getSelected();
+        return autoChooser.getSelected();
     }
 }
