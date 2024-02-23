@@ -8,31 +8,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "SC-A2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "center 2 note path"
+            "pathName": "A2-B2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "center 3 note path"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center 4 note path"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center 5 note path"
+            "pathName": "B2-SHOOT"
           }
         }
       ]

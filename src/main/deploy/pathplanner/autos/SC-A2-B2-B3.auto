@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SC-A2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A2-B2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B2-SHOOT"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SHOOT-B3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B3-SHOOT"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
