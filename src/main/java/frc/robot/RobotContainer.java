@@ -20,6 +20,7 @@ import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 
+import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
 /**
@@ -90,6 +91,10 @@ public class RobotContainer {
     private void configureBindings() {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
+
+        driverController.a()
+                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)))
+                .onFalse(shooter.stop());
 
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());
