@@ -20,19 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "B2-SHOOT"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SHOOT-B3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B3-SHOOT"
+            "pathName": "B2-PL"
           }
         }
       ]
