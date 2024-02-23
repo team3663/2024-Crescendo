@@ -36,7 +36,7 @@ public class c2024VisionIo implements VisionIo {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, cameraOffsets);
     }
 
-    public void updateInputs(Inputs inputs) {
+    public void updateInputs(VisionInputs inputs) {
         double targetYawDeg = 0;
         boolean targetFound = false;
         List<PhotonTrackedTarget> targetList = getTargetList();
