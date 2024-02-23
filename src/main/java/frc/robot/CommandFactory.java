@@ -61,6 +61,6 @@ public class CommandFactory {
     }
 
     public Command shoot() {
-        return null;
+        return Commands.sequence(shooter.runWithVoltage(2.0)).until(() -> !feeder.isDetected());
     }
 }
