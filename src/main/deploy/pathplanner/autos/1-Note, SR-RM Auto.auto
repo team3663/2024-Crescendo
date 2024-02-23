@@ -14,13 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Loaded-Outside Path"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "R Outside-1 Path"
+            "pathName": "SR-RM"
           }
         }
       ]

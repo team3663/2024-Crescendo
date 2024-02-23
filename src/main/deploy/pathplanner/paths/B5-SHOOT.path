@@ -3,70 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9017477243994034,
-        "y": 4.1
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 2.206044638076958,
-        "y": 1.9479686416989777
-      },
-      "isLocked": false,
-      "linkedName": "Right 1"
-    },
-    {
-      "anchor": {
         "x": 8.28,
         "y": 0.77
       },
-      "prevControl": {
-        "x": 3.481500296333926,
-        "y": 0.3130663888446425
-      },
+      "prevControl": null,
       "nextControl": {
-        "x": 8.806178707486952,
-        "y": 0.8201049810926077
+        "x": 9.28,
+        "y": 0.7699999999999996
       },
       "isLocked": false,
-      "linkedName": "Right 2"
+      "linkedName": "B5"
     },
     {
       "anchor": {
-        "x": 3.736591427985116,
-        "y": 2.3769855449315425
+        "x": 1.4,
+        "y": 5.55
       },
       "prevControl": {
-        "x": 4.1076330740232105,
-        "y": 1.762447818680948
+        "x": 1.3999999999999997,
+        "y": 0.8461418596279895
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Mid"
+      "linkedName": "SHOOT"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake Note",
-      "waypointRelativePos": 0.9,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "intakeNote"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "Shoot Note",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "parallel",
         "data": {

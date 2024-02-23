@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7450681568029801,
-      "y": 6.643964474369628
+      "x": 0.6639027967321469,
+      "y": 4.359739340947609
     },
     "rotation": 0
   },
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L Loaded-Outside Path"
+            "pathName": "SR-RM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RM-A3(shoot)"
           }
         }
       ]

@@ -12,20 +12,20 @@
         "y": 4.1
       },
       "isLocked": false,
-      "linkedName": "Right Outside"
+      "linkedName": "RM"
     },
     {
       "anchor": {
-        "x": 2.9017477243994034,
+        "x": 2.6,
         "y": 4.1
       },
       "prevControl": {
-        "x": 2.669846695625594,
+        "x": 2.368098971226191,
         "y": 4.1
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right 1"
+      "linkedName": "A3"
     }
   ],
   "rotationTargets": [],
