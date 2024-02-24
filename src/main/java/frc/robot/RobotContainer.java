@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivetrain.Drivetrain;
@@ -34,6 +35,7 @@ public class RobotContainer {
 
     private final CommandXboxController driverController =
             new CommandXboxController(DRIVER_CONTROLLER_PORT);
+
     private final SendableChooser<Command> autoChooser;
 
     /**
@@ -89,9 +91,7 @@ public class RobotContainer {
                         .beforeStarting(climber.unlock())
                         .andThen(climber.lock()));
         driverController.povDown()
-                .onTrue(climber.moveTo(0.0)
-                        .beforeStarting(climber.unlock())
-                        .andThen(climber.lock()));
+                .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
     }
 
     /**
