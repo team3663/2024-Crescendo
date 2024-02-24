@@ -9,6 +9,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -16,7 +17,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import org.photonvision.EstimatedRobotPose;
 
 import java.util.List;
 
@@ -144,9 +144,10 @@ public class CtreDrivetrain implements DrivetrainIO {
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
     }
 
-    public void addVisionMeasurements(List<EstimatedRobotPose> estimatedRobotPoses) {
-        for(EstimatedRobotPose estimatedRobotPose : estimatedRobotPoses) {
-            drivetrain.addVisionMeasurement(estimatedRobotPose.estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+    @Override
+    public void addVisionMeasurements(List<Pose3d> poses, List<Double> timestamps) {
+        for(int i = 0; i < poses.size(); i++) {
+            drivetrain.addVisionMeasurement(poses.get(i).toPose2d(), timestamps.get(i));
         }
     }
 

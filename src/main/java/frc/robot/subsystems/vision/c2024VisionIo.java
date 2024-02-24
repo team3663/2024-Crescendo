@@ -63,8 +63,10 @@ public class c2024VisionIo implements VisionIo {
 
         if(getEstimatedGlobalPose().isPresent() && getEstimatedGlobalPose().get().estimatedPose.toPose2d() != previousPose) {
             // Pose is updated and the previous pose is now set to the new recorded pose
-            visionInputs.estimatedPose = getEstimatedGlobalPose().get();
-            previousPose = visionInputs.estimatedPose.estimatedPose.toPose2d();
+            visionInputs.estimatedPose = getEstimatedGlobalPose().get().estimatedPose;
+            visionInputs.timestampSeconds = getEstimatedGlobalPose().get().timestampSeconds;
+            visionInputs.trackedTargets = getEstimatedGlobalPose().get().targetsUsed;
+            previousPose = visionInputs.estimatedPose.toPose2d();
             visionInputs.poseUpdated = true;
 
         } else {
