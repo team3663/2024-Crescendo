@@ -12,7 +12,6 @@ public interface ShooterIo {
     default void stop() {
     }
 
-    default void setShooterVoltage(double voltage) {}
     @AutoLog
     class ShooterInputs {
         public double upperAngularVelocity;
