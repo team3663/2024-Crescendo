@@ -12,7 +12,7 @@
         "y": 5.554029639132724
       },
       "isLocked": false,
-      "linkedName": "center 1"
+      "linkedName": "SC"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "center 2"
+      "linkedName": "A2"
     }
   ],
   "rotationTargets": [],
