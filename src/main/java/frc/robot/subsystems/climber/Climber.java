@@ -14,12 +14,13 @@ public class Climber extends SubsystemBase {
     private static final double WAIT_TIME = 0.25;
     private static final double POSITION_THRESHOLD = inchesToMeters(1.0);
     private static final double VELOCITY_THRESHOLD = 0.01;
-    private static final double HEIGHT_TOLERANCE = inchesToMeters(2.0);
-    private double leftTargetHeight = 0.0;
-    private double rightTargetHeight = 0.0;
+
     private final ClimberIo io;
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
+
+    private double leftTargetPosition = 0.0;
+    private double rightTargetPosition = 0.0;
 
     public Climber(ClimberIo io) {
         this.io = new LoggingClimberIo(io);
@@ -36,42 +37,34 @@ public class Climber extends SubsystemBase {
         Logger.processInputs("Climber", inputs);
     }
 
-    public double getLeftHeight() {
-        return inputs.leftPosition;
-    }
-
-    public double getRightHeight() {
-        return inputs.rightPosition;
-    }
-
     public boolean atTargetHeight() {
-        return (Math.abs(leftTargetHeight - getLeftHeight()) < HEIGHT_TOLERANCE) &&
-                (Math.abs(rightTargetHeight - getRightHeight()) < HEIGHT_TOLERANCE);
+        return (Math.abs(leftTargetPosition - inputs.leftPosition) < POSITION_THRESHOLD) &&
+                (Math.abs(rightTargetPosition - inputs.rightPosition) < POSITION_THRESHOLD);
     }
 
-    public Command follow(DoubleSupplier leftPositionSupplier, DoubleSupplier rightPositionSupplier) {
+    public Command follow(DoubleSupplier leftTargetPositionSupplier, DoubleSupplier rightTargetPositionSupplier) {
         return run(
                 () -> {
-                    leftTargetHeight = leftPositionSupplier.getAsDouble();
-                    rightTargetHeight = rightPositionSupplier.getAsDouble();
+                    leftTargetPosition = leftTargetPositionSupplier.getAsDouble();
+                    rightTargetPosition = rightTargetPositionSupplier.getAsDouble();
 
-                    io.setTargetPosition(leftTargetHeight, rightTargetHeight);
+                    io.setTargetPosition(leftTargetPosition, rightTargetPosition);
                 }
         ).handleInterrupt(io::stop);
     }
 
-    public Command follow(DoubleSupplier motorSupplier) {
-        return follow(motorSupplier, motorSupplier);
+    public Command follow(DoubleSupplier targetPositionSupplier) {
+        return follow(targetPositionSupplier, targetPositionSupplier);
     }
 
-    public Command moveTo(double leftHeight, double rightHeight) {
+    public Command moveTo(double leftTargetPosition, double rightTargetPosition) {
         return
-                follow(() -> leftHeight, () -> rightHeight)
+                follow(() -> leftTargetPosition, () -> rightTargetPosition)
                         .until(this::atTargetHeight);
     }
 
-    public Command moveTo(double motorHeight) {
-        return moveTo(motorHeight, motorHeight);
+    public Command moveTo(double targetPosition) {
+        return moveTo(targetPosition, targetPosition);
     }
 
     public Command lock() {
