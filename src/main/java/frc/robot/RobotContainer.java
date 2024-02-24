@@ -20,6 +20,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.vision.Vision;
 
 import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
@@ -38,6 +39,7 @@ public class RobotContainer {
     private final Led led;
     private final Pivot pivot;
     private final Shooter shooter;
+    private final Vision vision;
 
     private final CommandFactory commandFactory;
 
@@ -57,6 +59,7 @@ public class RobotContainer {
         led = new Led(robotFactory.createLedIo());
         pivot = new Pivot(robotFactory.createPivotIo());
         shooter = new Shooter(robotFactory.createShooterIo());
+        vision = new Vision(robotFactory.createVisionIo());
 
         commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter);
 
@@ -66,6 +69,10 @@ public class RobotContainer {
                         () -> -driverController.getLeftX() * drivetrain.getConstants().maxTranslationalVelocity(),
                         () -> -driverController.getRightX() * drivetrain.getConstants().maxRotationalVelocity()
                 )
+        );
+
+        vision.setDefaultCommand(
+                vision.visionToDrivetrain(drivetrain)
         );
 
         NamedCommands.registerCommand( "shootNote", commandFactory.shoot());

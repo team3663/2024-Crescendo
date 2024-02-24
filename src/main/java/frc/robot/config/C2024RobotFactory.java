@@ -154,7 +154,8 @@ public class C2024RobotFactory implements RobotFactory {
 
     }
 
-    public VisionIo[] createVisionIO() {
+    @Override
+    public VisionIo[] createVisionIo() {
         return new VisionIo[]{
                 new c2024VisionIo(VisionConstants.leftCamera, VisionConstants.leftCameraOffsets),
                 new c2024VisionIo(VisionConstants.rightCamera, VisionConstants.rightCameraOffsets)

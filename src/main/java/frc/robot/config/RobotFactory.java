@@ -7,6 +7,7 @@ import frc.robot.subsystems.intake.IntakeIo;
 import frc.robot.subsystems.led.LedIo;
 import frc.robot.subsystems.pivot.PivotIo;
 import frc.robot.subsystems.shooter.ShooterIo;
+import frc.robot.subsystems.vision.VisionIo;
 
 public interface RobotFactory {
     default DrivetrainIO createDrivetrainIO() {
@@ -41,6 +42,11 @@ public interface RobotFactory {
 
     default ClimberIo createClimberIo() {
         return new ClimberIo() {
+        };
+    }
+
+    default VisionIo[] createVisionIo() {
+        return new VisionIo[]{
         };
     }
 }

@@ -55,16 +55,14 @@ public class c2024VisionIo implements VisionIo {
             visionInputs.tagYawRad = Units.degreesToRadians(lastTargetYawDeg);
         }
 
-        // Sets the estimated pose to the one received by the camera if tags seen, or else it would be of null value
         if(getEstimatedGlobalPose().isPresent() && getEstimatedGlobalPose().get().estimatedPose.toPose2d() != previousPose) {
+            // Pose is updated and the previous pose is now set to the new recorded pose
             visionInputs.estimatedPose = getEstimatedGlobalPose().get();
             previousPose = visionInputs.estimatedPose.estimatedPose.toPose2d();
             visionInputs.poseUpdated = true;
-        } else if(getEstimatedGlobalPose().isPresent()) {
-            previousPose = visionInputs.estimatedPose.estimatedPose.toPose2d();
-            visionInputs.poseUpdated = false;
+
         } else {
-            visionInputs.estimatedPose = new EstimatedRobotPose(null, 0, null, null);
+            // Pose is not updated if pose is not seen or the same as the previous pose
             visionInputs.poseUpdated = false;
         }
     }
