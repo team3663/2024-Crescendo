@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.359605883053574,
-      "y": 5.554029639132724
+      "x": 0.6639027967321469,
+      "y": 4.359739340947609
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CX"
+            "pathName": "SR-RM"
           }
         }
       ]

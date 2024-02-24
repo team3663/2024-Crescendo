@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.359605883053574,
-      "y": 5.554029639132724
+      "x": 0.6870928996095279,
+      "y": 6.701939731563079
     },
-    "rotation": 180.0
+    "rotation": -121.07903963507927
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CX"
+            "pathName": "SL-A1"
           }
         }
       ]
