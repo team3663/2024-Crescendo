@@ -9,7 +9,7 @@ public class Shooter extends SubsystemBase {
     private final ShooterInputsAutoLogged inputs = new ShooterInputsAutoLogged();
 
     public Shooter(ShooterIo io) {
-        this.io = io;
+        this.io = new LoggingShooterIo(io);
     }
 
     @Override
