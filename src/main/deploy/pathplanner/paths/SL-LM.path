@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7450681568029801,
-        "y": 6.643964474369628
+        "x": 0.6870928996095279,
+        "y": 6.701939731563079
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6031019632660732,
-        "y": 6.806295194511293
+        "x": 1.545126706072621,
+        "y": 6.864270451704744
       },
       "isLocked": false,
       "linkedName": "SL"
@@ -32,10 +32,10 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot Note",
+      "name": "Shoot",
       "waypointRelativePos": 0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -57,13 +57,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -178.7255929108449,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 60.80251395393557,
+    "rotation": -119.0546040990771,
     "velocity": 0
   },
   "useDefaultConstraints": true
