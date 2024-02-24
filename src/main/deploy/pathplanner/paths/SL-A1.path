@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5567217575113115,
-        "y": 7.003411068969031
+        "x": 1.6697056961531431,
+        "y": 6.887606346948656
       },
       "isLocked": false,
       "linkedName": "SL"
     },
     {
       "anchor": {
-        "x": 2.4,
-        "y": 7.0
+        "x": 2.8785576215220225,
+        "y": 6.99181601753034
       },
       "prevControl": {
-        "x": 1.4,
-        "y": 7.0
+        "x": 1.8785576215220225,
+        "y": 6.99181601753034
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LM"
+      "linkedName": "A1"
     }
   ],
   "rotationTargets": [],
@@ -34,6 +34,40 @@
     {
       "name": "Shoot",
       "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shootNote"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intakeNote"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -57,13 +91,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.7255929108449,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -119.0546040990771,
+    "rotation": -119.74488129694225,
     "velocity": 0
   },
   "useDefaultConstraints": true
