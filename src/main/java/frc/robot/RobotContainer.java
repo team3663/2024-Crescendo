@@ -61,7 +61,7 @@ public class RobotContainer {
         shooter = new Shooter(robotFactory.createShooterIo());
         vision = new Vision(robotFactory.createVisionIo());
 
-        commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter);
+        commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter, vision);
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
