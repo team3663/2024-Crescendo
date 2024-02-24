@@ -71,6 +71,7 @@ public class RobotContainer {
                 )
         );
 
+        // Periodically adds the vision measurement to drivetrain for pose estimation
         vision.setDefaultCommand(
                 vision.visionToDrivetrain(drivetrain)
         );

@@ -42,6 +42,8 @@ public class c2024VisionIo implements VisionIo {
         double targetYawDeg = 0;
         boolean targetFound = false;
         List<PhotonTrackedTarget> targetList = getTargetList();
+
+        // Iterates through every tracked tag and see if their ID is the same as the ID of the target tag
         for (PhotonTrackedTarget t : targetList){
             if (t.getFiducialId() == targetID){
                 targetYawDeg = lastTargetYawDeg = t.getYaw();
@@ -49,9 +51,13 @@ public class c2024VisionIo implements VisionIo {
             }
         }
         visionInputs.tagFound = targetFound;
+
         if (targetFound) {
+            // Target yaw is updated if target is found
             visionInputs.tagYawRad = Units.degreesToRadians(targetYawDeg);
+
         } else {
+            // Target yaw is not updated if target is not found
             visionInputs.tagYawRad = Units.degreesToRadians(lastTargetYawDeg);
         }
 
@@ -88,6 +94,9 @@ public class c2024VisionIo implements VisionIo {
         }
     }
 
+    /**
+     * @return Optional estimated robot pose
+     */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         return estimator.update();
     }

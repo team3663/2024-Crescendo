@@ -163,9 +163,11 @@ public class C2024RobotFactory implements RobotFactory {
     }
 
     private static class VisionConstants {
+        // Photon cameras created with the camera-specific name
         private static final PhotonCamera leftCamera = new PhotonCamera(""); // Left Camera Name
         private static final  PhotonCamera rightCamera = new PhotonCamera(""); // Right Camera Name
 
+        // Offsets of the cameras from the center of the robot
         private static final Transform3d leftCameraOffsets = new Transform3d();
         private static final Transform3d rightCameraOffsets = new Transform3d();
     }
