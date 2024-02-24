@@ -28,6 +28,8 @@ public class c2024VisionIo implements VisionIo {
 
     private final PhotonPoseEstimator estimator;
 
+    private Pose2d previousPose = new Pose2d();
+
     public c2024VisionIo(PhotonCamera camera, Transform3d cameraOffsets) {
         this.camera = camera;
         this.cameraOffsets = cameraOffsets;
@@ -36,7 +38,7 @@ public class c2024VisionIo implements VisionIo {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, cameraOffsets);
     }
 
-    public void updateInputs(VisionInputs inputs) {
+    public void updateInputs(VisionInputs visionInputs) {
         double targetYawDeg = 0;
         boolean targetFound = false;
         List<PhotonTrackedTarget> targetList = getTargetList();
@@ -46,11 +48,24 @@ public class c2024VisionIo implements VisionIo {
                 targetFound = true;
             }
         }
-        inputs.tagFound = targetFound;
+        visionInputs.tagFound = targetFound;
         if (targetFound) {
-            inputs.tagYawRad = Units.degreesToRadians(targetYawDeg);
+            visionInputs.tagYawRad = Units.degreesToRadians(targetYawDeg);
         } else {
-            inputs.tagYawRad = Units.degreesToRadians(lastTargetYawDeg);
+            visionInputs.tagYawRad = Units.degreesToRadians(lastTargetYawDeg);
+        }
+
+        // Sets the estimated pose to the one received by the camera if tags seen, or else it would be of null value
+        if(getEstimatedGlobalPose().isPresent() && getEstimatedGlobalPose().get().estimatedPose.toPose2d() != previousPose) {
+            visionInputs.estimatedPose = getEstimatedGlobalPose().get();
+            previousPose = visionInputs.estimatedPose.estimatedPose.toPose2d();
+            visionInputs.poseUpdated = true;
+        } else if(getEstimatedGlobalPose().isPresent()) {
+            previousPose = visionInputs.estimatedPose.estimatedPose.toPose2d();
+            visionInputs.poseUpdated = false;
+        } else {
+            visionInputs.estimatedPose = new EstimatedRobotPose(null, 0, null, null);
+            visionInputs.poseUpdated = false;
         }
     }
 
@@ -75,8 +90,7 @@ public class c2024VisionIo implements VisionIo {
         }
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-        estimator.setReferencePose(prevEstimatedRobotPose);
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         return estimator.update();
     }
 }

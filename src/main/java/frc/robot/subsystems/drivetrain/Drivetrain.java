@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -50,6 +52,10 @@ public class Drivetrain extends SubsystemBase {
 
     public Pose2d getPose() {
         return inputs.pose;
+    }
+
+    public void addVisionMeasurements(EstimatedRobotPose[] estimatedRobotPoses) {
+        addVisionMeasurements(estimatedRobotPoses);
     }
 
     public Command drive(

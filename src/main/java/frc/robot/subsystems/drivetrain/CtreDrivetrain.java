@@ -16,6 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.vision.VisionIo;
+import org.photonvision.EstimatedRobotPose;
 
 public class CtreDrivetrain implements DrivetrainIO {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
@@ -139,6 +141,12 @@ public class CtreDrivetrain implements DrivetrainIO {
             drivetrain.updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
+    }
+
+    public void addVisionMeasurements(EstimatedRobotPose[] estimatedRobotPoses) {
+        for(int i = 0; i < estimatedRobotPoses.length - 1; i++) {
+            drivetrain.addVisionMeasurement(estimatedRobotPoses[i].estimatedPose.toPose2d(), estimatedRobotPoses[i].timestampSeconds);
+        }
     }
 
     public record Constants(

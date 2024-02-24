@@ -6,9 +6,17 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.util.PIDConstants;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.DrivetrainIO;
+import frc.robot.subsystems.vision.VisionIo;
+import frc.robot.subsystems.vision.c2024VisionIo;
+import org.photonvision.PhotonCamera;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class C2024RobotFactory implements RobotFactory {
     @Override
@@ -147,5 +155,20 @@ public class C2024RobotFactory implements RobotFactory {
         public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
                 kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
+    }
+
+    public VisionIo[] createVisionIO() {
+        return new VisionIo[]{
+                new c2024VisionIo(VisionConstants.leftCamera, VisionConstants.leftCameraOffsets),
+                new c2024VisionIo(VisionConstants.rightCamera, VisionConstants.rightCameraOffsets)
+        };
+    }
+
+    private static class VisionConstants {
+        private static final PhotonCamera leftCamera = new PhotonCamera(""); // Left Camera Name
+        private static final  PhotonCamera rightCamera = new PhotonCamera(""); // Right Camera Name
+
+        private static final Transform3d leftCameraOffsets = new Transform3d();
+        private static final Transform3d rightCameraOffsets = new Transform3d();
     }
 }
