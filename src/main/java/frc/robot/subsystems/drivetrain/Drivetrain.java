@@ -12,6 +12,7 @@ import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
+import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -54,7 +55,7 @@ public class Drivetrain extends SubsystemBase {
         return inputs.pose;
     }
 
-    public void addVisionMeasurements(EstimatedRobotPose[] estimatedRobotPoses) {
+    public void addVisionMeasurements(List<EstimatedRobotPose> estimatedRobotPoses) {
         addVisionMeasurements(estimatedRobotPoses);
     }
 

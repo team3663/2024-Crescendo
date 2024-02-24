@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.vision.VisionIo;
 import org.photonvision.EstimatedRobotPose;
 
+import java.util.List;
+
 public class CtreDrivetrain implements DrivetrainIO {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
     private final Drivetrain.Constants constants;
@@ -143,9 +145,9 @@ public class CtreDrivetrain implements DrivetrainIO {
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
     }
 
-    public void addVisionMeasurements(EstimatedRobotPose[] estimatedRobotPoses) {
-        for(int i = 0; i < estimatedRobotPoses.length - 1; i++) {
-            drivetrain.addVisionMeasurement(estimatedRobotPoses[i].estimatedPose.toPose2d(), estimatedRobotPoses[i].timestampSeconds);
+    public void addVisionMeasurements(List<EstimatedRobotPose> estimatedRobotPoses) {
+        for(EstimatedRobotPose estimatedRobotPose : estimatedRobotPoses) {
+            drivetrain.addVisionMeasurement(estimatedRobotPose.estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
         }
     }
 

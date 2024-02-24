@@ -2,8 +2,12 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.drivetrain.Drivetrain;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Vision extends SubsystemBase {
     private final VisionIo[] ios;
@@ -12,7 +16,7 @@ public class Vision extends SubsystemBase {
     public Vision(VisionIo[] io) {
         this.ios = io;
         visionInputs = new VisionInputsAutoLogged[ios.length];
-        for(int i = 0; i < visionInputs.length - 1; i++) {
+        for(int i = 0; i < visionInputs.length; i++) {
             visionInputs[i] = new VisionInputsAutoLogged();
         }
     }
@@ -25,15 +29,26 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public EstimatedRobotPose[] getEstimatedRobotPoses() {
-        EstimatedRobotPose[] estimatedRobotPoses = new EstimatedRobotPose[2];
-        for(int i = 0; i < 2; i++) {
-            estimatedRobotPoses[i] = visionInputs[i].estimatedPose;
+    /**
+     * @return List of estimated robot poses from each camera if the pose has been updated
+     */
+    public List<EstimatedRobotPose> getEstimatedRobotPoses() {
+        List<EstimatedRobotPose> estimatedRobotPoses = new ArrayList<EstimatedRobotPose>();
+        for(VisionInputsAutoLogged visionInput : visionInputs) {
+            if(visionInput.poseUpdated) {
+                estimatedRobotPoses.add(visionInput.estimatedPose);
+            }
         }
         return estimatedRobotPoses;
     }
 
-    public Command visionToDrivetrain() {
-        return run();
+    /**
+     * @param drivetrain Subsystem of the drivetrain the vision pose estimates would be sent
+     * @return Command that adds vision measurements to the drivetrain
+     */
+    public Command visionToDrivetrain(Drivetrain drivetrain) {
+        return run(
+                () -> drivetrain.addVisionMeasurements(getEstimatedRobotPoses())
+        );
     }
 }
