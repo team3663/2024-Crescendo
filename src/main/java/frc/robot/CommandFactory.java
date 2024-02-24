@@ -68,8 +68,6 @@ public class CommandFactory {
                 shooter.setTargetVelocity(Units.rotationsPerMinuteToRadiansPerSecond(3000))
         );
     }
-}
-
 
     public Command level() {
         double[] x = new double[1];
@@ -81,3 +79,4 @@ public class CommandFactory {
                                 () -> 0 - Math.min(0.0, x[0])))
                 .until(climber::atTargetHeight);
     }
+}
