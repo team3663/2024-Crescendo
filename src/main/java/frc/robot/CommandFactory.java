@@ -11,8 +11,6 @@ import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 
-import java.util.function.BooleanSupplier;
-
 public class CommandFactory {
     private final Climber climber;
     private final Drivetrain drivetrain;
@@ -56,22 +54,19 @@ public class CommandFactory {
                         intake.runWithVoltage(6.0),
                         feeder.runWithVoltage(4.0)
                 ).until(feeder::isDetected)
-                // Reverse the intake for a short amount of time and reverse the feeder until no piece is detected
+                // Reverse the intake for a short amount of time
                 .andThen(intake.runWithVoltage(-3.0).withTimeout(0.25));
     }
 
     public Command shoot() {
-        double targetVelocity = Units.rotationsPerMinuteToRadiansPerSecond(1000);
-        return Commands.sequence(
-                shooter.setTargetVelocity(targetVelocity),
-                Commands.waitUntil(() -> atSpeed(targetVelocity, shooter.getVelocity())),
-                feeder.runWithVoltage(4.0)
-        ).until(feeder::isNotDetected);
-    }
 
-    public boolean atSpeed(double targetVelocity, double currentVelocity) {
-        double difference = Math.abs(targetVelocity - currentVelocity);
-        double threshold = Units.rotationsPerMinuteToRadiansPerSecond(50);
-        return difference < threshold;
+        return Commands.deadline(
+                Commands.sequence(
+                        Commands.waitUntil(()->shooter.atTargetVelocity(0.01)),
+                        feeder.runWithVoltage(4.0)
+                ).until(feeder::isNotDetected),
+                shooter.setTargetVelocity(Units.rotationsPerMinuteToRadiansPerSecond(3000))
+        );
     }
 }
+

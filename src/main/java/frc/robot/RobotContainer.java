@@ -93,8 +93,7 @@ public class RobotContainer {
                 .onTrue(drivetrain.zeroGyroscope());
 
         driverController.a()
-                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)))
-                .onFalse(shooter.stop());
+                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)));
 
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());

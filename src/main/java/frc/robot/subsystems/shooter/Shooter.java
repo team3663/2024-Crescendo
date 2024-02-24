@@ -11,6 +11,7 @@ public class Shooter extends SubsystemBase {
     public Shooter(ShooterIo io) {
         this.io = new LoggingShooterIo(io);
     }
+    private double targetVelocity = 0.0;
 
     @Override
     public void periodic() {
@@ -18,17 +19,32 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
-    public double getVelocity() {
-        return inputs.upperAngularVelocity;
+    /**
+     * Return whether the shooter velocity is within a specified percent of the target velocity.
+     * @param thresholdPercent - Percent of target velocity that shooter must be running at to be considered at speed.
+     *
+     * @return True if shooter velocity is within threshold% of the target velocity.
+     */
+    public boolean atTargetVelocity(double thresholdPercent)
+    {
+        double threshold = targetVelocity * thresholdPercent;
+
+        return Math.abs(targetVelocity - inputs.lowerAngularVelocity) < threshold;
     }
 
+    /**
+     * Create a command to run the shooter at a specified velocity
+     * @param velocity - Velocity to run shooter at (radians/second)
+     * @return - Command
+     */
     public Command setTargetVelocity(double velocity) {
-        return run(
-                () -> io.setTargetVelocity(velocity)
+        return startEnd(
+                () -> { targetVelocity = velocity; io.setTargetVelocity(velocity); },
+                () -> { targetVelocity = 0; io.stop(); }
         );
     }
 
     public Command stop() {
-        return runOnce(io::stop);
+        return runOnce(() -> {targetVelocity = 0; io.stop();});
     }
 }
