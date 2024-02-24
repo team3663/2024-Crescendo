@@ -14,7 +14,7 @@ public class Climber extends SubsystemBase {
     private static final double WAIT_TIME = 0.25;
     private static final double POSITION_THRESHOLD = inchesToMeters(1.0);
     private static final double VELOCITY_THRESHOLD = 0.01;
-    private static final double HEIGHT_TOLERANCE = inchesToMeters(2);
+    private static final double HEIGHT_TOLERANCE = inchesToMeters(2.0);
     private double leftTargetHeight = 0.0;
     private double rightTargetHeight = 0.0;
     private final ClimberIo io;
@@ -67,8 +67,7 @@ public class Climber extends SubsystemBase {
     public Command moveTo(double leftHeight, double rightHeight) {
         return
                 follow(() -> leftHeight, () -> rightHeight)
-                        .until(() -> Math.abs(inputs.leftPosition - leftHeight) < POSITION_THRESHOLD &&
-                                Math.abs(inputs.rightPosition - rightHeight) < POSITION_THRESHOLD);
+                        .until(this::atTargetHeight);
     }
 
     public Command moveTo(double motorHeight) {
