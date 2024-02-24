@@ -14,9 +14,6 @@ import frc.robot.subsystems.vision.VisionIo;
 import frc.robot.subsystems.vision.c2024VisionIo;
 import org.photonvision.PhotonCamera;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class C2024RobotFactory implements RobotFactory {
     @Override
