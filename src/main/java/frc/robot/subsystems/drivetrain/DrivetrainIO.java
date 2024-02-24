@@ -1,9 +1,12 @@
 package frc.robot.subsystems.drivetrain;
 
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.LogTable;
@@ -67,9 +70,9 @@ public interface DrivetrainIO {
         public Pose2d pose = new Pose2d();
 
         public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
-
         public SwerveModuleState[] moduleStates = new SwerveModuleState[0];
         public SwerveModuleState[] moduleTargets = new SwerveModuleState[0];
+        public Rotation3d rotation = new Rotation3d();
 
         @Override
         public void toLog(LogTable table) {

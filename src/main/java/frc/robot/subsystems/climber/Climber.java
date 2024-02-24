@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climber;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -32,6 +33,12 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Climber", inputs);
+    }
+    public double getLeftHeight(){
+        return inputs.leftPosition;
+    }
+    public double getRightHeight(){
+        return inputs.rightPosition;
     }
 
     public Command follow(DoubleSupplier leftPositionSupplier, DoubleSupplier rightPositionSupplier) {
