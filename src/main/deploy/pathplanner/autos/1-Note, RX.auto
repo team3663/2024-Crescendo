@@ -2,15 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/autos/1-Note, RX.auto
-      "x": 0.73,
-      "y": 4.41
-========
-      "x": 2.0,
-      "y": 7.0
->>>>>>>> main:src/main/deploy/pathplanner/autos/New Auto.auto
+      "x": 0.66,
+      "y": 4.36
     },
-    "rotation": 119.782500796121
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -19,11 +14,7 @@
         {
           "type": "named",
           "data": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/autos/1-Note, RX.auto
             "name": "shootNote"
-========
-            "pathName": "New Path"
->>>>>>>> main:src/main/deploy/pathplanner/autos/New Auto.auto
           }
         }
       ]
