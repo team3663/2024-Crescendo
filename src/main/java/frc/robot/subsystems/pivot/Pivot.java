@@ -15,7 +15,7 @@ public class Pivot extends SubsystemBase {
     private final PivotInputsAutoLogged inputs = new PivotInputsAutoLogged();
 
     public Pivot(PivotIo io) {
-        this.io = io;
+        this.io = new LoggingPivotIo(io);
     }
 
     @Override
@@ -25,11 +25,8 @@ public class Pivot extends SubsystemBase {
     }
 
     public Command moveTo(double angle) {
-        return run(() -> {
-            Logger.recordOutput("Pivot/TargetAngleRad", angle);
-
-            io.setTargetAngle(angle);
-        }).until(() -> Math.abs(angle - inputs.currentAngleRad) < ANGLE_THRESHOLD);
+        return run(() -> io.setTargetAngle(angle))
+                .until(() -> Math.abs(angle - inputs.currentAngleRad) < ANGLE_THRESHOLD);
     }
 
     public Command zero() {
