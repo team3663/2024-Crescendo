@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.climber.Climber;
@@ -9,6 +10,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
+
+import java.util.function.BooleanSupplier;
 
 public class CommandFactory {
     private final Climber climber;
@@ -54,15 +57,21 @@ public class CommandFactory {
                         feeder.runWithVoltage(4.0)
                 ).until(feeder::isDetected)
                 // Reverse the intake for a short amount of time and reverse the feeder until no piece is detected
-                .andThen(Commands.parallel(
-                        intake.runWithVoltage(-3.0).withTimeout(0.25),
-                        feeder.runWithVoltage(-1.0).until(feeder::isNotDetected)
-                ));
+                .andThen(intake.runWithVoltage(-3.0).withTimeout(0.25));
     }
 
     public Command shoot() {
+        double targetVelocity = Units.rotationsPerMinuteToRadiansPerSecond(1000);
         return Commands.sequence(
-                shooter.runWithVoltage(2.0)
+                shooter.setTargetVelocity(targetVelocity),
+                Commands.waitUntil(() -> atSpeed(targetVelocity, shooter.getVelocity())),
+                feeder.runWithVoltage(4.0)
         ).until(feeder::isNotDetected);
+    }
+
+    public boolean atSpeed(double targetVelocity, double currentVelocity) {
+        double difference = Math.abs(targetVelocity - currentVelocity);
+        double threshold = Units.rotationsPerMinuteToRadiansPerSecond(50);
+        return difference < threshold;
     }
 }

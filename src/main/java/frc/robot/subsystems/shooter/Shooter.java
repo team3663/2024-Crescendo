@@ -18,6 +18,10 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
+    public double getVelocity() {
+        return inputs.upperAngularVelocity;
+    }
+
     public Command setTargetVelocity(double velocity) {
         return run(
                 () -> io.setTargetVelocity(velocity)
