@@ -50,13 +50,13 @@ public class CommandFactory {
     public Command intakeAndLoad() {
         // Spin both the feeder and the intake until we detect a piece in the feeder
         return Commands.parallel(
-                        led.setLedColor(Constants.GET_NOTE),
+                        led.setLedColor(Constants.GET_NOTE_COLOR),
                         intake.runWithVoltage(6.0),
                         feeder.runWithVoltage(4.0)
                 ).until(feeder::isDetected)
                 // Reverse the intake for a short amount of time and reverse the feeder until no piece is detected
                 .andThen(Commands.parallel(
-                        led.setLedColor(Constants.HAS_NOTE),
+                        led.setLedColor(Constants.HAS_NOTE_COLOR),
                         intake.runWithVoltage(-3.0).withTimeout(0.25),
                         feeder.runWithVoltage(-1.0).until(() -> !feeder.isDetected())
                 ));
