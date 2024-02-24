@@ -108,7 +108,7 @@ public class RobotContainer {
                         .beforeStarting(climber.unlock())
                         .andThen(climber.lock()));
         driverController.povDown()
-                .onTrue(commandFactory.level());
+                .onTrue(commandFactory.level().andThen(climber.lock()));
     }
 
     /**
