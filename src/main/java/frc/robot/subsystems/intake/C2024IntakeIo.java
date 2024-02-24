@@ -8,16 +8,16 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 
 public class C2024IntakeIo implements IntakeIo {
-    public final TalonFX intakeMotor;
+    public final TalonFX rollerMotor;
     public final TalonSRX centeringMotor;
 
-    public C2024IntakeIo(TalonFX intakeMotor, TalonSRX centeringMotor) {
-        this.intakeMotor = intakeMotor;
+    public C2024IntakeIo(TalonFX rollerMotor, TalonSRX centeringMotor) {
+        this.rollerMotor = rollerMotor;
         this.centeringMotor = centeringMotor;
 
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
         fxConfig.CurrentLimits.SupplyCurrentLimit = 15.0;
-        intakeMotor.getConfigurator().apply(fxConfig);
+        rollerMotor.getConfigurator().apply(fxConfig);
 
         TalonSRXConfiguration srxConfig = new TalonSRXConfiguration();
         srxConfig.peakCurrentLimit = 15;
@@ -25,11 +25,11 @@ public class C2024IntakeIo implements IntakeIo {
     }
 
     @Override
-    public void updateInputs(IntakeIo.Inputs inputs) {
-        inputs.intakeAngularVelocity = intakeMotor.getRotorVelocity().getValueAsDouble();
-        inputs.intakeCurrentDrawAmps = intakeMotor.getSupplyCurrent().getValueAsDouble();
-        inputs.intakeAppliedVolts = intakeMotor.getMotorVoltage().getValueAsDouble();
-        inputs.intakeMotorTemp = intakeMotor.getDeviceTemp().getValueAsDouble();
+    public void updateInputs(IntakeInputs inputs) {
+        inputs.rollerAngularVelocity = rollerMotor.getRotorVelocity().getValueAsDouble();
+        inputs.rollerCurrentDrawAmps = rollerMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.rollerAppliedVolts = rollerMotor.getMotorVoltage().getValueAsDouble();
+        inputs.rollerMotorTemp = rollerMotor.getDeviceTemp().getValueAsDouble();
 
         inputs.centeringAngularVelocity = centeringMotor.getActiveTrajectoryVelocity();
         inputs.centeringCurrentDrawAmps = centeringMotor.getSupplyCurrent();
@@ -38,14 +38,12 @@ public class C2024IntakeIo implements IntakeIo {
     }
 
     @Override
-    public void setIntakeVoltage(double voltage) {
-        intakeMotor.set(voltage);
+    public void setRollerVoltage(double voltage) {
+        rollerMotor.set(voltage);
     }
     @Override
     public void setCenteringVoltage(double voltage) {
         double output = voltage != 0 ? 12 / voltage : 0;
         centeringMotor.set(TalonSRXControlMode.PercentOutput, output);
     }
-
-
 }

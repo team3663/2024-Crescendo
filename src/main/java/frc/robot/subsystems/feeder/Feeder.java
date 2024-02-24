@@ -9,7 +9,7 @@ public class Feeder extends SubsystemBase {
     private final FeederInputsAutoLogged inputs = new FeederInputsAutoLogged();
 
     public Feeder(FeederIo io) {
-        this.io = io;
+        this.io = new LoggingFeederIo(io);
     }
 
     @Override
