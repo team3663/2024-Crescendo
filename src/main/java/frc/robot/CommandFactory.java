@@ -59,4 +59,8 @@ public class CommandFactory {
                         feeder.runWithVoltage(-1.0).until(() -> !feeder.isDetected())
                 ));
     }
+
+    public Command shoot() {
+        return null;
+    }
 }
