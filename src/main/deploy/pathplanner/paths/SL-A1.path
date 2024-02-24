@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6697056961531431,
-        "y": 6.887606346948656
+        "x": 1.5799118603886924,
+        "y": 6.609179320053555
       },
       "isLocked": false,
       "linkedName": "SL"
@@ -20,8 +20,8 @@
         "y": 6.99181601753034
       },
       "prevControl": {
-        "x": 1.8785576215220225,
-        "y": 6.99181601753034
+        "x": 2.0669040208136913,
+        "y": 6.284517879770223
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,25 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "shootNote"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "Intake",
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 0.85,
       "command": {
         "type": "sequential",
         "data": {
@@ -59,23 +42,6 @@
               "type": "named",
               "data": {
                 "name": "intakeNote"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "shootNote"
               }
             }
           ]
@@ -91,7 +57,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -142.88313931672977,
     "rotateFast": false
   },
   "reversed": false,
