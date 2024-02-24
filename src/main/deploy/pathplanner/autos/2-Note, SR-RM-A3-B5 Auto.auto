@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6639027967321469,
+      "y": 4.359739340947609
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SR-RM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RM-A3(shoot)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A3-B5"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

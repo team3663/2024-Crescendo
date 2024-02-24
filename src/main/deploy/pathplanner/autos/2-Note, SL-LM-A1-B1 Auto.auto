@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7450681568029801,
+      "y": 6.643964474369628
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SL-LM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LM-A1(shoot)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A1-B1"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
