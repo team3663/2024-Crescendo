@@ -56,11 +56,13 @@ public class CommandFactory {
                 // Reverse the intake for a short amount of time and reverse the feeder until no piece is detected
                 .andThen(Commands.parallel(
                         intake.runWithVoltage(-3.0).withTimeout(0.25),
-                        feeder.runWithVoltage(-1.0).until(() -> !feeder.isDetected())
+                        feeder.runWithVoltage(-1.0).until(feeder::isNotDetected)
                 ));
     }
 
     public Command shoot() {
-        return Commands.sequence(shooter.runWithVoltage(2.0)).until(() -> !feeder.isDetected());
+        return Commands.sequence(
+                shooter.runWithVoltage(2.0)
+        ).until(feeder::isNotDetected);
     }
 }
