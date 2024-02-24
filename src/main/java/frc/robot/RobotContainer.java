@@ -68,9 +68,6 @@ public class RobotContainer {
                 )
         );
 
-        NamedCommands.registerCommand( "shootNote", commandFactory.shoot());
-        NamedCommands.registerCommand("intakeNote", commandFactory.intakeAndLoad());
-
         // Configure the trigger bindings
         configureBindings();
 
