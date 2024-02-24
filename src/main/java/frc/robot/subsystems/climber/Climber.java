@@ -16,7 +16,7 @@ public class Climber extends SubsystemBase {
     private static final double VELOCITY_THRESHOLD = 0.01;
     private static final double HEIGHT_TOLERANCE = inchesToMeters(2);
     private double leftTargetHeight = 0.0;
-    private double rightTargetHeight= 0.0;
+    private double rightTargetHeight = 0.0;
     private final ClimberIo io;
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
