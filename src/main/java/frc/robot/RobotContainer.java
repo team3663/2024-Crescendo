@@ -19,6 +19,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.utility.ControllerHelper;
 
 import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
@@ -42,7 +43,7 @@ public class RobotContainer {
 
     private final CommandXboxController driverController =
             new CommandXboxController(DRIVER_CONTROLLER_PORT);
-
+    private final ControllerHelper controllerHelper = new ControllerHelper();
     private final SendableChooser<Command> autoChooser;
 
     /**
@@ -61,9 +62,9 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
-                        () -> -driverController.getLeftY() * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -driverController.getLeftX() * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -driverController.getRightX() * drivetrain.getConstants().maxRotationalVelocity()
+                        () -> -controllerHelper.modifyAxis(driverController.getLeftY()) * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -controllerHelper.modifyAxis(driverController.getLeftX()) * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -controllerHelper.modifyAxis(driverController.getRightX()) * drivetrain.getConstants().maxRotationalVelocity()
                 )
         );
 
