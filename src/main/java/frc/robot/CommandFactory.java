@@ -70,3 +70,14 @@ public class CommandFactory {
     }
 }
 
+
+    public Command level() {
+        double[] x = new double[1];
+        final double LEVEL_CONSTANT = 0.1;
+
+        return Commands.parallel(
+                        Commands.run(() -> x[0] = x[0] + LEVEL_CONSTANT * drivetrain.getRotation().getX() * Robot.defaultPeriodSecs),
+                        climber.follow(() -> 0 + Math.max(0.0, x[0]),
+                                () -> 0 - Math.min(0.0, x[0])))
+                .until(climber::atTargetHeight);
+    }
