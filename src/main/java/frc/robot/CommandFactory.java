@@ -3,9 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIo;
 import frc.robot.subsystems.drivetrain.Drivetrain;
-import frc.robot.subsystems.drivetrain.DrivetrainIO;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
@@ -62,16 +60,15 @@ public class CommandFactory {
                 ));
     }
 
-    public Command level(){
-        double [] x = new double[1];
-        x[0]= 0;
+    public Command level() {
+        double[] x = new double[1];
         final double LEVEL_CONSTANT = 0.1;
 
-        return  Commands.parallel(
-                Commands.run(()-> x[0] = x[0]+ LEVEL_CONSTANT * drivetrain.getRotation().getX()* Robot.defaultPeriodSecs),
-                climber.follow(()-> 0+ Math.max(0.0,x[0]),
-                        ()->0 -Math.min(0.0,x [0])))
-                .until(()->(climber.getLeftHeight() == 0.0) || (climber.getRightHeight() == 0.0));
+        return Commands.parallel(
+                        Commands.run(() -> x[0] = x[0] + LEVEL_CONSTANT * drivetrain.getRotation().getX() * Robot.defaultPeriodSecs),
+                        climber.follow(() -> 0 + Math.max(0.0, x[0]),
+                                () -> 0 - Math.min(0.0, x[0])))
+                .until(climber::atTargetHeight);
     }
 
     public Command shoot() {

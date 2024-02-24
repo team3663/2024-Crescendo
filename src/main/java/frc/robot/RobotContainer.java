@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -108,7 +107,7 @@ public class RobotContainer {
                         .beforeStarting(climber.unlock())
                         .andThen(climber.lock()));
         driverController.povDown()
-                .onTrue(commandFactory.level().andThen(climber.lock()));
+                .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
     }
 
     /**

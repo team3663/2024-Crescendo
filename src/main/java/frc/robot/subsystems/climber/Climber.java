@@ -1,6 +1,5 @@
 package frc.robot.subsystems.climber;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -15,7 +14,9 @@ public class Climber extends SubsystemBase {
     private static final double WAIT_TIME = 0.25;
     private static final double POSITION_THRESHOLD = inchesToMeters(1.0);
     private static final double VELOCITY_THRESHOLD = 0.01;
-
+    private static final double HEIGHT_TOLERANCE = inchesToMeters(2);
+    private double leftTargetHeight = 0.0;
+    private double rightTargetHeight= 0.0;
     private final ClimberIo io;
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
@@ -34,16 +35,28 @@ public class Climber extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Climber", inputs);
     }
-    public double getLeftHeight(){
+
+    public double getLeftHeight() {
         return inputs.leftPosition;
     }
-    public double getRightHeight(){
+
+    public double getRightHeight() {
         return inputs.rightPosition;
+    }
+
+    public boolean atTargetHeight() {
+        return (Math.abs(leftTargetHeight - getLeftHeight()) < HEIGHT_TOLERANCE) &&
+                (Math.abs(rightTargetHeight - getRightHeight()) < HEIGHT_TOLERANCE);
     }
 
     public Command follow(DoubleSupplier leftPositionSupplier, DoubleSupplier rightPositionSupplier) {
         return run(
-                () -> io.setTargetPosition(leftPositionSupplier.getAsDouble(), rightPositionSupplier.getAsDouble())
+                () -> {
+                    leftTargetHeight = leftPositionSupplier.getAsDouble();
+                    rightTargetHeight = rightPositionSupplier.getAsDouble();
+
+                    io.setTargetPosition(leftTargetHeight, rightTargetHeight);
+                }
         ).handleInterrupt(io::stop);
     }
 

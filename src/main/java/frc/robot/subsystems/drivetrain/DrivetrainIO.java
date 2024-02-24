@@ -1,7 +1,5 @@
 package frc.robot.subsystems.drivetrain;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,14 +25,16 @@ public interface DrivetrainIO {
         );
     }
 
-    default void updateInputs(Inputs inputs) {}
+    default void updateInputs(Inputs inputs) {
+    }
 
     /**
      * Drives using a WPILib chassis speeds.
      *
      * @param chassisSpeeds The chassis speeds to follow.
      */
-    default void drive(ChassisSpeeds chassisSpeeds) {}
+    default void drive(ChassisSpeeds chassisSpeeds) {
+    }
 
     /**
      * Drives field-oriented with the ability to specify an X, Y, and rotational velocity.
@@ -43,7 +43,8 @@ public interface DrivetrainIO {
      * @param yVelocity          The target Y (toward the left side of the field) velocity in meters per second.
      * @param rotationalVelocity The target rotational (counter-clockwise positive) velocity in radians per second.
      */
-    default void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity) {}
+    default void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity) {
+    }
 
     /**
      * Drives field-oriented at a specified angle with the ability to specify an X, Y velocity.
@@ -52,15 +53,20 @@ public interface DrivetrainIO {
      * @param yVelocity The target Y (toward the left side of the field) velocity in meters per second.
      * @param angle     The target angle to face while driving.
      */
-    default void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle) {}
+    default void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle) {
+    }
 
     /**
      * Stops the drivetrain.
      */
-    default void stop() {}
+    default void stop() {
+    }
 
-    default void resetPose(Pose2d pose) {}
-    default void zeroGyroscope() {}
+    default void resetPose(Pose2d pose) {
+    }
+
+    default void zeroGyroscope() {
+    }
 
     class Inputs implements LoggableInputs {
         public int successfulDaqs = 0;
@@ -68,10 +74,10 @@ public interface DrivetrainIO {
         public double odometryPeriod = 0;
 
         public Pose2d pose = new Pose2d();
-
         public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
         public SwerveModuleState[] moduleStates = new SwerveModuleState[0];
         public SwerveModuleState[] moduleTargets = new SwerveModuleState[0];
+
         public Rotation3d rotation = new Rotation3d();
 
         @Override

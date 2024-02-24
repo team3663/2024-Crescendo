@@ -1,7 +1,5 @@
 package frc.robot.subsystems.drivetrain;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -45,14 +43,13 @@ public class Drivetrain extends SubsystemBase {
     }
 
 
-
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drivetrain", inputs);
     }
 
-    public Rotation3d getRotation(){
+    public Rotation3d getRotation() {
         return inputs.rotation;
     }
 
@@ -72,8 +69,6 @@ public class Drivetrain extends SubsystemBase {
                 io::stop
         );
     }
-
-
 
 
     public Command driveWithAngle(
