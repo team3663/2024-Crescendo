@@ -3,6 +3,7 @@ package frc.robot.subsystems.drivetrain;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -41,10 +42,15 @@ public class Drivetrain extends SubsystemBase {
         return constants;
     }
 
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drivetrain", inputs);
+    }
+
+    public Rotation3d getRotation() {
+        return inputs.rotation;
     }
 
     public Command drive(
@@ -63,6 +69,7 @@ public class Drivetrain extends SubsystemBase {
                 io::stop
         );
     }
+
 
     public Command driveWithAngle(
             DoubleSupplier xVelocity,

@@ -19,6 +19,9 @@ public class Climber extends SubsystemBase {
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
 
+    private double leftTargetPosition = 0.0;
+    private double rightTargetPosition = 0.0;
+
     public Climber(ClimberIo io) {
         this.io = new LoggingClimberIo(io);
         this.constants = io.getConstants();
@@ -34,25 +37,34 @@ public class Climber extends SubsystemBase {
         Logger.processInputs("Climber", inputs);
     }
 
-    public Command follow(DoubleSupplier leftPositionSupplier, DoubleSupplier rightPositionSupplier) {
+    public boolean atTargetHeight() {
+        return (Math.abs(leftTargetPosition - inputs.leftPosition) < POSITION_THRESHOLD) &&
+                (Math.abs(rightTargetPosition - inputs.rightPosition) < POSITION_THRESHOLD);
+    }
+
+    public Command follow(DoubleSupplier leftTargetPositionSupplier, DoubleSupplier rightTargetPositionSupplier) {
         return run(
-                () -> io.setTargetPosition(leftPositionSupplier.getAsDouble(), rightPositionSupplier.getAsDouble())
+                () -> {
+                    leftTargetPosition = leftTargetPositionSupplier.getAsDouble();
+                    rightTargetPosition = rightTargetPositionSupplier.getAsDouble();
+
+                    io.setTargetPosition(leftTargetPosition, rightTargetPosition);
+                }
         ).handleInterrupt(io::stop);
     }
 
-    public Command follow(DoubleSupplier motorSupplier) {
-        return follow(motorSupplier, motorSupplier);
+    public Command follow(DoubleSupplier targetPositionSupplier) {
+        return follow(targetPositionSupplier, targetPositionSupplier);
     }
 
-    public Command moveTo(double leftHeight, double rightHeight) {
+    public Command moveTo(double leftTargetPosition, double rightTargetPosition) {
         return
-                follow(() -> leftHeight, () -> rightHeight)
-                        .until(() -> Math.abs(inputs.leftPosition - leftHeight) < POSITION_THRESHOLD &&
-                                Math.abs(inputs.rightPosition - rightHeight) < POSITION_THRESHOLD);
+                follow(() -> leftTargetPosition, () -> rightTargetPosition)
+                        .until(this::atTargetHeight);
     }
 
-    public Command moveTo(double motorHeight) {
-        return moveTo(motorHeight, motorHeight);
+    public Command moveTo(double targetPosition) {
+        return moveTo(targetPosition, targetPosition);
     }
 
     public Command lock() {
