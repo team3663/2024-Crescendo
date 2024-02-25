@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,9 +15,9 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.utility.ControllerHelper;
 
 import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
-import static frc.robot.Constants.DEADBAND_WIDTH;
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
 
@@ -54,9 +53,9 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
-                        () -> -MathUtil.applyDeadband(driverController.getLeftY(), DEADBAND_WIDTH) * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -MathUtil.applyDeadband(driverController.getLeftX(), DEADBAND_WIDTH) * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -MathUtil.applyDeadband(driverController.getRightX(), DEADBAND_WIDTH) * drivetrain.getConstants().maxRotationalVelocity()
+                        () -> -ControllerHelper.modifyAxis(driverController.getLeftY()) * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -ControllerHelper.modifyAxis(driverController.getLeftX()) * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -ControllerHelper.modifyAxis(driverController.getRightX()) * drivetrain.getConstants().maxRotationalVelocity()
                 )
         );
 
