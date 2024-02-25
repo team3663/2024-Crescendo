@@ -1,10 +1,13 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
+
+    private final double VELOCITY_THRESHOLD = Units.rotationsPerMinuteToRadiansPerSecond(100);
     private final ShooterIo io;
     private final ShooterInputsAutoLogged inputs = new ShooterInputsAutoLogged();
 
@@ -25,11 +28,9 @@ public class Shooter extends SubsystemBase {
      *
      * @return True if shooter velocity is within threshold% of the target velocity.
      */
-    public boolean atTargetVelocity(double thresholdPercent)
+    public boolean atTargetVelocity()
     {
-        double threshold = targetVelocity * thresholdPercent;
-
-        return Math.abs(targetVelocity - inputs.lowerAngularVelocity) < threshold;
+        return Math.abs(targetVelocity - inputs.lowerAngularVelocity) < VELOCITY_THRESHOLD;
     }
 
     /**

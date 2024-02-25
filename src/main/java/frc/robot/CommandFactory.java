@@ -62,7 +62,7 @@ public class CommandFactory {
 
         return Commands.deadline(
                 Commands.sequence(
-                        Commands.waitUntil(()->shooter.atTargetVelocity(0.01)),
+                        Commands.waitUntil(shooter::atTargetVelocity),
                         feeder.runWithVoltage(4.0)
                 ).until(feeder::isNotDetected),
                 shooter.setTargetVelocity(Units.rotationsPerMinuteToRadiansPerSecond(3000))
