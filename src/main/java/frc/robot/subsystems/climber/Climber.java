@@ -6,19 +6,24 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
 
+import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 
 public class Climber extends SubsystemBase {
-    private static final double WAIT_TIME = 0.1;
+    private static final double WAIT_TIME = 0.25;
+    private static final double POSITION_THRESHOLD = inchesToMeters(1.0);
     private static final double VELOCITY_THRESHOLD = 0.01;
 
     private final ClimberIo io;
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
 
+    private double leftTargetPosition = 0.0;
+    private double rightTargetPosition = 0.0;
+
     public Climber(ClimberIo io) {
-        this.io = io;
+        this.io = new LoggingClimberIo(io);
         this.constants = io.getConstants();
     }
 
@@ -28,27 +33,38 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         io.updateInputs(inputs);
         Logger.processInputs("Climber", inputs);
     }
 
-    public Command follow(DoubleSupplier leftPositionSupplier, DoubleSupplier rightPositionSupplier) {
+    public boolean atTargetHeight() {
+        return (Math.abs(leftTargetPosition - inputs.leftPosition) < POSITION_THRESHOLD) &&
+                (Math.abs(rightTargetPosition - inputs.rightPosition) < POSITION_THRESHOLD);
+    }
+
+    public Command follow(DoubleSupplier leftTargetPositionSupplier, DoubleSupplier rightTargetPositionSupplier) {
         return run(
-                () -> io.setTargetPosition(leftPositionSupplier.getAsDouble(), rightPositionSupplier.getAsDouble())
-        );
+                () -> {
+                    leftTargetPosition = leftTargetPositionSupplier.getAsDouble();
+                    rightTargetPosition = rightTargetPositionSupplier.getAsDouble();
+
+                    io.setTargetPosition(leftTargetPosition, rightTargetPosition);
+                }
+        ).handleInterrupt(io::stop);
     }
 
-    public Command follow(DoubleSupplier motorSupplier) {
-        return follow(motorSupplier, motorSupplier);
+    public Command follow(DoubleSupplier targetPositionSupplier) {
+        return follow(targetPositionSupplier, targetPositionSupplier);
     }
 
-    public Command moveTo(double leftHeight, double rightHeight) {
-        return follow(() -> leftHeight, () -> rightHeight);
+    public Command moveTo(double leftTargetPosition, double rightTargetPosition) {
+        return
+                follow(() -> leftTargetPosition, () -> rightTargetPosition)
+                        .until(this::atTargetHeight);
     }
 
-    public Command moveTo(double motorHeight) {
-        return moveTo(motorHeight, motorHeight);
+    public Command moveTo(double targetPosition) {
+        return moveTo(targetPosition, targetPosition);
     }
 
     public Command lock() {
@@ -62,14 +78,21 @@ public class Climber extends SubsystemBase {
     }
 
     public Command zero() {
-        return waitSeconds(WAIT_TIME)
-                .andThen(waitUntil(
-                        () -> Math.abs(inputs.leftVelocity) < VELOCITY_THRESHOLD
-                                && Math.abs(inputs.rightVelocity) < VELOCITY_THRESHOLD))
+        // Wait until the climber stops moving
+        return waitUntil(() -> Math.abs(inputs.leftVelocity) < VELOCITY_THRESHOLD
+                && Math.abs(inputs.rightVelocity) < VELOCITY_THRESHOLD)
+                // Then reset the climber position
+                .andThen(io::resetPosition)
+                // Before we check if we're at the bottom hard stop, wait a little
+                .beforeStarting(waitSeconds(WAIT_TIME))
+                // Retract while we haven't found the bottom hard stop
                 .deadlineWith(runEnd(
                         () -> io.setVoltage(constants.armResetVoltage, constants.armResetVoltage),
                         io::stop))
-                .andThen(io::resetPosition);
+                // Before we move, unlock the climber
+                .beforeStarting(unlock())
+                // After we finish, lock the climber
+                .andThen(lock());
     }
 
     public record Constants(double maxArmHeight, double armResetVoltage) {

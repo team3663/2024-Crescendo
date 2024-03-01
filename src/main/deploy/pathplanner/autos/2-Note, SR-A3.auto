@@ -1,26 +1,32 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.6639027967321469,
+      "y": 4.359739340947609
+    },
+    "rotation": 120.0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SC-A2"
+            "name": "shootNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "A2-B2"
+            "pathName": "SR-A3"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "B2-PL"
+            "name": "shootNote"
           }
         }
       ]

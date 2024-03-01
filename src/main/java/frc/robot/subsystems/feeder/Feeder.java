@@ -9,7 +9,7 @@ public class Feeder extends SubsystemBase {
     private final FeederInputsAutoLogged inputs = new FeederInputsAutoLogged();
 
     public Feeder(FeederIo io) {
-        this.io = io;
+        this.io = new LoggingFeederIo(io);
     }
 
     @Override
@@ -20,6 +20,9 @@ public class Feeder extends SubsystemBase {
 
     public boolean isDetected() {
         return inputs.beamBreakSignaled;
+    }
+    public boolean isNotDetected() {
+        return !inputs.beamBreakSignaled;
     }
 
     public Command runWithVoltage(double voltage) {

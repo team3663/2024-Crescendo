@@ -1,13 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -19,16 +15,12 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.utility.ControllerHelper;
 
 import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
+
 public class RobotContainer {
     private final Climber climber;
     private final Drivetrain drivetrain;
@@ -61,9 +53,9 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
-                        () -> -driverController.getLeftY() * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -driverController.getLeftX() * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -driverController.getRightX() * drivetrain.getConstants().maxRotationalVelocity()
+                        () -> -ControllerHelper.modifyAxis(driverController.getLeftY()) * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -ControllerHelper.modifyAxis(driverController.getLeftX()) * drivetrain.getConstants().maxTranslationalVelocity(),
+                        () -> -ControllerHelper.modifyAxis(driverController.getRightX()) * drivetrain.getConstants().maxRotationalVelocity()
                 )
         );
 
@@ -79,25 +71,25 @@ public class RobotContainer {
                 .withWidget(BuiltInWidgets.kComboBoxChooser);
     }
 
-    /**
-     * Use this method to define your trigger->command mappings. Triggers can be created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
-     */
     private void configureBindings() {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
 
         driverController.a()
-                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)))
-                .onFalse(shooter.stop());
+                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)));
 
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());
+
+        // Climber controls
+        driverController.back()
+                .onTrue(climber.zero());
+        driverController.povUp()
+                .onTrue(climber.moveTo(climber.getConstants().maxArmHeight())
+                        .beforeStarting(climber.unlock())
+                        .andThen(climber.lock()));
+        driverController.povDown()
+                .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
     }
 
     /**
@@ -107,6 +99,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-       return autoChooser.getSelected();
+        return autoChooser.getSelected();
     }
 }

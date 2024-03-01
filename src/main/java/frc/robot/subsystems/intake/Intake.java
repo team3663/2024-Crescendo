@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
-    private final frc.robot.subsystems.intake.IntakeIo io;
-    private final IntakeIo.Inputs inputs = new IntakeIo.Inputs();
+    private final IntakeIo io;
+    private final IntakeInputsAutoLogged inputs = new IntakeInputsAutoLogged();
 
     public Intake(IntakeIo io) {
-        this.io = io;
+        this.io = new LoggingIntakeIo(io);
     }
 
     @Override
@@ -20,8 +20,14 @@ public class Intake extends SubsystemBase {
 
     public Command runWithVoltage(double voltage) {
         return runEnd(
-                () -> {io.setIntakeVoltage(voltage); io.setCenteringVoltage(voltage);},
-                () -> {io.setIntakeVoltage(0.0); io.setCenteringVoltage(0.0);}
+                () -> {
+                    io.setRollerVoltage(voltage);
+                    io.setCenteringVoltage(voltage);
+                },
+                () -> {
+                    io.setRollerVoltage(0.0);
+                    io.setCenteringVoltage(0.0);
+                }
         );
     }
 

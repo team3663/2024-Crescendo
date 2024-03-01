@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.climber.Climber;
@@ -53,10 +54,29 @@ public class CommandFactory {
                         intake.runWithVoltage(6.0),
                         feeder.runWithVoltage(4.0)
                 ).until(feeder::isDetected)
-                // Reverse the intake for a short amount of time and reverse the feeder until no piece is detected
-                .andThen(Commands.parallel(
-                        intake.runWithVoltage(-3.0).withTimeout(0.25),
-                        feeder.runWithVoltage(-1.0).until(() -> !feeder.isDetected())
-                ));
+                // Reverse the intake for a short amount of time
+                .andThen(intake.runWithVoltage(-3.0).withTimeout(0.25));
+    }
+
+    public Command shoot() {
+
+        return Commands.deadline(
+                Commands.sequence(
+                        Commands.waitUntil(shooter::atTargetVelocity),
+                        feeder.runWithVoltage(4.0)
+                ).until(feeder::isNotDetected),
+                shooter.setTargetVelocity(Units.rotationsPerMinuteToRadiansPerSecond(3000))
+        );
+    }
+
+    public Command level() {
+        double[] x = new double[1];
+        final double LEVEL_CONSTANT = 0.1;
+
+        return Commands.parallel(
+                        Commands.run(() -> x[0] = x[0] + LEVEL_CONSTANT * drivetrain.getRotation().getX() * Robot.defaultPeriodSecs),
+                        climber.follow(() -> 0 + Math.max(0.0, x[0]),
+                                () -> 0 - Math.min(0.0, x[0])))
+                .until(climber::atTargetHeight);
     }
 }

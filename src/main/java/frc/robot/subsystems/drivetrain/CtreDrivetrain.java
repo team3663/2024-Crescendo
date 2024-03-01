@@ -84,6 +84,7 @@ public class CtreDrivetrain implements DrivetrainIO {
         inputs.moduleStates = state.ModuleStates;
         inputs.moduleTargets = state.ModuleTargets;
         inputs.chassisSpeeds = kinematics.toChassisSpeeds(inputs.moduleStates);
+        inputs.rotation = drivetrain.getRotation3d();
     }
 
     @Override
