@@ -47,7 +47,7 @@ public class C2024RobotFactory implements RobotFactory {
         // When using closed-loop control, the drive motor uses the control
         // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
         private static final Slot0Configs DRIVE_PID_CONSTANTS = new Slot0Configs()
-                .withKP(3).withKI(0).withKD(0)
+                .withKP(0).withKI(0).withKD(0)
                 .withKS(0).withKV(0).withKA(0);
 
         // The closed-loop output type to use for the steer motors;
@@ -75,9 +75,9 @@ public class C2024RobotFactory implements RobotFactory {
         public static final double MAX_DRIVE_VELOCITY = DCMotor.getFalcon500Foc(1)
                 .freeSpeedRadPerSec / DRIVE_REDUCTION * WHEEL_RADIUS;
 
-        private static final boolean STEER_MOTOR_INVERTED = false;
+        private static final boolean STEER_MOTOR_INVERTED = true;
         private static final boolean INVERT_LEFT_SIDE = false;
-        private static final boolean INVERT_RIGHT_SIDE = true;
+        private static final boolean INVERT_RIGHT_SIDE = false;
 
         private static final String CAN_BUS_NAME = "3663";
         private static final int PIGEON_ID = 0;
