@@ -51,11 +51,11 @@ public class CommandFactory {
     public Command intakeAndLoad() {
         // Spin both the feeder and the intake until we detect a piece in the feeder
         return Commands.parallel(
-                        intake.runWithVoltage(6.0),
+                        intake.runWithVoltage(4.0),
                         feeder.runWithVoltage(4.0)
                 ).until(feeder::isDetected)
                 // Reverse the intake for a short amount of time
-                .andThen(intake.runWithVoltage(-3.0).withTimeout(0.25));
+                .andThen(intake.runWithVoltage(-1.0).withTimeout(0.25));
     }
 
     public Command shoot() {

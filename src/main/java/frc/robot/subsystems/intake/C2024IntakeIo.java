@@ -4,12 +4,16 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 
 public class C2024IntakeIo implements IntakeIo {
     public final TalonFX rollerMotor;
     public final TalonSRX centeringMotor;
+
+    private final VoltageOut voltageRequest = new VoltageOut(0.0);
 
     public C2024IntakeIo(TalonFX rollerMotor, TalonSRX centeringMotor) {
         this.rollerMotor = rollerMotor;
@@ -17,6 +21,7 @@ public class C2024IntakeIo implements IntakeIo {
 
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
         fxConfig.CurrentLimits.SupplyCurrentLimit = 15.0;
+        fxConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         rollerMotor.getConfigurator().apply(fxConfig);
 
         TalonSRXConfiguration srxConfig = new TalonSRXConfiguration();
@@ -39,7 +44,7 @@ public class C2024IntakeIo implements IntakeIo {
 
     @Override
     public void setRollerVoltage(double voltage) {
-        rollerMotor.set(voltage);
+        rollerMotor.setControl(voltageRequest.withOutput(voltage));
     }
     @Override
     public void setCenteringVoltage(double voltage) {

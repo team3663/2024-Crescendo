@@ -1,6 +1,8 @@
 package frc.robot.config;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -10,6 +12,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.DrivetrainIO;
+import frc.robot.subsystems.intake.C2024IntakeIo;
+import frc.robot.subsystems.intake.IntakeIo;
 
 public class C2024RobotFactory implements RobotFactory {
     @Override
@@ -24,6 +28,14 @@ public class C2024RobotFactory implements RobotFactory {
                 DrivetrainConstants.FRONT_RIGHT,
                 DrivetrainConstants.BACK_LEFT,
                 DrivetrainConstants.BACK_RIGHT
+        );
+    }
+
+    @Override
+    public IntakeIo createIntakeIo() {
+        return new C2024IntakeIo(
+                new TalonFX(9, "3663"),
+                new TalonSRX(4)
         );
     }
 
