@@ -90,9 +90,9 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
 
     @Override
     public void resetPose(Pose2d pose) {
-        x.mut_plus(pose.getX(), Meters);
-        y.mut_plus(pose.getY(), Meters);
-        rotation.mut_plus(pose.getRotation().getRadians(), Radians);
+        x.mut_replace(pose.getX(), Meters);
+        y.mut_replace(pose.getY(), Meters);
+        rotation.mut_replace(pose.getRotation().getRadians(), Radians);
     }
 
     @Override
