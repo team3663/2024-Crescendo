@@ -14,8 +14,4 @@ public final class Constants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
     public static final int TEST_CONTROLLER_PORT = 2;
-    public static final LedColor OFF_COLOR = new LedColor(0, 0, 0); // The LED lights are off
-    public static final LedColor GET_NOTE_COLOR = new LedColor(255, 125, 0); // The LED lights are yellow
-    public static final LedColor HAS_NOTE_COLOR = new LedColor(100, 255, 100); // The LED lights are green
-    public static final LedColor EJECT_NOTE_COLOR = new LedColor(255, 0, 0); // The LED lights are red
 }
