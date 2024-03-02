@@ -13,6 +13,11 @@ public class LoggingPivotIo implements PivotIo {
     }
 
     @Override
+    public Pivot.Constants getConstants() {
+        return inner.getConstants();
+    }
+
+    @Override
     public void updateInputs(PivotInputs inputs) {
         inner.updateInputs(inputs);
     }

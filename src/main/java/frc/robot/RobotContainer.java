@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivetrain.Drivetrain;
@@ -72,7 +72,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        driverController.start()
+        driverController.back()
                 .onTrue(drivetrain.zeroGyroscope());
 
         driverController.leftTrigger()
@@ -83,8 +83,8 @@ public class RobotContainer {
                 .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(2500)));
 
         // Climber controls
-        driverController.back()
-                .onTrue(climber.zero());
+        driverController.start()
+                .onTrue(Commands.parallel(climber.zero(), pivot.zero()));
         driverController.povUp()
                 .onTrue(climber.moveTo(climber.getConstants().maxArmHeight())
                         .beforeStarting(climber.unlock())

@@ -1,6 +1,5 @@
 package frc.robot.config;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -17,6 +16,8 @@ import frc.robot.subsystems.feeder.C2024FeederIo;
 import frc.robot.subsystems.feeder.FeederIo;
 import frc.robot.subsystems.intake.C2024IntakeIo;
 import frc.robot.subsystems.intake.IntakeIo;
+import frc.robot.subsystems.pivot.C2024PivotIo;
+import frc.robot.subsystems.pivot.PivotIo;
 import frc.robot.subsystems.shooter.C2024ShooterIo;
 import frc.robot.subsystems.shooter.ShooterIo;
 
@@ -50,6 +51,13 @@ public class C2024RobotFactory implements RobotFactory {
         return new C2024FeederIo(
                 new TalonFX(3),
                 new AnalogInput(0)
+        );
+    }
+
+    @Override
+    public PivotIo createPivotIo() {
+        return new C2024PivotIo(
+                new TalonFX(10, "3663")
         );
     }
 
