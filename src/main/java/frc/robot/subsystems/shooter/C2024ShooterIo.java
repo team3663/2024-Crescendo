@@ -9,7 +9,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 public class C2024ShooterIo implements ShooterIo {
     private static final double GEAR_RATIO = 1.0;
-    private static final double VELOCITY_COEFFICIENT = (2 * Math.PI) / (2048 * GEAR_RATIO) * 10;
 
     private final TalonFX upperMotor;
     private final TalonFX lowerMotor;
@@ -23,13 +22,23 @@ public class C2024ShooterIo implements ShooterIo {
         this.upperMotor = upperMotor;
         this.lowerMotor = lowerMotor;
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
+        upperMotor.getSupplyCurrent()
+                .setUpdateFrequency(50);
 
-        config.Slot0.kP = 1.0;
-        config.Slot0.kI = 0.0;
-        config.Slot0.kD = 0.0;
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.CurrentLimits.SupplyCurrentLimit = 40.0;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
+
+        config.Feedback.SensorToMechanismRatio = GEAR_RATIO / (2.0 * Math.PI);
+
+        config.Slot0.kP = 0.01;
+        config.Slot0.kV = 0.02;
 
         upperMotor.getConfigurator().apply(config);
+
+        // Configuration overrides for lower
+        config.Slot0.kV = 0.021;
 
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         lowerMotor.getConfigurator().apply(config);
@@ -37,12 +46,12 @@ public class C2024ShooterIo implements ShooterIo {
 
     @Override
     public void updateInputs(ShooterInputs inputs) {
-        inputs.upperAngularVelocity = upperMotor.getRotorVelocity().getValueAsDouble() * VELOCITY_COEFFICIENT;
+        inputs.upperAngularVelocity = upperMotor.getVelocity().getValueAsDouble();
         inputs.upperCurrentDrawAmps = upperMotor.getSupplyCurrent().getValueAsDouble();
         inputs.upperAppliedVolts = upperMotor.getMotorVoltage().getValueAsDouble();
         inputs.upperMotorTemp = upperMotor.getDeviceTemp().getValueAsDouble();
 
-        inputs.lowerAngularVelocity = lowerMotor.getRotorVelocity().getValueAsDouble() * VELOCITY_COEFFICIENT;
+        inputs.lowerAngularVelocity = lowerMotor.getVelocity().getValueAsDouble();
         inputs.lowerCurrentDrawAmps = lowerMotor.getSupplyCurrent().getValueAsDouble();
         inputs.lowerAppliedVolts = lowerMotor.getMotorVoltage().getValueAsDouble();
         inputs.lowerMotorTemp = lowerMotor.getDeviceTemp().getValueAsDouble();

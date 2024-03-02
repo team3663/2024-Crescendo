@@ -75,11 +75,12 @@ public class RobotContainer {
         driverController.start()
                 .onTrue(drivetrain.zeroGyroscope());
 
-        driverController.a()
-                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)));
-
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());
+        driverController.rightTrigger()
+                .whileTrue(shooter.runWithVoltage(4.0));
+        driverController.rightBumper()
+                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(2500)));
 
         // Climber controls
         driverController.back()

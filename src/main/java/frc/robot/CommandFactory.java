@@ -52,7 +52,7 @@ public class CommandFactory {
         // Spin both the feeder and the intake until we detect a piece in the feeder
         return Commands.parallel(
                         intake.runWithVoltage(4.0),
-                        feeder.runWithVoltage(4.0)
+                        feeder.runWithVoltage(12.0)
                 ).until(feeder::isDetected)
                 // Reverse the intake for a short amount of time
                 .andThen(intake.runWithVoltage(-1.0).withTimeout(0.25));
