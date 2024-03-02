@@ -18,6 +18,7 @@ public class Led extends SubsystemBase {
 
     public Led(LedIo io) {
         this.io = io;
+        io.setColor(black);
     }
 
     public enum Pattern {
@@ -40,6 +41,7 @@ public class Led extends SubsystemBase {
             case SOLID:
                 currentAnimation = null;
                 io.setAnimation(currentAnimation);
+                io.setColor(currentColor);
                 break;
 
             case STROBE:
@@ -47,7 +49,6 @@ public class Led extends SubsystemBase {
                 io.setAnimation(currentAnimation);
                 break;
         }
-
     }
 
     public Command setLedColor(LedColor color) {
