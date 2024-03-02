@@ -1,19 +1,15 @@
 package frc.robot.subsystems.led;
 
-import frc.robot.utility.RobotMode;
+import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.StrobeAnimation;
 import org.littletonrobotics.junction.AutoLog;
-
-import static java.awt.Color.blue;
-import static java.awt.Color.yellow;
-import static java.awt.Color.red;
 
 public interface LedIo {
     default void updateInputs(LedInputs inputs) {}
 
     default void setColor(LedColor color) {}
 
-    
-
+    default void setAnimation(Animation animation) {}
 
     @AutoLog
     class LedInputs {
