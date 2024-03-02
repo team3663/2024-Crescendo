@@ -38,7 +38,8 @@ public class Led extends SubsystemBase {
     public void setPattern (Pattern pattern) {
         switch(pattern) {
             case SOLID:
-                
+                currentAnimation = null;
+                io.setAnimation(currentAnimation);
                 break;
 
             case STROBE:
