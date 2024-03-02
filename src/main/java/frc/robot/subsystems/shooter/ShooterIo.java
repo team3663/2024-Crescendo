@@ -9,6 +9,9 @@ public interface ShooterIo {
     default void setTargetVelocity(double velocity) {
     }
 
+    default void setVoltage(double voltage) {
+    }
+
     default void stop() {
     }
 

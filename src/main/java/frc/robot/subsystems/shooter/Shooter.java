@@ -45,6 +45,10 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    public Command runWithVoltage(double voltage) {
+        return startEnd(() -> io.setVoltage(voltage), io::stop);
+    }
+
     public Command stop() {
         return runOnce(() -> {targetVelocity = 0; io.stop();});
     }

@@ -1,8 +1,11 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 public class C2024ShooterIo implements ShooterIo {
     private static final double GEAR_RATIO = 1.0;
@@ -12,6 +15,8 @@ public class C2024ShooterIo implements ShooterIo {
     private final TalonFX lowerMotor;
 
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0.0);
+    private final VoltageOut voltageRequest = new VoltageOut(0.0);
+    private final CoastOut stopRequest = new CoastOut();
 
 
     public C2024ShooterIo(TalonFX upperMotor, TalonFX lowerMotor) {
@@ -25,6 +30,8 @@ public class C2024ShooterIo implements ShooterIo {
         config.Slot0.kD = 0.0;
 
         upperMotor.getConfigurator().apply(config);
+
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         lowerMotor.getConfigurator().apply(config);
     }
 
@@ -39,14 +46,23 @@ public class C2024ShooterIo implements ShooterIo {
         inputs.lowerCurrentDrawAmps = lowerMotor.getSupplyCurrent().getValueAsDouble();
         inputs.lowerAppliedVolts = lowerMotor.getMotorVoltage().getValueAsDouble();
         inputs.lowerMotorTemp = lowerMotor.getDeviceTemp().getValueAsDouble();
-
     }
 
     @Override
     public void setTargetVelocity(double velocity) {
         upperMotor.setControl(velocityRequest.withVelocity(velocity));
         lowerMotor.setControl(velocityRequest.withVelocity(velocity));
+    }
 
+    @Override
+    public void setVoltage(double voltage) {
+        upperMotor.setControl(voltageRequest.withOutput(voltage));
+        lowerMotor.setControl(voltageRequest.withOutput(voltage));
+    }
 
+    @Override
+    public void stop() {
+        upperMotor.setControl(stopRequest);
+        lowerMotor.setControl(stopRequest);
     }
 }
