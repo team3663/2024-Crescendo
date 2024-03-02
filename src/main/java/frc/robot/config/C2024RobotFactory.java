@@ -9,8 +9,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
+import frc.robot.subsystems.climber.C2024ClimberIo;
+import frc.robot.subsystems.climber.ClimberIo;
 import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.DrivetrainIO;
 import frc.robot.subsystems.feeder.C2024FeederIo;
@@ -23,6 +25,16 @@ import frc.robot.subsystems.shooter.C2024ShooterIo;
 import frc.robot.subsystems.shooter.ShooterIo;
 
 public class C2024RobotFactory implements RobotFactory {
+    @Override
+    public ClimberIo createClimberIo() {
+        return new C2024ClimberIo(
+                new TalonFX(11, "3663"),
+                new TalonFX(12, "3663"),
+                new Servo(0),
+                new Servo(1)
+        );
+    }
+
     @Override
     public DrivetrainIO createDrivetrainIO() {
         return new CtreDrivetrain(

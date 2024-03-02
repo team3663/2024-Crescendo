@@ -44,7 +44,7 @@ public final class LoggingClimberIo implements ClimberIo {
         Logger.recordOutput("Climber/Left/Zeroed", true);
         Logger.recordOutput("Climber/Right/Zeroed", true);
 
-        inner.stop();
+        inner.resetPosition();
     }
 
     @Override
