@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -78,9 +79,12 @@ public class RobotContainer {
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());
         driverController.rightTrigger()
-                .whileTrue(shooter.runWithVoltage(4.0));
+                .whileTrue(commandFactory.shoot());
+//        driverController.rightBumper()
+//                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(2500)));
         driverController.rightBumper()
-                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(2500)));
+                        .onTrue(pivot.moveTo(Units.degreesToRadians(20.0)))
+                                .onFalse(pivot.moveTo(Units.degreesToRadians(2.0)));
 
         // Climber controls
         driverController.start()

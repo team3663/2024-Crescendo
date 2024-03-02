@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
 
@@ -14,11 +15,11 @@ public class C2024FeederIo implements FeederIo {
     private static final double GEAR_RATIO = 1.0;
     private static final double ROLLER_DIAMETER = inchesToMeters(2.0);
     private final TalonFX motor;
-    private final AnalogInput beamBreak;
+    private final DigitalInput beamBreak;
 
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
 
-    public C2024FeederIo(TalonFX motor, AnalogInput beamBreak) {
+    public C2024FeederIo(TalonFX motor, DigitalInput beamBreak) {
         this.motor = motor;
         this.beamBreak = beamBreak;
 
@@ -36,8 +37,7 @@ public class C2024FeederIo implements FeederIo {
         inputs.currentDrawAmps = motor.getSupplyCurrent().getValueAsDouble();
         inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
         inputs.motorTemp = motor.getExpiration();
-        inputs.beamBreakVoltage = beamBreak.getVoltage();
-        inputs.beamBreakSignaled = beamBreak.getVoltage() > BEAM_BREAK_THRESHOLD_VOLTAGE;
+        inputs.beamBreakSignaled = beamBreak.get();
     }
 
     @Override

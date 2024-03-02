@@ -1,6 +1,7 @@
 package frc.robot.subsystems.pivot;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -14,7 +15,7 @@ public class C2024PivotIo implements PivotIo {
 
     private static final Pivot.Constants CONSTANTS = new Pivot.Constants(
             Units.degreesToRadians(0.0),
-            Units.degreesToRadians(100.0),
+            Units.degreesToRadians(120.0),
             -1.0
     );
 
@@ -22,7 +23,7 @@ public class C2024PivotIo implements PivotIo {
 
     private final VoltageOut voltageRequest = new VoltageOut(0);
     // Uses Slot 0 PID constants
-    private final PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
+    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withSlot(0);
     private final StaticBrake brakeRequest = new StaticBrake();
 
     public C2024PivotIo(TalonFX motor) {
@@ -35,14 +36,17 @@ public class C2024PivotIo implements PivotIo {
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO / (2.0 * Math.PI);
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
+        config.MotionMagic.MotionMagicCruiseVelocity = Units.degreesToRadians(1200);
+        config.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(5000);
+
         // PID constants
-        config.Slot0.kP = 0.0;
+        config.Slot0.kP = 20.0;
         config.Slot0.kI = 0.0;
         config.Slot0.kD = 0.0;
         config.Slot0.kS = 0.0;
-        config.Slot0.kV = 0.0;
+        config.Slot0.kV = 0.1;
         config.Slot0.kA = 0.0;
-        config.Slot0.kG = 0.0;
+        config.Slot0.kG = 0.7;
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         // Applies config configuration onto the motor
@@ -65,7 +69,7 @@ public class C2024PivotIo implements PivotIo {
 
     @Override
     public void setTargetAngle(double targetRad) {
-//        primaryMotor.setControl(positionRequest.withPosition(targetRad));
+        motor.setControl(positionRequest.withPosition(targetRad));
     }
 
     @Override
