@@ -1,9 +1,6 @@
 package frc.robot.subsystems.led;
 
-import com.ctre.phoenix.led.Animation;
-import com.ctre.phoenix.led.LarsonAnimation;
-import com.ctre.phoenix.led.RgbFadeAnimation;
-import com.ctre.phoenix.led.StrobeAnimation;
+import com.ctre.phoenix.led.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
