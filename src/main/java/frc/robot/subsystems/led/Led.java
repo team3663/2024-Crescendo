@@ -16,22 +16,23 @@ public class Led extends SubsystemBase {
         LARSON,
         STROBE;
     }
-    private final double ANIMATION_SPEED = 0.5;
-    private final double LED_BRIGHTNESS = 0.25;
-    private final int NUM_LEDS = 3;
-    private final int POCKET_SIZE = 7;
+    private final double ANIMATION_SPEED = 0.25;
+    private final double LED_BRIGHTNESS = 0.01;
+    private final int NUM_LEDS = 8;
+    private final int POCKET_SIZE = 3;
 
     private final LedIo io;
     private final LedColor black = new LedColor(0, 0, 0);
     private final LedInputsAutoLogged inputs = new LedInputsAutoLogged();
-
-    private LedColor currentColor;
     private Animation currentAnimation;
+    private LedColor currentColor;
+    private Pattern currentPattern = Pattern.SOLID;
     private final Animation startAnimation = new RgbFadeAnimation(LED_BRIGHTNESS, ANIMATION_SPEED, NUM_LEDS);
 
     public Led(LedIo io) {
         this.io = io;
-        io.setColor(black);
+        io.setAnimation(startAnimation);
+        //io.setColor(black);
     }
 
     public void periodic() {
@@ -41,7 +42,7 @@ public class Led extends SubsystemBase {
 
     public void setColor(LedColor color) {
         currentColor = color;
-        io.setColor(color);
+        setPattern(currentPattern);
     }
 
 
@@ -52,21 +53,27 @@ public class Led extends SubsystemBase {
                 currentAnimation = null;
                 io.setAnimation(currentAnimation);
                 io.setColor(currentColor);
+                currentPattern = Pattern.SOLID;
                 break;
 
             case FADE:
+                io.setColor(currentColor);
                 currentAnimation = new RgbFadeAnimation(LED_BRIGHTNESS, ANIMATION_SPEED, NUM_LEDS);
                 io.setAnimation(currentAnimation);
-                break;
+                currentPattern = Pattern.FADE;
 
             case LARSON:
-                currentAnimation = new LarsonAnimation(currentColor.red, currentColor.green, currentColor.blue, 0, ANIMATION_SPEED, NUM_LEDS, LarsonAnimation.BounceMode.Front , POCKET_SIZE);
+                io.setColor(currentColor);
+                currentAnimation = new LarsonAnimation(currentColor.red, currentColor.green, currentColor.blue, 0, ANIMATION_SPEED, NUM_LEDS, LarsonAnimation.BounceMode.Center , POCKET_SIZE);
                 io.setAnimation(currentAnimation);
+                currentPattern = Pattern.LARSON;
                 break;
 
             case STROBE:
+                io.setColor(currentColor);
                 currentAnimation = new StrobeAnimation(currentColor.red, currentColor.green, currentColor.blue, 0, ANIMATION_SPEED, NUM_LEDS);
                 io.setAnimation(currentAnimation);
+                currentPattern = Pattern.STROBE;
                 break;
         }
     }

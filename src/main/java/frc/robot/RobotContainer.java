@@ -114,6 +114,7 @@ public class RobotContainer {
 
         testController.povUp().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.SOLID)));
         testController.povDown().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.STROBE)));
+        testController.povRight().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.LARSON)));
     }
 
     /**
