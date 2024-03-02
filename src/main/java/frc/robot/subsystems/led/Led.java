@@ -51,10 +51,8 @@ public class Led extends SubsystemBase {
     }
 
     public Command setLedColor(LedColor color) {
-        return runEnd(
-                () -> io.setColor(color),
-                () -> io.setColor(black)
+        return runOnce(
+                () -> io.setColor(color)
         );
     }
-
 }
