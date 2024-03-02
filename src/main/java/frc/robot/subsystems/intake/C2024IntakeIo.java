@@ -1,8 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -10,45 +7,58 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 
 public class C2024IntakeIo implements IntakeIo {
-    public final TalonFX rollerMotor;
-    public final TalonSRX centeringMotor;
+    private final TalonFX rollerMotor;
+    private final TalonFX leftCenteringMotor;
+    private final TalonFX rightCenteringMotor;
 
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
 
-    public C2024IntakeIo(TalonFX rollerMotor, TalonSRX centeringMotor) {
+    public C2024IntakeIo(TalonFX rollerMotor, TalonFX leftCenteringMotor, TalonFX rightCenteringMotor) {
         this.rollerMotor = rollerMotor;
-        this.centeringMotor = centeringMotor;
+        this.leftCenteringMotor = leftCenteringMotor;
+        this.rightCenteringMotor = rightCenteringMotor;
 
-        TalonFXConfiguration fxConfig = new TalonFXConfiguration();
-        fxConfig.CurrentLimits.SupplyCurrentLimit = 15.0;
-        fxConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        rollerMotor.getConfigurator().apply(fxConfig);
+        TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
+        rollerConfig.CurrentLimits.SupplyCurrentLimit = 15.0;
+        rollerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        rollerMotor.getConfigurator().apply(rollerConfig);
 
-        TalonSRXConfiguration srxConfig = new TalonSRXConfiguration();
-        srxConfig.peakCurrentLimit = 15;
-        centeringMotor.configAllSettings(srxConfig);
+        TalonFXConfiguration centeringConfig = new TalonFXConfiguration();
+        centeringConfig.CurrentLimits.SupplyCurrentLimit = 15;
+
+        leftCenteringMotor.getConfigurator().apply(centeringConfig);
+
+        // Configuration overrides for right
+        centeringConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        rightCenteringMotor.getConfigurator().apply(centeringConfig);
     }
 
     @Override
     public void updateInputs(IntakeInputs inputs) {
-        inputs.rollerAngularVelocity = rollerMotor.getRotorVelocity().getValueAsDouble();
+        inputs.rollerAngularVelocity = rollerMotor.getVelocity().getValueAsDouble();
         inputs.rollerCurrentDrawAmps = rollerMotor.getSupplyCurrent().getValueAsDouble();
         inputs.rollerAppliedVolts = rollerMotor.getMotorVoltage().getValueAsDouble();
         inputs.rollerMotorTemp = rollerMotor.getDeviceTemp().getValueAsDouble();
 
-        inputs.centeringAngularVelocity = centeringMotor.getActiveTrajectoryVelocity();
-        inputs.centeringCurrentDrawAmps = centeringMotor.getSupplyCurrent();
-        inputs.centeringAppliedVolts = centeringMotor.getMotorOutputVoltage();
-        inputs.centeringMotorTemp = centeringMotor.getTemperature();
+        inputs.leftCenteringAngularVelocity = leftCenteringMotor.getVelocity().getValueAsDouble();
+        inputs.leftCenteringCurrentDrawAmps = leftCenteringMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.leftCenteringAppliedVolts = leftCenteringMotor.getMotorVoltage().getValueAsDouble();
+        inputs.leftCenteringMotorTemp = leftCenteringMotor.getDeviceTemp().getValueAsDouble();
+
+        inputs.rightCenteringAngularVelocity = rightCenteringMotor.getVelocity().getValueAsDouble();
+        inputs.rightCenteringCurrentDrawAmps = rightCenteringMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.rightCenteringAppliedVolts = rightCenteringMotor.getMotorVoltage().getValueAsDouble();
+        inputs.rightCenteringMotorTemp = rightCenteringMotor.getDeviceTemp().getValueAsDouble();
     }
 
     @Override
     public void setRollerVoltage(double voltage) {
         rollerMotor.setControl(voltageRequest.withOutput(voltage));
     }
+
     @Override
     public void setCenteringVoltage(double voltage) {
-        double output = voltage != 0 ? 12 / voltage : 0;
-        centeringMotor.set(TalonSRXControlMode.PercentOutput, output);
+        leftCenteringMotor.setControl(voltageRequest.withOutput(voltage));
+        rightCenteringMotor.setControl(voltageRequest.withOutput(voltage));
     }
 }

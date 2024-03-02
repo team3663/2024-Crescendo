@@ -40,7 +40,8 @@ public class C2024RobotFactory implements RobotFactory {
     public IntakeIo createIntakeIo() {
         return new C2024IntakeIo(
                 new TalonFX(9, "3663"),
-                new TalonSRX(4)
+                new TalonFX(13, "3663"),
+                new TalonFX(14, "3663")
         );
     }
 
