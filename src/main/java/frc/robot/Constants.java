@@ -12,4 +12,7 @@ public final class Constants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
     public static final int TEST_CONTROLLER_PORT = 2;
+
+    // If true code will turn on various test feature like enabling and biding the test controller.
+    public static boolean ENABLE_TEST_FEATURES = true;
 }

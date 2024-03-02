@@ -20,7 +20,7 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.utility.ControllerHelper;
 
 import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
-import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
+import static frc.robot.Constants.*;
 
 
 public class RobotContainer {
@@ -37,12 +37,15 @@ public class RobotContainer {
     private final CommandXboxController driverController =
             new CommandXboxController(DRIVER_CONTROLLER_PORT);
 
+    private final CommandXboxController testController;
+
     private final SendableChooser<Command> autoChooser;
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer(RobotFactory robotFactory) {
+
         climber = new Climber(robotFactory.createClimberIo());
         drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
         feeder = new Feeder(robotFactory.createFeederIo());
@@ -61,8 +64,16 @@ public class RobotContainer {
                 )
         );
 
-        // Configure the trigger bindings
+        // Configure controller binding.
         configureBindings();
+
+        // If test features are turned on then create the test controller object and bind it.
+        if (ENABLE_TEST_FEATURES) {
+            testController = new CommandXboxController(TEST_CONTROLLER_PORT);
+            configureTestBinding();
+        } else {
+            testController = null;
+        }
 
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -92,10 +103,17 @@ public class RobotContainer {
                         .andThen(climber.lock()));
         driverController.povDown()
                 .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
+    }
 
-        // Test LED subsystem
-        driverController.b().onTrue(new InstantCommand(() -> led.setColor(new LedColor(255,0,0))));
-        driverController.x().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0,0,255))));
+    private void configureTestBinding()
+    {
+        testController.a().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 255, 0))));
+        testController.b().onTrue(new InstantCommand(() -> led.setColor(new LedColor(255, 0, 0))));
+        testController.x().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 0, 255))));
+        testController.y().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 0, 0))));
+
+        testController.povUp().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.SOLID)));
+        testController.povDown().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.STROBE)));
     }
 
     /**

@@ -9,27 +9,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Led extends SubsystemBase {
-    private final double ANIMATION_SPEED = 0.5;
-    private final double LED_BRIGHTNESS = 0.5;
-    private final int NUM_LEDS = 3;
-    private final int POCKET_SIZE = 7;
-    private final LedIo io;
-    private final LedColor black = new LedColor(0, 0, 0);
-    private final LedInputsAutoLogged inputs = new LedInputsAutoLogged();
-    private LedColor currentColor;
-    private Animation currentAnimation;
-    private final Animation startAnimation = new RgbFadeAnimation(LED_BRIGHTNESS, ANIMATION_SPEED, NUM_LEDS);
-
-    public Led(LedIo io) {
-        this.io = io;
-        io.setAnimation(startAnimation);
-    }
 
     public enum Pattern {
         SOLID,
         FADE,
         LARSON,
         STROBE;
+    }
+    private final double ANIMATION_SPEED = 0.5;
+    private final double LED_BRIGHTNESS = 0.25;
+    private final int NUM_LEDS = 3;
+    private final int POCKET_SIZE = 7;
+
+    private final LedIo io;
+    private final LedColor black = new LedColor(0, 0, 0);
+    private final LedInputsAutoLogged inputs = new LedInputsAutoLogged();
+
+    private LedColor currentColor;
+    private Animation currentAnimation;
+    private final Animation startAnimation = new RgbFadeAnimation(LED_BRIGHTNESS, ANIMATION_SPEED, NUM_LEDS);
+
+    public Led(LedIo io) {
+        this.io = io;
+        io.setColor(black);
     }
 
     public void periodic() {
@@ -41,6 +43,7 @@ public class Led extends SubsystemBase {
         currentColor = color;
         io.setColor(color);
     }
+
 
     public void setPattern (Pattern pattern) {
         switch(pattern) {
