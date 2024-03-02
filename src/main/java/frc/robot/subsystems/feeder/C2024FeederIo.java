@@ -1,7 +1,10 @@
 package frc.robot.subsystems.feeder;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
@@ -13,12 +16,16 @@ public class C2024FeederIo implements FeederIo {
     private final TalonFX motor;
     private final AnalogInput beamBreak;
 
+    private final VoltageOut voltageRequest = new VoltageOut(0.0);
+
     public C2024FeederIo(TalonFX motor, AnalogInput beamBreak) {
         this.motor = motor;
         this.beamBreak = beamBreak;
 
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Feedback.SensorToMechanismRatio = (Math.PI * ROLLER_DIAMETER) / GEAR_RATIO;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         motor.getConfigurator().apply(config);
     }
@@ -35,6 +42,6 @@ public class C2024FeederIo implements FeederIo {
 
     @Override
     public void setVoltage(double voltage) {
-        motor.set(voltage);
+        motor.setControl(voltageRequest.withOutput(voltage));
     }
 }

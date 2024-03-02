@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase {
         return runEnd(
                 () -> {
                     io.setRollerVoltage(voltage);
-                    io.setCenteringVoltage(voltage / 4.0);
+                    io.setCenteringVoltage(voltage);
                 },
                 () -> {
                     io.setRollerVoltage(0.0);

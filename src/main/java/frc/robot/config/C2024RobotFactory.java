@@ -10,10 +10,15 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.subsystems.drivetrain.CtreDrivetrain;
 import frc.robot.subsystems.drivetrain.DrivetrainIO;
+import frc.robot.subsystems.feeder.C2024FeederIo;
+import frc.robot.subsystems.feeder.FeederIo;
 import frc.robot.subsystems.intake.C2024IntakeIo;
 import frc.robot.subsystems.intake.IntakeIo;
+import frc.robot.subsystems.shooter.C2024ShooterIo;
+import frc.robot.subsystems.shooter.ShooterIo;
 
 public class C2024RobotFactory implements RobotFactory {
     @Override
@@ -36,6 +41,22 @@ public class C2024RobotFactory implements RobotFactory {
         return new C2024IntakeIo(
                 new TalonFX(9, "3663"),
                 new TalonSRX(4)
+        );
+    }
+
+    @Override
+    public FeederIo createFeederIo() {
+        return new C2024FeederIo(
+                new TalonFX(3),
+                new AnalogInput(0)
+        );
+    }
+
+    @Override
+    public ShooterIo createShooterIo() {
+        return new C2024ShooterIo(
+                new TalonFX(2),
+                new TalonFX(1)
         );
     }
 
