@@ -6,10 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.config.C2023RobotFactory;
-import frc.robot.config.C2024RobotFactory;
-import frc.robot.config.RobotFactory;
-import frc.robot.config.SimRobotFactory;
+import frc.robot.config.*;
 import frc.robot.utility.AdvantageKitHelper;
 import frc.robot.utility.RobotIdUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -43,6 +40,7 @@ public class Robot extends LoggedRobot {
         // Create the robot factory for the hardware we are currently running on.
         RobotFactory factory = switch (RobotIdUtil.getRobotId()) {
             case SIM -> new SimRobotFactory();
+            case BENCH_RIO -> new BenchRobotFactory();
             case C2023 -> new C2023RobotFactory();
             default -> new C2024RobotFactory();
         };

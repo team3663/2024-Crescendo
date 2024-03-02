@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.config.RobotFactory;
@@ -13,6 +14,7 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
+import frc.robot.subsystems.led.LedColor;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.utility.ControllerHelper;
@@ -90,6 +92,10 @@ public class RobotContainer {
                         .andThen(climber.lock()));
         driverController.povDown()
                 .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
+
+        // Test LED subsystem
+        driverController.b().onTrue(new InstantCommand(() -> led.setColor(new LedColor(255,0,0))));
+        driverController.x().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0,0,255))));
     }
 
     /**

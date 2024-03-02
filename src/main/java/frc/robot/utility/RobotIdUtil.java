@@ -7,10 +7,12 @@ public class RobotIdUtil {
 
     public enum RobotId {
         SIM,
+        BENCH_RIO,
         C2023,
         C2024
     }
 
+    private static final String BENCH_RIO_MAC_ADDRESS = "00-80-2f-21-c5-21";
     private static final String C2023_MAC_ADDRESS = "00-80-2f-33-d0-3f";
     private static final String C2024_MAC_ADDRESS = "00-80-2f-33-d0-1b";
 
@@ -25,6 +27,7 @@ public class RobotIdUtil {
             String macAddress = String.valueOf(macAddresses.stream().findFirst());
 
             return switch (macAddress) {
+                case BENCH_RIO_MAC_ADDRESS -> RobotId.BENCH_RIO;
                 case C2023_MAC_ADDRESS -> RobotId.C2023;
                 case C2024_MAC_ADDRESS -> RobotId.C2024;
                 default -> RobotId.C2024;
