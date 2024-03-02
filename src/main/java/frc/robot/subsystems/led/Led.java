@@ -1,14 +1,16 @@
 package frc.robot.subsystems.led;
 
 import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Led extends SubsystemBase {
-    private final double STROBE_SPEED = 0.5;
+    private final double ANIMATION_SPEED = 0.5;
     private final int NUM_LEDS = 3;
+    private final int POCKET_SIZE = 7;
     private final LedIo io;
     private final LedColor black = new LedColor(0, 0, 0);
 
@@ -23,7 +25,7 @@ public class Led extends SubsystemBase {
 
     public enum Pattern {
         SOLID,
-        STROBE;
+        LARSON;
     }
 
     public void periodic() {
@@ -44,8 +46,8 @@ public class Led extends SubsystemBase {
                 io.setColor(currentColor);
                 break;
 
-            case STROBE:
-                currentAnimation = new StrobeAnimation(currentColor.red, currentColor.green, currentColor.blue, 0, STROBE_SPEED, NUM_LEDS);
+            case LARSON:
+                currentAnimation = new LarsonAnimation(currentColor.red, currentColor.green, currentColor.blue, 0, ANIMATION_SPEED, NUM_LEDS, LarsonAnimation.BounceMode.Front , POCKET_SIZE);
                 io.setAnimation(currentAnimation);
                 break;
         }
