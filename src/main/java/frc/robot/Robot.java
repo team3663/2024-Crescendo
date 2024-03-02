@@ -6,12 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.config.C2023RobotFactory;
-import frc.robot.config.C2024RobotFactory;
-import frc.robot.config.RobotFactory;
-import frc.robot.config.SimRobotFactory;
+import frc.robot.config.*;
 import frc.robot.utility.AdvantageKitHelper;
 import frc.robot.utility.RobotIdUtil;
+import frc.robot.utility.RobotIdUtil.RobotId;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
@@ -35,14 +33,19 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotInit() {
+        RobotId robotId = RobotIdUtil.getRobotId();
 
-        // Initialize and start AdvantageKit logging
+        // Initialize AdvantageKit
         AdvantageKitHelper.setupLogger();
+
+        // Record static metadata and start logger.
+        Logger.recordMetadata("RobotId", robotId.name());
         Logger.start();
 
         // Create the robot factory for the hardware we are currently running on.
-        RobotFactory factory = switch (RobotIdUtil.getRobotId()) {
+        RobotFactory factory = switch (robotId) {
             case SIM -> new SimRobotFactory();
+            case BENCH_RIO1, BENCH_RIO2 -> new BenchRobotFactory();
             case C2023 -> new C2023RobotFactory();
             default -> new C2024RobotFactory();
         };
