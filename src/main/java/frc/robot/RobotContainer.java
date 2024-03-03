@@ -18,7 +18,6 @@ import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.utility.ControllerHelper;
 
-import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
 
 
@@ -82,19 +81,20 @@ public class RobotContainer {
                 .whileTrue(commandFactory.shoot());
 //        driverController.rightBumper()
 //                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(2500)));
+        // AMP: 1500 RPM, 120 deg, 0.5 in from wall
         driverController.rightBumper()
-                        .onTrue(pivot.moveTo(Units.degreesToRadians(20.0)))
-                                .onFalse(pivot.moveTo(Units.degreesToRadians(2.0)));
+                .onTrue(pivot.moveTo(Units.degreesToRadians(50.0)))
+                .onFalse(pivot.moveTo(Units.degreesToRadians(2.0)));
 
         // Climber controls
         driverController.start()
                 .onTrue(Commands.parallel(climber.zero(), pivot.zero()));
         driverController.povUp()
-                .onTrue(climber.moveTo(climber.getConstants().maxArmHeight())
+                .onTrue(climber.moveTo(climber.getConstants().maxPosition())
                         .beforeStarting(climber.unlock())
                         .andThen(climber.lock()));
         driverController.povDown()
-                .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
+                .onTrue(climber.unlock().andThen(climber.follow(climber.getConstants()::minPosition)).andThen(climber.lock()));
     }
 
     /**

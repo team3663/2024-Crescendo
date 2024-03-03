@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimberIo {
     default Climber.Constants getConstants() {
-        return new Climber.Constants(0, -2.0);
+        return new Climber.Constants(0.0, 1.0, -2.0);
     }
 
     default void updateInputs(ClimberInputs inputs) {

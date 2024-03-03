@@ -33,7 +33,12 @@ public class C2024ClimberIo implements ClimberIo {
 
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO / (2.0 * Math.PI * PULLEY_RADIUS);
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+        config.MotionMagic.MotionMagicCruiseVelocity = Units.feetToMeters(10.0);
+        config.MotionMagic.MotionMagicAcceleration = Units.feetToMeters(10.0);
+        config.Slot0.kP = 100.0;
+        config.Slot0.kV = 20.0;
 
         leftMotor.getConfigurator().apply(config);
         rightMotor.getConfigurator().apply(config);
@@ -44,7 +49,7 @@ public class C2024ClimberIo implements ClimberIo {
 
     @Override
     public Climber.Constants getConstants() {
-        return new Climber.Constants(0.75, -1.0);
+        return new Climber.Constants(0.0, 0.75, -1.0);
     }
 
     @Override
@@ -78,8 +83,8 @@ public class C2024ClimberIo implements ClimberIo {
 
     @Override
     public void setTargetPosition(double leftHeight, double rightHeight) {
-//        leftMotor.setControl(positionRequest.withPosition(leftHeight));
-//        rightMotor.setControl(positionRequest.withPosition(rightHeight));
+        leftMotor.setControl(positionRequest.withPosition(leftHeight));
+        rightMotor.setControl(positionRequest.withPosition(rightHeight));
     }
 
     public void setVoltage(double leftVoltage, double rightVoltage) {

@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 public class Drivetrain extends SubsystemBase {
     private final DrivetrainIO io;
-    private final DrivetrainIO.Inputs inputs = new DrivetrainIO.Inputs();
+    private final DrivetrainInputsAutoLogged inputs = new DrivetrainInputsAutoLogged();
     private final Constants constants;
 
     public Drivetrain(DrivetrainIO io) {

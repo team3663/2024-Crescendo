@@ -1,6 +1,8 @@
 package frc.robot.subsystems.climber;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -18,6 +20,8 @@ public class Climber extends SubsystemBase {
     private final ClimberIo io;
     private final ClimberInputsAutoLogged inputs = new ClimberInputsAutoLogged();
     private final Constants constants;
+
+    private boolean zeroed = false;
 
     private double leftTargetPosition = 0.0;
     private double rightTargetPosition = 0.0;
@@ -37,20 +41,30 @@ public class Climber extends SubsystemBase {
         Logger.processInputs("Climber", inputs);
     }
 
+    public boolean isZeroed() {
+        return zeroed;
+    }
+
     public boolean atTargetHeight() {
         return (Math.abs(leftTargetPosition - inputs.leftPosition) < POSITION_THRESHOLD) &&
                 (Math.abs(rightTargetPosition - inputs.rightPosition) < POSITION_THRESHOLD);
     }
 
     public Command follow(DoubleSupplier leftTargetPositionSupplier, DoubleSupplier rightTargetPositionSupplier) {
-        return run(
-                () -> {
-                    leftTargetPosition = leftTargetPositionSupplier.getAsDouble();
-                    rightTargetPosition = rightTargetPositionSupplier.getAsDouble();
+        return Commands.either(
+                run(() -> {
+                    leftTargetPosition =
+                            MathUtil.clamp(leftTargetPositionSupplier.getAsDouble(),
+                                    constants.minPosition(), constants.maxPosition());
+                    rightTargetPosition =
+                            MathUtil.clamp(rightTargetPositionSupplier.getAsDouble(),
+                                    constants.minPosition(), constants.maxPosition());
 
                     io.setTargetPosition(leftTargetPosition, rightTargetPosition);
-                }
-        ).handleInterrupt(io::stop);
+                }).handleInterrupt(io::stop),
+                Commands.none(),
+                this::isZeroed
+        );
     }
 
     public Command follow(DoubleSupplier targetPositionSupplier) {
@@ -82,7 +96,10 @@ public class Climber extends SubsystemBase {
         return waitUntil(() -> Math.abs(inputs.leftVelocity) < VELOCITY_THRESHOLD
                 && Math.abs(inputs.rightVelocity) < VELOCITY_THRESHOLD)
                 // Then reset the climber position
-                .andThen(io::resetPosition)
+                .andThen(() -> {
+                    io.resetPosition();
+                    zeroed = true;
+                })
                 // Before we check if we're at the bottom hard stop, wait a little
                 .beforeStarting(waitSeconds(WAIT_TIME))
                 // Retract while we haven't found the bottom hard stop
@@ -95,6 +112,6 @@ public class Climber extends SubsystemBase {
                 .andThen(lock());
     }
 
-    public record Constants(double maxArmHeight, double armResetVoltage) {
+    public record Constants(double minPosition, double maxPosition, double armResetVoltage) {
     }
 }

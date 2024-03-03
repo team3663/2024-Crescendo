@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
@@ -25,7 +26,7 @@ public interface DrivetrainIO {
         );
     }
 
-    default void updateInputs(Inputs inputs) {
+    default void updateInputs(DrivetrainInputs inputs) {
     }
 
     /**
@@ -68,7 +69,8 @@ public interface DrivetrainIO {
     default void zeroGyroscope() {
     }
 
-    class Inputs implements LoggableInputs {
+    @AutoLog
+    class DrivetrainInputs {
         public int successfulDaqs = 0;
         public int failedDaqs = 0;
         public double odometryPeriod = 0;
@@ -79,28 +81,5 @@ public interface DrivetrainIO {
         public SwerveModuleState[] moduleTargets = new SwerveModuleState[0];
 
         public Rotation3d rotation = new Rotation3d();
-
-        @Override
-        public void toLog(LogTable table) {
-            table.put("SuccessfulDaqs", successfulDaqs);
-            table.put("FailedDaqs", failedDaqs);
-            table.put("OdometryPeriod", odometryPeriod);
-            if (pose != null)
-                table.put("Pose", pose);
-            if (moduleStates != null)
-                table.put("ModuleStates", moduleStates);
-            if (moduleTargets != null)
-                table.put("ModuleTargets", moduleTargets);
-        }
-
-        @Override
-        public void fromLog(LogTable table) {
-            successfulDaqs = table.get("SuccessfulDaqs", 0);
-            failedDaqs = table.get("FailedDaqs", 0);
-            odometryPeriod = table.get("OdometryPeriod", 0.0);
-            pose = table.get("Pose", new Pose2d());
-            moduleStates = table.get("ModuleStates", new SwerveModuleState[0]);
-            moduleTargets = table.get("ModuleTargets", new SwerveModuleState[0]);
-        }
     }
 }

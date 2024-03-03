@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -73,7 +74,7 @@ public class CtreDrivetrain implements DrivetrainIO {
     }
 
     @Override
-    public void updateInputs(Inputs inputs) {
+    public void updateInputs(DrivetrainInputs inputs) {
         SwerveDrivetrain.SwerveDriveState state = drivetrain.getState();
 
         inputs.successfulDaqs = state.SuccessfulDaqs;
@@ -81,8 +82,8 @@ public class CtreDrivetrain implements DrivetrainIO {
         inputs.odometryPeriod = state.OdometryPeriod;
 
         inputs.pose = state.Pose;
-        inputs.moduleStates = state.ModuleStates;
-        inputs.moduleTargets = state.ModuleTargets;
+        inputs.moduleStates = state.ModuleStates == null ? new SwerveModuleState[0] : state.ModuleStates;
+        inputs.moduleTargets = state.ModuleTargets == null ? new SwerveModuleState[0] : state.ModuleTargets;
         inputs.chassisSpeeds = kinematics.toChassisSpeeds(inputs.moduleStates);
         inputs.rotation = drivetrain.getRotation3d();
     }

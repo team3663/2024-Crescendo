@@ -38,8 +38,7 @@ public class Pivot extends SubsystemBase {
     public Command follow(DoubleSupplier angleSupplier) {
         return Commands.either(
                 run(() -> io.setTargetAngle(
-                        MathUtil.clamp(angleSupplier.getAsDouble(), constants.minAngle(), constants.maxAngle())))
-                        .handleInterrupt(io::stop),
+                        MathUtil.clamp(angleSupplier.getAsDouble(), constants.minAngle(), constants.maxAngle()))),
                 Commands.none(),
                 this::isZeroed
         );

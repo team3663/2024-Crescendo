@@ -34,7 +34,7 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void updateInputs(Inputs inputs) {
+    public void updateInputs(DrivetrainInputs inputs) {
         x.mut_plus((Measure<Distance>) xVelocity.times(updatePeriod));
         y.mut_plus((Measure<Distance>) yVelocity.times(updatePeriod));
         if (targetAngle != null) {
