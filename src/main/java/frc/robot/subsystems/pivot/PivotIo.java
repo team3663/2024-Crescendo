@@ -1,8 +1,13 @@
 package frc.robot.subsystems.pivot;
 
+import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface PivotIo {
+
+    default Pivot.Constants getConstants() {
+        return new Pivot.Constants(0.0, Units.degreesToRadians(90.0), -1.0);
+    }
 
     default void updateInputs(PivotInputs inputs) {}
 
@@ -31,11 +36,10 @@ public interface PivotIo {
 
     @AutoLog
     class PivotInputs {
-        public double inputVoltagePrimary = 0;
-        public double inputVoltageSecondary = 0;
-        public double outputVoltagePrimary = 0;
-        public double outputVoltageSecondary = 0;
-        public double currentAngleRad = 0;
-        public double currentVelocityRadPerSec = 0;
+        public double angle;
+        public double angularVelocity;
+        public double appliedVolts;
+        public double currentDrawAmps;
+        public double motorTemp;
     }
 }

@@ -18,9 +18,15 @@ public interface IntakeIo {
         public double rollerAppliedVolts;
         public double rollerCurrentDrawAmps;
         public double rollerMotorTemp;
-        public double centeringAngularVelocity;
-        public double centeringAppliedVolts;
-        public double centeringCurrentDrawAmps;
-        public double centeringMotorTemp;
+        
+        public double leftCenteringAngularVelocity;
+        public double leftCenteringAppliedVolts;
+        public double leftCenteringCurrentDrawAmps;
+        public double leftCenteringMotorTemp;
+        
+        public double rightCenteringAngularVelocity;
+        public double rightCenteringAppliedVolts;
+        public double rightCenteringCurrentDrawAmps;
+        public double rightCenteringMotorTemp;
     }
 }

@@ -1,10 +1,12 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotFactory;
@@ -19,9 +21,7 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.utility.ControllerHelper;
 import frc.robot.utility.RobotMode;
 
-import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.*;
-
 
 public class RobotContainer {
     private final Climber climber;
@@ -45,7 +45,6 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer(RobotFactory robotFactory) {
-
         climber = new Climber(robotFactory.createClimberIo());
         drivetrain = new Drivetrain(robotFactory.createDrivetrainIO());
         feeder = new Feeder(robotFactory.createFeederIo());
@@ -85,24 +84,29 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        driverController.start()
+        driverController.back()
                 .onTrue(drivetrain.zeroGyroscope());
-
-        driverController.a()
-                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(3000)));
 
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());
+        driverController.rightTrigger()
+                .whileTrue(commandFactory.shoot());
+//        driverController.rightBumper()
+//                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(2500)));
+        // AMP: 1500 RPM, 120 deg, 0.5 in from wall
+        driverController.rightBumper()
+                .onTrue(pivot.moveTo(Units.degreesToRadians(50.0)))
+                .onFalse(pivot.moveTo(Units.degreesToRadians(2.0)));
 
         // Climber controls
-        driverController.back()
-                .onTrue(climber.zero());
+        driverController.start()
+                .onTrue(Commands.parallel(climber.zero(), pivot.zero()));
         driverController.povUp()
-                .onTrue(climber.moveTo(climber.getConstants().maxArmHeight())
+                .onTrue(climber.moveTo(climber.getConstants().maxPosition())
                         .beforeStarting(climber.unlock())
                         .andThen(climber.lock()));
         driverController.povDown()
-                .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
+                .onTrue(climber.unlock().andThen(climber.follow(climber.getConstants()::minPosition)).andThen(climber.lock()));
 
         // Scoring location controls
         driverController.x().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.AMP));
@@ -110,8 +114,7 @@ public class RobotContainer {
         driverController.b().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.TRAP));
     }
 
-    private void configureTestBinding()
-    {
+    private void configureTestBinding() {
         testController.a().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 255, 0))));
         testController.b().onTrue(new InstantCommand(() -> led.setColor(new LedColor(255, 0, 0))));
         testController.x().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 0, 255))));

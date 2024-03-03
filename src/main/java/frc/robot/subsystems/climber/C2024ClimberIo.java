@@ -1,16 +1,19 @@
 package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Servo;
 
 public class C2024ClimberIo implements ClimberIo {
 
-    private static final double GEAR_RATIO = 1.0;
-    private static final double PULLEY_RADIUS = 1.0;
+    private static final double GEAR_RATIO = 9.66;
+    private static final double PULLEY_RADIUS = Units.inchesToMeters(0.6);
     private static final double LOCKED_THRESHOLD = 0.5;
 
     private final TalonFX rightMotor;
@@ -29,13 +32,24 @@ public class C2024ClimberIo implements ClimberIo {
         this.rightServo = rightServo;
 
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.Feedback.SensorToMechanismRatio = (2.0 * Math.PI * PULLEY_RADIUS) / GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = GEAR_RATIO / (2.0 * Math.PI * PULLEY_RADIUS);
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+        config.MotionMagic.MotionMagicCruiseVelocity = Units.feetToMeters(10.0);
+        config.MotionMagic.MotionMagicAcceleration = Units.feetToMeters(10.0);
+        config.Slot0.kP = 100.0;
+        config.Slot0.kV = 20.0;
 
         leftMotor.getConfigurator().apply(config);
         rightMotor.getConfigurator().apply(config);
 
         leftServo.setBoundsMicroseconds(2000, 1800, 1500, 1200, 1000);
         rightServo.setBoundsMicroseconds(2000, 1800, 1500, 1200, 1000);
+    }
+
+    @Override
+    public Climber.Constants getConstants() {
+        return new Climber.Constants(0.0, 0.75, -1.0);
     }
 
     @Override

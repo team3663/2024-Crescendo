@@ -67,7 +67,7 @@ public class SimClimberIo implements ClimberIo {
                 18.0,
                 lbsToKilograms(60.0),
                 inchesToMeters(1.75)
-        ), new Climber.Constants(feetToMeters(4.0), -2.0));
+        ), new Climber.Constants(0.0, feetToMeters(4.0), -2.0));
     }
 
     public SimClimberIo(Config config, Climber.Constants constants) {
@@ -77,9 +77,9 @@ public class SimClimberIo implements ClimberIo {
         this.sim = new LinearSystemSim<>(plant);
 
         sim.setState(VecBuilder.fill(
-                constants.maxArmHeight(),
+                constants.maxPosition(),
                 0.0,
-                constants.maxArmHeight(),
+                constants.maxPosition(),
                 0.0
         ));
     }
@@ -125,13 +125,13 @@ public class SimClimberIo implements ClimberIo {
             var output = sim.getOutput();
             double leftPosition = output.get(OUTPUT_LEFT_POSITION_INDEX, 0);
             double rightPosition = output.get(OUTPUT_RIGHT_POSITION_INDEX, 0);
-            if (leftPosition < 0 || rightPosition > constants.maxArmHeight()) {
-                output.set(OUTPUT_LEFT_POSITION_INDEX, 0, MathUtil.clamp(leftPosition, 0.0, constants.maxArmHeight()));
+            if (leftPosition < constants.minPosition() || rightPosition > constants.maxPosition()) {
+                output.set(OUTPUT_LEFT_POSITION_INDEX, 0, MathUtil.clamp(leftPosition, constants.minPosition(), constants.maxPosition()));
                 output.set(OUTPUT_LEFT_VELOCITY_INDEX, 0, 0.0);
                 clamped = true;
             }
-            if (rightPosition < 0 || rightPosition > constants.maxArmHeight()) {
-                output.set(OUTPUT_RIGHT_POSITION_INDEX, 0, MathUtil.clamp(rightPosition, 0.0, constants.maxArmHeight()));
+            if (rightPosition < constants.minPosition() || rightPosition > constants.maxPosition()) {
+                output.set(OUTPUT_RIGHT_POSITION_INDEX, 0, MathUtil.clamp(rightPosition, constants.minPosition(), constants.maxPosition()));
                 output.set(OUTPUT_RIGHT_VELOCITY_INDEX, 0, 0.0);
                 clamped = true;
             }
