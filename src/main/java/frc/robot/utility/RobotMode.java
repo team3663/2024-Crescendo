@@ -4,9 +4,12 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.led.LedColor;
 
 import java.util.Map;
+
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 
 public class RobotMode {
 
@@ -16,23 +19,22 @@ public class RobotMode {
         TRAP
     }
 
-    private final LedColor red = new LedColor(255,0,0);
-    private final LedColor yellow = new LedColor(255,255, 0);
-    private final LedColor blue = new LedColor(0,0,255);
-    private final LedColor black = new LedColor(0, 0, 0);
+    private static final LedColor red = new LedColor(255,0,0);
+    private static final LedColor yellow = new LedColor(255,255, 0);
+    private static final LedColor blue = new LedColor(0,0,255);
+    private static final LedColor black = new LedColor(0, 0, 0);
 
     private static GenericEntry scoreSpeakerEntry;
     private static GenericEntry scoreTrapEntry;
     private static GenericEntry scoreAmpEntry;
-
     private static ScoreLocation scoreLocation;
 
-    public RobotMode() {
-        // Default to scoring in the speaker
-        scoreLocation = ScoreLocation.SPEAKER;
+    static {
+        SetupShuffleboard();
+        setScoreLocation(ScoreLocation.SPEAKER);
     }
 
-    public void setScoreLocation(ScoreLocation location) {
+    public static void setScoreLocation(ScoreLocation location) {
         scoreLocation = location;
 
         scoreSpeakerEntry.setBoolean(scoreLocation == ScoreLocation.SPEAKER);
@@ -44,7 +46,7 @@ public class RobotMode {
         return scoreLocation;
     }
 
-    public LedColor getLedColor(ScoreLocation mode) {
+    public static LedColor getLedColor(ScoreLocation mode) {
         switch(mode) {
             case SPEAKER:
                 return blue;
@@ -81,5 +83,11 @@ public class RobotMode {
                 .withWidget(BuiltInWidgets.kBooleanBox)
                 .withProperties(Map.of("Color when true", "#00FF00", "Color when false", "#FFFFFF"))
                 .getEntry();
+    }
+
+    public static Command scoreLocation(ScoreLocation location) {
+        return runOnce(
+                () -> setScoreLocation(location)
+        );
     }
 }

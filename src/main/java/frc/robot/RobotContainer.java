@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivetrain.Drivetrain;
@@ -18,6 +17,7 @@ import frc.robot.subsystems.led.LedColor;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.utility.ControllerHelper;
+import frc.robot.utility.RobotMode;
 
 import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
 import static frc.robot.Constants.*;
@@ -103,6 +103,11 @@ public class RobotContainer {
                         .andThen(climber.lock()));
         driverController.povDown()
                 .onTrue(climber.unlock().andThen(commandFactory.level()).andThen(climber.lock()));
+
+        // Scoring location controls
+        driverController.x().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.AMP));
+        driverController.y().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SPEAKER));
+        driverController.b().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.TRAP));
     }
 
     private void configureTestBinding()
