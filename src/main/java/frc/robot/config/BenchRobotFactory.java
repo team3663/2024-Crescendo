@@ -11,9 +11,9 @@ import frc.robot.subsystems.shooter.ShooterIo;
 import frc.robot.subsystems.shooter.SimShooterIo;
 
 public class BenchRobotFactory implements RobotFactory {
-    @Override
+/*    @Override
     public LedIo createLedIo() {
         CANdle candle = new CANdle(1);
         return new LedCandleIo(candle);
-    }
+    }*/
 }
