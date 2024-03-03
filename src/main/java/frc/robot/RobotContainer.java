@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.climber.Climber;
@@ -14,12 +15,13 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
+import frc.robot.subsystems.led.LedColor;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.utility.ControllerHelper;
+import frc.robot.utility.RobotMode;
 
-import static frc.robot.Constants.DRIVER_CONTROLLER_PORT;
-
+import static frc.robot.Constants.*;
 
 public class RobotContainer {
     private final Climber climber;
@@ -34,6 +36,8 @@ public class RobotContainer {
 
     private final CommandXboxController driverController =
             new CommandXboxController(DRIVER_CONTROLLER_PORT);
+
+    private final CommandXboxController testController;
 
     private final SendableChooser<Command> autoChooser;
 
@@ -59,8 +63,16 @@ public class RobotContainer {
                 )
         );
 
-        // Configure the trigger bindings
+        // Configure controller binding.
         configureBindings();
+
+        // If test features are turned on then create the test controller object and bind it.
+        if (ENABLE_TEST_FEATURES) {
+            testController = new CommandXboxController(TEST_CONTROLLER_PORT);
+            configureTestBinding();
+        } else {
+            testController = null;
+        }
 
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -95,6 +107,21 @@ public class RobotContainer {
                         .andThen(climber.lock()));
         driverController.povDown()
                 .onTrue(climber.unlock().andThen(climber.follow(climber.getConstants()::minPosition)).andThen(climber.lock()));
+
+        // Scoring location controls
+        driverController.x().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.AMP));
+        driverController.y().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SPEAKER));
+        driverController.b().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.TRAP));
+    }
+
+    private void configureTestBinding() {
+        testController.a().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 255, 0))));
+        testController.b().onTrue(new InstantCommand(() -> led.setColor(new LedColor(255, 0, 0))));
+        testController.x().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 0, 255))));
+        testController.y().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 0, 0))));
+
+        testController.povUp().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.SOLID)));
+        testController.povDown().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.STROBE)));
     }
 
     /**
