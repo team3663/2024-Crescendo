@@ -2,82 +2,55 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.util.Units;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class c2024VisionIo implements VisionIo {
 
-    private final PhotonCamera camera;
-
-    private double targetID;
-
-    private double lastTargetYawDeg;
-
-    private final AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-
-    private final Transform3d cameraOffsets;
-
     private final PhotonPoseEstimator estimator;
 
-    private Pose2d previousPose = new Pose2d();
-
     public c2024VisionIo(PhotonCamera camera, Transform3d cameraOffsets) {
-        this.camera = camera;
-        this.cameraOffsets = cameraOffsets;
+        AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
         estimator = new PhotonPoseEstimator(fieldLayout,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, cameraOffsets);
     }
 
     public void updateInputs(VisionInputs visionInputs) {
-        if(getEstimatedGlobalPose().isPresent() && getEstimatedGlobalPose().get().estimatedPose.toPose2d() != previousPose) {
-            // Pose is updated and the previous pose is now set to the new recorded pose
-            visionInputs.estimatedPose = getEstimatedGlobalPose().get().estimatedPose;
-            visionInputs.timestampSeconds = getEstimatedGlobalPose().get().timestampSeconds;
-//            visionInputs.trackedTargets = getEstimatedGlobalPose().get().targetsUsed;
-            previousPose = visionInputs.estimatedPose.toPose2d();
-            visionInputs.poseUpdated = true;
 
-        } else {
-            // Pose is not updated if pose is not seen or the same as the previous pose
-            visionInputs.poseUpdated = false;
+        // Assume pose will not be updated.
+        visionInputs.poseUpdated = false;
+
+        // Values used by the CLOSEST_TO_LAST_POSE and CLOSEST_TO_REFERENCE_POST strategies.
+        estimator.setLastPose(visionInputs.estimatedPose);
+        estimator.setReferencePose(visionInputs.estimatedPose);
+
+        Optional<EstimatedRobotPose> newPose = estimator.update();
+
+        // If there is no new pose then we have nothing to do, just bail out.
+        if (newPose.isEmpty()) {
+            return;
         }
-    }
 
+        EstimatedRobotPose newEstimate = newPose.get();
+        visionInputs.estimatedPose = newEstimate.estimatedPose;
+        visionInputs.timestampSeconds = newEstimate.timestampSeconds;
 
-    /**
-     * Sets the desired target to the one containing given ID
-     * @param targetID The ID of the desired apriltag target
-     */
-    public void setTargetID(int targetID) {
-        this.targetID = targetID;
-    }
-
-    /**
-     * @return List of apriltag targets
-     */
-    public List<PhotonTrackedTarget> getTargetList() {
-        PhotonPipelineResult result = camera.getLatestResult();
-        if (result.hasTargets()) {
-            return result.getTargets();
-        } else {
-            return List.of();
+        // Get the list of targets used in the current estimate and store their Ids in our Inputs.
+        List<PhotonTrackedTarget> targets = newEstimate.targetsUsed;
+        int[] ids = new int[targets.size()];
+        int index = 0;
+        for (PhotonTrackedTarget target : targets) {
+           ids[index++] = target.getFiducialId();
         }
-    }
-
-    /**
-     * @return Optional estimated robot pose
-     */
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-        return estimator.update();
+        visionInputs.targetIds = ids;
+        visionInputs.poseUpdated = true;
     }
 }

@@ -1,7 +1,9 @@
 package frc.robot.config;
 
 import com.ctre.phoenix.led.CANdle;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.subsystems.climber.ClimberIo;
 import frc.robot.subsystems.climber.SimClimberIo;
 import frc.robot.subsystems.drivetrain.DrivetrainIO;
@@ -23,8 +25,11 @@ public class BenchRobotFactory implements RobotFactory {
 
     @Override
     public VisionIo[] createVisionIo() {
-        PhotonCamera camera = new PhotonCamera("");
-        Transform3d cameraOffsets = new Transform3d();
+        PhotonCamera camera = new PhotonCamera("Arducam_OV9782");
+        Transform3d cameraOffsets = new Transform3d(
+                new Translation3d(2.0, 0.0, 1.0),
+                new Rotation3d(0.0, 0.0, 0.0)
+        );
 
         return new VisionIo[]{
                 new c2024VisionIo(camera, cameraOffsets)

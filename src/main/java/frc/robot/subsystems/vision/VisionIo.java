@@ -13,8 +13,8 @@ public interface VisionIo {
     @AutoLog
     class VisionInputs {
         public Pose3d estimatedPose = new Pose3d();
-        public double timestampSeconds = 0;
-//        public List<PhotonTrackedTarget> trackedTargets;
-        public boolean poseUpdated = false;
+        public double timestampSeconds;
+        public int[] targetIds;
+        public boolean poseUpdated;
     }
 }
