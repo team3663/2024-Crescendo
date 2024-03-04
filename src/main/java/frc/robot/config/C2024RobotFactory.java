@@ -7,7 +7,9 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.util.PIDConstants;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -215,11 +217,17 @@ public class C2024RobotFactory implements RobotFactory {
 
     private static class VisionConstants {
         // Photon cameras created with the camera-specific name
-        private static final PhotonCamera leftCamera = new PhotonCamera(""); // Left Camera Name
-        private static final  PhotonCamera rightCamera = new PhotonCamera(""); // Right Camera Name
+        private static final PhotonCamera leftCamera = new PhotonCamera("left_camera");
+        private static final  PhotonCamera rightCamera = new PhotonCamera("right_camera");
 
         // Offsets of the cameras from the center of the robot
-        private static final Transform3d leftCameraOffsets = new Transform3d();
-        private static final Transform3d rightCameraOffsets = new Transform3d();
+        private static final Transform3d leftCameraOffsets = new Transform3d(
+                new Translation3d(0.0, 0.0, 0.0),
+                new Rotation3d(0.0, 0.0, 0.0)
+        );
+        private static final Transform3d rightCameraOffsets = new Transform3d(
+                new Translation3d(0.0, 0.0, 0.0),
+                new Rotation3d(0.0, 0.0, 0.0)
+        );
     }
 }
