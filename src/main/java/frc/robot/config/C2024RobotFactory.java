@@ -7,6 +7,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.util.PIDConstants;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -23,6 +24,9 @@ import frc.robot.subsystems.pivot.C2024PivotIo;
 import frc.robot.subsystems.pivot.PivotIo;
 import frc.robot.subsystems.shooter.C2024ShooterIo;
 import frc.robot.subsystems.shooter.ShooterIo;
+import frc.robot.subsystems.vision.VisionIo;
+import frc.robot.subsystems.vision.c2024VisionIo;
+import org.photonvision.PhotonCamera;
 
 public class C2024RobotFactory implements RobotFactory {
     @Override
@@ -199,5 +203,23 @@ public class C2024RobotFactory implements RobotFactory {
                 BACK_LEFT_STEER_MOTOR_ID, BACK_LEFT_DRIVE_MOTOR_ID, BACK_LEFT_ENCODER_ID, BACK_LEFT_ENCODER_OFFSET, -BACK_MODULE_X_OFFSET, MODULE_Y_OFFSET, INVERT_LEFT_SIDE);
         public static final SwerveModuleConstants BACK_RIGHT = MODULE_CONSTANTS_FACTORY.createModuleConstants(
                 BACK_RIGHT_STEER_MOTOR_ID, BACK_RIGHT_DRIVE_MOTOR_ID, BACK_RIGHT_ENCODER_ID, BACK_RIGHT_ENCODER_OFFSET, -BACK_MODULE_X_OFFSET, -MODULE_Y_OFFSET, INVERT_RIGHT_SIDE);
+    }
+
+    @Override
+    public VisionIo[] createVisionIo() {
+        return new VisionIo[]{
+                new c2024VisionIo(VisionConstants.leftCamera, VisionConstants.leftCameraOffsets),
+                new c2024VisionIo(VisionConstants.rightCamera, VisionConstants.rightCameraOffsets)
+        };
+    }
+
+    private static class VisionConstants {
+        // Photon cameras created with the camera-specific name
+        private static final PhotonCamera leftCamera = new PhotonCamera(""); // Left Camera Name
+        private static final  PhotonCamera rightCamera = new PhotonCamera(""); // Right Camera Name
+
+        // Offsets of the cameras from the center of the robot
+        private static final Transform3d leftCameraOffsets = new Transform3d();
+        private static final Transform3d rightCameraOffsets = new Transform3d();
     }
 }
