@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.VisionMeasurement;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
@@ -59,8 +60,9 @@ public class Drivetrain extends SubsystemBase {
         return inputs.pose;
     }
 
-    public void addVisionMeasurements(List<Pose3d> poses, List<Double> timestamps) {
-        io.addVisionMeasurements(poses, timestamps);
+    public void addVisionMeasurements(List<VisionMeasurement> measurements)
+    {
+        io.addVisionMeasurements(measurements);
     }
 
     public Command drive(

@@ -2,13 +2,10 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import org.littletonrobotics.junction.AutoLog;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
-import java.util.List;
 
 public interface VisionIo {
-    default void updateInputs(VisionInputs inputs) {}
+    default void updateInputs(VisionInputs inputs) {
+    }
 
     @AutoLog
     class VisionInputs {

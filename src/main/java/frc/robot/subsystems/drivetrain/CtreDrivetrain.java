@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.vision.VisionMeasurement;
 
 import java.util.List;
 
@@ -146,10 +147,10 @@ public class CtreDrivetrain implements DrivetrainIO {
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
     }
 
-    @Override
-    public void addVisionMeasurements(List<Pose3d> poses, List<Double> timestamps) {
-        for(int i = 0; i < poses.size(); i++) {
-            drivetrain.addVisionMeasurement(poses.get(i).toPose2d(), timestamps.get(i));
+    public void addVisionMeasurements(List<VisionMeasurement> measurements) {
+        for ( VisionMeasurement m: measurements )
+        {
+            drivetrain.addVisionMeasurement(m.estimatedPose.toPose2d(), m.timestamp);
         }
     }
 

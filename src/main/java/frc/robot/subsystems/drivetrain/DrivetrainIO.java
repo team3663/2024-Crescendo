@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.subsystems.vision.VisionMeasurement;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
@@ -72,7 +73,7 @@ public interface DrivetrainIO {
     default void zeroGyroscope() {
     }
 
-    default void addVisionMeasurements(List<Pose3d> poses, List<Double> timestamps){}
+    default void addVisionMeasurements(List<VisionMeasurement> measurements) {}
 
     @AutoLog
     class DrivetrainInputs {

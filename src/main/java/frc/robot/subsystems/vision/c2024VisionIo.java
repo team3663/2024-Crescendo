@@ -8,7 +8,6 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class c2024VisionIo implements VisionIo {
         int[] ids = new int[targets.size()];
         int index = 0;
         for (PhotonTrackedTarget target : targets) {
-           ids[index++] = target.getFiducialId();
+            ids[index++] = target.getFiducialId();
         }
         visionInputs.targetIds = ids;
         visionInputs.poseUpdated = true;
