@@ -66,11 +66,11 @@ public class Drivetrain extends SubsystemBase {
         Translation2d currentPosition = inputs.pose.getTranslation();
 
         for (VisionMeasurement measurement : measurements) {
-            Translation2d measuredPosition = measurement.estimatedPose.toPose2d().getTranslation();
+            Translation2d measuredPosition = measurement.estimatedPose().getTranslation();
             double distance = currentPosition.getDistance(measuredPosition);
 
             if (distance < MAX_MEASUREMENT_DISTANCE) {
-                io.addVisionMeasurement(measurement);
+                io.addVisionMeasurement(measurement.timestamp(), measurement.estimatedPose(), measurement.standardDeviation());
             }
         }
     }

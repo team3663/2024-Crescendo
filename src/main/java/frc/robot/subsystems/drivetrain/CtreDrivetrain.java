@@ -8,6 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -16,12 +17,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.vision.VisionMeasurement;
 
 import java.util.List;
+import java.util.Vector;
 
 public class CtreDrivetrain implements DrivetrainIO {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
@@ -136,6 +140,11 @@ public class CtreDrivetrain implements DrivetrainIO {
         drivetrain.seedFieldRelative();
     }
 
+    @Override
+    public void addVisionMeasurement(double timestamp, Pose2d pose, Matrix<N3, N1> stdDevs) {
+        drivetrain.addVisionMeasurement(pose, timestamp, stdDevs);
+    }
+
     private void startSimThread() {
         lastSimTime = Timer.getFPGATimestamp();
 
@@ -149,10 +158,6 @@ public class CtreDrivetrain implements DrivetrainIO {
             drivetrain.updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
-    }
-
-    public void addVisionMeasurement(VisionMeasurement measurement) {
-        drivetrain.addVisionMeasurement(measurement.estimatedPose.toPose2d(), measurement.timestamp);
     }
 
     public record Constants(

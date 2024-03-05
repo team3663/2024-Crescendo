@@ -68,7 +68,7 @@ public class RobotContainer {
 
         // Periodically adds the vision measurement to drivetrain for pose estimation
         vision.setDefaultCommand(
-                vision.updateVisionMeasurements(drivetrain)
+                vision.consumeVisionMeasurements(drivetrain::addVisionMeasurements).ignoringDisable(true)
         );
         // Configure controller binding.
         configureBindings();
