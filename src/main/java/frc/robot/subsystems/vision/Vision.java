@@ -24,7 +24,7 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         for (int i = 0; i < ios.length; i++) {
             ios[i].updateInputs(visionInputs[i]);
-            Logger.processInputs("Vision", visionInputs[i]);
+            Logger.processInputs("Vision/" + Integer.toString(i), visionInputs[i]);
         }
     }
 
@@ -49,6 +49,6 @@ public class Vision extends SubsystemBase {
     public Command updateVisionMeasurements(Drivetrain drivetrain) {
         return run(
                 () -> drivetrain.addVisionMeasurements(getVisionMeasurements())
-        );
+        ).ignoringDisable(true);
     }
 }

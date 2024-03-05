@@ -3,7 +3,6 @@ package frc.robot.subsystems.drivetrain;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,6 +17,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class Drivetrain extends SubsystemBase {
+    private static final  double max_distance = 1;
     private final DrivetrainIO io;
     private final DrivetrainInputsAutoLogged inputs = new DrivetrainInputsAutoLogged();
     private final Constants constants;
@@ -62,7 +62,12 @@ public class Drivetrain extends SubsystemBase {
 
     public void addVisionMeasurements(List<VisionMeasurement> measurements)
     {
-        io.addVisionMeasurements(measurements);
+        for(VisionMeasurement measurement : measurements) {
+            if(inputs.pose.getTranslation().getDistance(measurement.estimatedPose.toPose2d().getTranslation()) < max_distance) {
+                io.addVisionMeasurement(measurement);
+            }
+        }
+
     }
 
     public Command drive(

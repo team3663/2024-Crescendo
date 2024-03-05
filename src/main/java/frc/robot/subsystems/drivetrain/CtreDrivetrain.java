@@ -8,6 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -64,7 +65,10 @@ public class CtreDrivetrain implements DrivetrainIO {
                         new ReplanningConfig())
         );
 
-        drivetrain = new SwerveDrivetrain(drivetrainConstants, moduleConstants);
+        drivetrain = new SwerveDrivetrain(drivetrainConstants, 0.0,
+                VecBuilder.fill(0.05, 0.05, 0.01),
+                VecBuilder.fill(10.0, 10.0, 10.0),
+                moduleConstants);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -147,11 +151,8 @@ public class CtreDrivetrain implements DrivetrainIO {
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
     }
 
-    public void addVisionMeasurements(List<VisionMeasurement> measurements) {
-        for ( VisionMeasurement m: measurements )
-        {
-            drivetrain.addVisionMeasurement(m.estimatedPose.toPose2d(), m.timestamp);
-        }
+    public void addVisionMeasurement(VisionMeasurement measurement) {
+        drivetrain.addVisionMeasurement(measurement.estimatedPose.toPose2d(), measurement.timestamp);
     }
 
     public record Constants(

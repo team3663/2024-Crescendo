@@ -14,5 +14,5 @@ public final class Constants {
     public static final int TEST_CONTROLLER_PORT = 2;
 
     // If true code will turn on various test feature like enabling and biding the test controller.
-    public static boolean ENABLE_TEST_FEATURES = true;
+    public static boolean ENABLE_TEST_FEATURES = false;
 }

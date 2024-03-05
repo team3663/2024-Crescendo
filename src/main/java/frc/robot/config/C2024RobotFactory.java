@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.subsystems.climber.C2024ClimberIo;
@@ -221,13 +222,24 @@ public class C2024RobotFactory implements RobotFactory {
         private static final  PhotonCamera rightCamera = new PhotonCamera("right_camera");
 
         // Offsets of the cameras from the center of the robot
+        private static final double left_cam_x = Units.inchesToMeters(5.25);
+        private static final double left_cam_y = Units.inchesToMeters(12.25);
+        private static final double left_cam_z = Units.inchesToMeters(16.5);
+        private static final double left_cam_pitch = Units.degreesToRadians(-10.00);
+        private static final double left_cam_yaw = Units.degreesToRadians(15.220741);
+        private static final double right_cam_x = Units.inchesToMeters(5.25);
+        private static final double right_cam_y = Units.inchesToMeters(-12.25);
+        private static final double right_cam_z = Units.inchesToMeters(16.5);
+        private static final double right_cam_pitch = Units.degreesToRadians(-10.00);
+        private static final double right_cam_yaw = Units.degreesToRadians(-15.220741);
         private static final Transform3d leftCameraOffsets = new Transform3d(
-                new Translation3d(0.0, 0.0, 0.0),
-                new Rotation3d(0.0, 0.0, 0.0)
+                // x:14-8.75  z:16.5
+                new Translation3d(left_cam_x, left_cam_y, left_cam_z),
+                new Rotation3d(0.0, left_cam_pitch, left_cam_yaw)
         );
         private static final Transform3d rightCameraOffsets = new Transform3d(
-                new Translation3d(0.0, 0.0, 0.0),
-                new Rotation3d(0.0, 0.0, 0.0)
+                new Translation3d(right_cam_x, right_cam_y, right_cam_z),
+                new Rotation3d(0.0, right_cam_pitch, right_cam_yaw)
         );
     }
 }
