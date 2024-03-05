@@ -10,6 +10,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.vision.Vision;
 
 public class CommandFactory {
     private final Climber climber;
@@ -19,6 +20,7 @@ public class CommandFactory {
     private final Led led;
     private final Pivot pivot;
     private final Shooter shooter;
+    private final Vision vision;
 
     public CommandFactory(
             Climber climber,
@@ -27,7 +29,8 @@ public class CommandFactory {
             Intake intake,
             Led led,
             Pivot pivot,
-            Shooter shooter
+            Shooter shooter,
+            Vision vision
     ) {
         this.climber = climber;
         this.drivetrain = drivetrain;
@@ -36,6 +39,7 @@ public class CommandFactory {
         this.led = led;
         this.pivot = pivot;
         this.shooter = shooter;
+        this.vision = vision;
     }
 
     /**

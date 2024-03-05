@@ -18,6 +18,7 @@ import frc.robot.subsystems.led.Led;
 import frc.robot.subsystems.led.LedColor;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.utility.ControllerHelper;
 import frc.robot.utility.RobotMode;
 
@@ -31,6 +32,7 @@ public class RobotContainer {
     private final Led led;
     private final Pivot pivot;
     private final Shooter shooter;
+    private final Vision vision;
 
     private final CommandFactory commandFactory;
 
@@ -52,8 +54,9 @@ public class RobotContainer {
         led = new Led(robotFactory.createLedIo());
         pivot = new Pivot(robotFactory.createPivotIo());
         shooter = new Shooter(robotFactory.createShooterIo());
+        vision = new Vision(robotFactory.createVisionIo());
 
-        commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter);
+        commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter, vision);
 
         drivetrain.setDefaultCommand(
                 drivetrain.drive(
@@ -63,6 +66,10 @@ public class RobotContainer {
                 )
         );
 
+        // Periodically adds the vision measurement to drivetrain for pose estimation
+        vision.setDefaultCommand(
+                vision.consumeVisionMeasurements(drivetrain::addVisionMeasurements).ignoringDisable(true)
+        );
         // Configure controller binding.
         configureBindings();
 

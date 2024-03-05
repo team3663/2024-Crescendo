@@ -2,14 +2,17 @@ package frc.robot.subsystems.drivetrain;
 
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import frc.robot.subsystems.vision.VisionMeasurement;
 import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import static edu.wpi.first.math.util.Units.feetToMeters;
 import static edu.wpi.first.math.util.Units.inchesToMeters;
@@ -68,6 +71,8 @@ public interface DrivetrainIO {
 
     default void zeroGyroscope() {
     }
+
+    default void addVisionMeasurement(double timestamp, Pose2d pose, Matrix<N3, N1> stdDevs) {}
 
     @AutoLog
     class DrivetrainInputs {

@@ -8,15 +8,24 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.vision.VisionMeasurement;
+
+import java.util.List;
+import java.util.Vector;
 
 public class CtreDrivetrain implements DrivetrainIO {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
@@ -60,7 +69,10 @@ public class CtreDrivetrain implements DrivetrainIO {
                         new ReplanningConfig())
         );
 
-        drivetrain = new SwerveDrivetrain(drivetrainConstants, moduleConstants);
+        drivetrain = new SwerveDrivetrain(drivetrainConstants, 0.0,
+                VecBuilder.fill(0.05, 0.05, 0.01),
+                VecBuilder.fill(10.0, 10.0, 10.0),
+                moduleConstants);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -126,6 +138,11 @@ public class CtreDrivetrain implements DrivetrainIO {
     @Override
     public void zeroGyroscope() {
         drivetrain.seedFieldRelative();
+    }
+
+    @Override
+    public void addVisionMeasurement(double timestamp, Pose2d pose, Matrix<N3, N1> stdDevs) {
+        drivetrain.addVisionMeasurement(pose, timestamp, stdDevs);
     }
 
     private void startSimThread() {
