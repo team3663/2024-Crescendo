@@ -22,7 +22,8 @@ public class Feeder extends SubsystemBase {
         return inputs.beamBreakSignaled;
     }
     public boolean isNotDetected() {
-        return !inputs.beamBreakSignaled;
+        return false;
+//        return !inputs.beamBreakSignaled;
     }
 
     public Command runWithVoltage(double voltage) {

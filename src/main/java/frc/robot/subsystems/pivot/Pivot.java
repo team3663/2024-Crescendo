@@ -31,17 +31,30 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
     }
 
+    public Constants getConstants() {
+        return constants;
+    }
+
+    public double getAngle() {
+        return inputs.angle;
+    }
+
     public boolean isZeroed() {
         return zeroed;
     }
 
     public Command follow(DoubleSupplier angleSupplier) {
-        return Commands.either(
-                run(() -> io.setTargetAngle(
-                        MathUtil.clamp(angleSupplier.getAsDouble(), constants.minAngle(), constants.maxAngle()))),
-                Commands.none(),
-                this::isZeroed
-        );
+        return run(() -> {
+            double angle = angleSupplier.getAsDouble();
+
+            // Do nothing if not zeroed
+            if (!zeroed) return;
+
+            // Ignore if target angle is not finite
+            if (!Double.isFinite(angle)) return;
+
+            io.setTargetAngle(MathUtil.clamp(angle, constants.minAngle(), constants.maxAngle()));
+        });
     }
 
     public Command moveTo(double angle) {
@@ -68,6 +81,6 @@ public class Pivot extends SubsystemBase {
                         });
     }
 
-    public record Constants(double minAngle, double maxAngle, double zeroVoltage) {
+    public record Constants(double minAngle, double maxAngle, double restingAngle, double zeroVoltage) {
     }
 }

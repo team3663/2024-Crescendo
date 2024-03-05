@@ -3,7 +3,6 @@ package frc.robot.subsystems.drivetrain;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -11,7 +10,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.subsystems.vision.VisionMeasurement;
 import org.littletonrobotics.junction.AutoLog;
 
 import static edu.wpi.first.math.util.Units.feetToMeters;
@@ -43,11 +41,21 @@ public interface DrivetrainIO {
     /**
      * Drives field-oriented with the ability to specify an X, Y, and rotational velocity.
      *
-     * @param xVelocity          The target X (downfield) velocity in meters per second.
-     * @param yVelocity          The target Y (toward the left side of the field) velocity in meters per second.
-     * @param rotationalVelocity The target rotational (counter-clockwise positive) velocity in radians per second.
+     * @param xVelocity       The target X (downfield) velocity in meters per second.
+     * @param yVelocity       The target Y (toward the left side of the field) velocity in meters per second.
+     * @param angularVelocity The target angular (counter-clockwise positive) velocity in radians per second.
      */
-    default void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity) {
+    default void driveFieldOriented(double xVelocity, double yVelocity, double angularVelocity) {
+    }
+
+    /**
+     * Drives robot-oriented with the ability to specify an X, Y, and rotational velocity.
+     *
+     * @param xVelocity       The target X (forward) velocity in meters per second.
+     * @param yVelocity       The target Y (toward the left side of the robot) velocity in meters per second.
+     * @param angularVelocity The target angular (counter-clockwise positive) velocity in radians per second.
+     */
+    default void driveRobotOriented(double xVelocity, double yVelocity, double angularVelocity) {
     }
 
     /**
@@ -72,7 +80,8 @@ public interface DrivetrainIO {
     default void zeroGyroscope() {
     }
 
-    default void addVisionMeasurement(double timestamp, Pose2d pose, Matrix<N3, N1> stdDevs) {}
+    default void addVisionMeasurement(double timestamp, Pose2d pose, Matrix<N3, N1> stdDevs) {
+    }
 
     @AutoLog
     class DrivetrainInputs {

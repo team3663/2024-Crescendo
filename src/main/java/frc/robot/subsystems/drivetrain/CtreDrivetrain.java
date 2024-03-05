@@ -106,12 +106,12 @@ public class CtreDrivetrain implements DrivetrainIO {
     }
 
     @Override
-    public void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity) {
+    public void driveFieldOriented(double xVelocity, double yVelocity, double angularVelocity) {
         drivetrain.setControl(
                 fieldCentricRequest
                         .withVelocityX(xVelocity)
                         .withVelocityY(yVelocity)
-                        .withRotationalRate(rotationalVelocity)
+                        .withRotationalRate(angularVelocity)
         );
     }
 

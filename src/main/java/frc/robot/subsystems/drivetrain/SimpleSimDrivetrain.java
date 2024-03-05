@@ -66,10 +66,10 @@ public class SimpleSimDrivetrain implements DrivetrainIO {
     }
 
     @Override
-    public void driveFieldOriented(double xVelocity, double yVelocity, double rotationalVelocity) {
+    public void driveFieldOriented(double xVelocity, double yVelocity, double angularVelocity) {
         this.xVelocity.mut_replace(xVelocity, MetersPerSecond);
         this.yVelocity.mut_replace(yVelocity, MetersPerSecond);
-        this.rotationalVelocity.mut_replace(rotationalVelocity, RadiansPerSecond);
+        this.rotationalVelocity.mut_replace(angularVelocity, RadiansPerSecond);
         this.targetAngle = null;
     }
 

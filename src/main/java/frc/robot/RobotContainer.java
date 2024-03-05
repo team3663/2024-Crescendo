@@ -1,7 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.util.Units;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -21,6 +21,9 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.utility.ControllerHelper;
 import frc.robot.utility.RobotMode;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import static frc.robot.Constants.*;
 
@@ -58,13 +61,10 @@ public class RobotContainer {
 
         commandFactory = new CommandFactory(climber, drivetrain, feeder, intake, led, pivot, shooter, vision);
 
-        drivetrain.setDefaultCommand(
-                drivetrain.drive(
-                        () -> -ControllerHelper.modifyAxis(driverController.getLeftY()) * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -ControllerHelper.modifyAxis(driverController.getLeftX()) * drivetrain.getConstants().maxTranslationalVelocity(),
-                        () -> -ControllerHelper.modifyAxis(driverController.getRightX()) * drivetrain.getConstants().maxRotationalVelocity()
-                )
-        );
+        drivetrain.setDefaultCommand(drivetrain.drive(this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity));
+
+        // When nothing is happening, return to the resting angle
+        pivot.setDefaultCommand(pivot.follow(() -> pivot.getConstants().restingAngle()));
 
         // Periodically adds the vision measurement to drivetrain for pose estimation
         vision.setDefaultCommand(
@@ -81,6 +81,9 @@ public class RobotContainer {
             testController = null;
         }
 
+        NamedCommands.registerCommand("shootNote", commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0));
+        NamedCommands.registerCommand("intakeNote", commandFactory.intakeAndLoad().withTimeout(1.5));
+
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();
         Shuffleboard.getTab("Driver")
@@ -96,14 +99,28 @@ public class RobotContainer {
 
         driverController.leftTrigger()
                 .whileTrue(commandFactory.intakeAndLoad());
-        driverController.rightTrigger()
-                .whileTrue(commandFactory.shoot());
-//        driverController.rightBumper()
-//                .whileTrue(shooter.setTargetVelocity(rotationsPerMinuteToRadiansPerSecond(2500)));
-        // AMP: 1500 RPM, 120 deg, 0.5 in from wall
-        driverController.rightBumper()
-                .onTrue(pivot.moveTo(Units.degreesToRadians(50.0)))
-                .onFalse(pivot.moveTo(Units.degreesToRadians(2.0)));
+
+        Map<RobotMode.ScoreLocation, Command> robotModeCommandMap = new EnumMap<>(RobotMode.ScoreLocation.class);
+        robotModeCommandMap.put(RobotMode.ScoreLocation.AMP, commandFactory.aimAndFireAtAmp(
+                // Allowed to fire when left trigger is held
+                driverController.leftTrigger(),
+                // Drive using normal controls
+                this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
+        ));
+        robotModeCommandMap.put(RobotMode.ScoreLocation.SPEAKER, commandFactory.aimAndFireAtSpeaker(
+                // Allowed to fire when left trigger is held
+                driverController.leftTrigger(),
+                // Drive using normal controls
+                this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
+        ));
+        robotModeCommandMap.put(RobotMode.ScoreLocation.SUBWOOFER, commandFactory.aimAndFireAtSubwoofer(
+                // Allowed to fire when left trigger is held
+                driverController.leftTrigger(),
+                // Drive using normal controls
+                this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
+        ));
+
+        driverController.rightBumper().whileTrue(Commands.select(robotModeCommandMap, RobotMode::getScoreLocation));
 
         // Climber controls
         driverController.start()
@@ -118,7 +135,7 @@ public class RobotContainer {
         // Scoring location controls
         driverController.x().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.AMP));
         driverController.y().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SPEAKER));
-        driverController.b().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.TRAP));
+        driverController.b().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SUBWOOFER));
     }
 
     private void configureTestBinding() {
@@ -130,6 +147,18 @@ public class RobotContainer {
         testController.povUp().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.SOLID)));
         testController.povDown().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.STROBE)));
         testController.povRight().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.LARSON)));
+    }
+
+    private double getDrivetrainXVelocity() {
+        return -ControllerHelper.modifyAxis(driverController.getLeftY()) * drivetrain.getConstants().maxLinearVelocity();
+    }
+
+    private double getDrivetrainYVelocity() {
+        return -ControllerHelper.modifyAxis(driverController.getLeftX()) * drivetrain.getConstants().maxLinearVelocity();
+    }
+
+    private double getDrivetrainAngularVelocity() {
+        return -ControllerHelper.modifyAxis(driverController.getRightX()) * drivetrain.getConstants().maxAngularVelocity();
     }
 
     /**

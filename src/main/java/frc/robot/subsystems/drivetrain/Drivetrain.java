@@ -14,6 +14,7 @@ import frc.robot.subsystems.vision.VisionMeasurement;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -76,16 +77,16 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Command drive(
-            DoubleSupplier xVelocity,
-            DoubleSupplier yVelocity,
-            DoubleSupplier rotationalVelocity
+            DoubleSupplier xVelocitySupplier,
+            DoubleSupplier yVelocitySupplier,
+            DoubleSupplier angularVelocitySupplier
     ) {
         return runEnd(
                 // execute()
                 () -> io.driveFieldOriented(
-                        xVelocity.getAsDouble(),
-                        yVelocity.getAsDouble(),
-                        rotationalVelocity.getAsDouble()
+                        xVelocitySupplier.getAsDouble(),
+                        yVelocitySupplier.getAsDouble(),
+                        angularVelocitySupplier.getAsDouble()
                 ),
                 // end()
                 io::stop
@@ -93,17 +94,43 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Command driveWithAngle(
-            DoubleSupplier xVelocity,
-            DoubleSupplier yVelocity,
-            Supplier<Rotation2d> angle
+            DoubleSupplier xVelocitySupplier,
+            DoubleSupplier yVelocitySupplier,
+            Supplier<Rotation2d> angleSupplier
     ) {
         return runEnd(
                 // execute()
                 () -> io.driveFieldOrientedFacingAngle(
-                        xVelocity.getAsDouble(),
-                        yVelocity.getAsDouble(),
-                        angle.get()
+                        xVelocitySupplier.getAsDouble(),
+                        yVelocitySupplier.getAsDouble(),
+                        angleSupplier.get()
                 ),
+                // end()
+                io::stop
+        );
+    }
+
+    public Command driveWithOptionalAngle(
+            DoubleSupplier xVelocitySupplier,
+            DoubleSupplier yVelocitySupplier,
+            DoubleSupplier angularVelocitySupplier,
+            Supplier<Optional<Rotation2d>> angleSupplier
+    ) {
+        return runEnd(
+                // execute()
+                () -> {
+                    double xVelocity = xVelocitySupplier.getAsDouble();
+                    double yVelocity = yVelocitySupplier.getAsDouble();
+                    double angularVelocity = angularVelocitySupplier.getAsDouble();
+                    Optional<Rotation2d> angle = angleSupplier.get();
+
+                    // If we were given an angle, drive while facing the angle
+                    if (angle.isPresent())
+                        io.driveFieldOrientedFacingAngle(xVelocity, yVelocity, angle.get());
+                    else
+                        io.driveFieldOriented(xVelocity, yVelocity, angularVelocity);
+
+                },
                 // end()
                 io::stop
         );
@@ -113,16 +140,32 @@ public class Drivetrain extends SubsystemBase {
         return Commands.runOnce(io::zeroGyroscope);
     }
 
+    public Command driveRobotOriented(
+            DoubleSupplier xVelocitySupplier,
+            DoubleSupplier yVelocitySupplier,
+            DoubleSupplier angularVelocitySupplier) {
+        return runEnd(
+                // execute()
+                () -> io.driveRobotOriented(
+                        xVelocitySupplier.getAsDouble(),
+                        yVelocitySupplier.getAsDouble(),
+                        angularVelocitySupplier.getAsDouble()
+                ),
+                // end()
+                io::stop
+        );
+    }
+
     public record Constants(
             double maxModuleVelocity,
             double driveBaseRadius,
             HolonomicPathFollowerConfig pathFollowerConfig
     ) {
-        public double maxTranslationalVelocity() {
+        public double maxLinearVelocity() {
             return maxModuleVelocity;
         }
 
-        public double maxRotationalVelocity() {
+        public double maxAngularVelocity() {
             return maxModuleVelocity / driveBaseRadius;
         }
     }

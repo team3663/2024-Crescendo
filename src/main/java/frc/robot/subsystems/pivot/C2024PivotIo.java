@@ -16,6 +16,7 @@ public class C2024PivotIo implements PivotIo {
     private static final Pivot.Constants CONSTANTS = new Pivot.Constants(
             Units.degreesToRadians(0.0),
             Units.degreesToRadians(125.0),
+            Units.degreesToRadians(2.0),
             -1.0
     );
 

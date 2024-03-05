@@ -1,7 +1,5 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Transform3d;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -19,9 +17,8 @@ public class C2024VisionIo implements VisionIo {
         this.constants = new Constants(cameraName);
 
         PhotonCamera camera = new PhotonCamera(cameraName);
-        AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
-        estimator = new PhotonPoseEstimator(fieldLayout,
+        estimator = new PhotonPoseEstimator(frc.robot.Constants.FIELD_LAYOUT,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, cameraTransform);
     }
 

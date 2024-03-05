@@ -1,7 +1,5 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.InterpolatingMatrixTreeMap;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -11,6 +9,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.*;
@@ -23,8 +22,6 @@ public class Vision extends SubsystemBase {
 
     private final VisionIo[] ios;
     private final VisionInputsAutoLogged[] visionInputs;
-
-    private final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
 
     private List<VisionMeasurement> acceptedMeasurements = Collections.emptyList();
 
@@ -58,8 +55,8 @@ public class Vision extends SubsystemBase {
             if (!visionInput.poseUpdated) continue;
 
             // Skip measurements that are not with in the field boundary
-            if (pose.getX() < 0.0 || pose.getX() > fieldLayout.getFieldLength() ||
-                    pose.getY() < 0.0 || pose.getY() > fieldLayout.getFieldWidth())
+            if (pose.getX() < 0.0 || pose.getX() > Constants.FIELD_LAYOUT.getFieldLength() ||
+                    pose.getY() < 0.0 || pose.getY() > Constants.FIELD_LAYOUT.getFieldWidth())
                 continue;
 
             // Skip measurements that are floating
@@ -67,7 +64,7 @@ public class Vision extends SubsystemBase {
 
             // Compute the standard deviation to use based on the distance to the closest tag
             OptionalDouble closestTagDistance = Arrays.stream(visionInput.targetIds)
-                    .mapToObj(fieldLayout::getTagPose)
+                    .mapToObj(Constants.FIELD_LAYOUT::getTagPose)
                     .filter(Optional::isPresent)
                     .mapToDouble(v -> v.get().getTranslation().getDistance(pose.getTranslation()))
                     .min();
