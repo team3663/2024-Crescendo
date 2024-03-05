@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.subsystems.climber.C2024ClimberIo;
@@ -27,9 +26,8 @@ import frc.robot.subsystems.pivot.C2024PivotIo;
 import frc.robot.subsystems.pivot.PivotIo;
 import frc.robot.subsystems.shooter.C2024ShooterIo;
 import frc.robot.subsystems.shooter.ShooterIo;
+import frc.robot.subsystems.vision.C2024VisionIo;
 import frc.robot.subsystems.vision.VisionIo;
-import frc.robot.subsystems.vision.c2024VisionIo;
-import org.photonvision.PhotonCamera;
 
 public class C2024RobotFactory implements RobotFactory {
     @Override
@@ -87,6 +85,14 @@ public class C2024RobotFactory implements RobotFactory {
                 new TalonFX(2),
                 new TalonFX(1)
         );
+    }
+
+    @Override
+    public VisionIo[] createVisionIo() {
+        return new VisionIo[]{
+                new C2024VisionIo(VisionConstants.LEFT_CAMERA_NAME, VisionConstants.LEFT_CAMERA_TRANSFORM),
+                new C2024VisionIo(VisionConstants.RIGHT_CAMERA_NAME, VisionConstants.RIGHT_CAMERA_TRANSFORM)
+        };
     }
 
     private static class DrivetrainConstants {
@@ -208,38 +214,29 @@ public class C2024RobotFactory implements RobotFactory {
                 BACK_RIGHT_STEER_MOTOR_ID, BACK_RIGHT_DRIVE_MOTOR_ID, BACK_RIGHT_ENCODER_ID, BACK_RIGHT_ENCODER_OFFSET, -BACK_MODULE_X_OFFSET, -MODULE_Y_OFFSET, INVERT_RIGHT_SIDE);
     }
 
-    @Override
-    public VisionIo[] createVisionIo() {
-        return new VisionIo[]{
-                new c2024VisionIo(VisionConstants.leftCamera, VisionConstants.leftCameraOffsets),
-                new c2024VisionIo(VisionConstants.rightCamera, VisionConstants.rightCameraOffsets)
-        };
-    }
-
     private static class VisionConstants {
         // Photon cameras created with the camera-specific name
-        private static final PhotonCamera leftCamera = new PhotonCamera("left_camera");
-        private static final  PhotonCamera rightCamera = new PhotonCamera("right_camera");
+        public static final String LEFT_CAMERA_NAME = "left_camera";
+        public static final String RIGHT_CAMERA_NAME = "right_camera";
 
         // Offsets of the cameras from the center of the robot
-        private static final double left_cam_x = Units.inchesToMeters(5.25);
-        private static final double left_cam_y = Units.inchesToMeters(12.25);
-        private static final double left_cam_z = Units.inchesToMeters(16.5);
-        private static final double left_cam_pitch = Units.degreesToRadians(-10.00);
-        private static final double left_cam_yaw = Units.degreesToRadians(15.220741);
-        private static final double right_cam_x = Units.inchesToMeters(5.25);
-        private static final double right_cam_y = Units.inchesToMeters(-12.25);
-        private static final double right_cam_z = Units.inchesToMeters(16.5);
-        private static final double right_cam_pitch = Units.degreesToRadians(-10.00);
-        private static final double right_cam_yaw = Units.degreesToRadians(-15.220741);
-        private static final Transform3d leftCameraOffsets = new Transform3d(
-                // x:14-8.75  z:16.5
-                new Translation3d(left_cam_x, left_cam_y, left_cam_z),
-                new Rotation3d(0.0, left_cam_pitch, left_cam_yaw)
-        );
-        private static final Transform3d rightCameraOffsets = new Transform3d(
-                new Translation3d(right_cam_x, right_cam_y, right_cam_z),
-                new Rotation3d(0.0, right_cam_pitch, right_cam_yaw)
-        );
+        private static final double LEFT_CAMERA_X = Units.inchesToMeters(5.25);
+        private static final double LEFT_CAMERA_Y = Units.inchesToMeters(12.25);
+        private static final double LEFT_CAMERA_Z = Units.inchesToMeters(16.5);
+        private static final double LEFT_CAMERA_PITCH = Units.degreesToRadians(-10.00);
+        private static final double LEFT_CAMERA_YAW = Units.degreesToRadians(15.220741);
+
+        private static final double RIGHT_CAMERA_X = Units.inchesToMeters(5.25);
+        private static final double RIGHT_CAMERA_Y = Units.inchesToMeters(-12.25);
+        private static final double RIGHT_CAMERA_Z = Units.inchesToMeters(16.5);
+        private static final double RIGHT_CAMERA_PITCH = Units.degreesToRadians(-10.00);
+        private static final double RIGHT_CAMERA_YAW = Units.degreesToRadians(-15.220741);
+
+        public static final Transform3d LEFT_CAMERA_TRANSFORM = new Transform3d(
+                new Translation3d(LEFT_CAMERA_X, LEFT_CAMERA_Y, LEFT_CAMERA_Z),
+                new Rotation3d(0.0, LEFT_CAMERA_PITCH, LEFT_CAMERA_YAW));
+        public static final Transform3d RIGHT_CAMERA_TRANSFORM = new Transform3d(
+                new Translation3d(RIGHT_CAMERA_X, RIGHT_CAMERA_Y, RIGHT_CAMERA_Z),
+                new Rotation3d(0.0, RIGHT_CAMERA_PITCH, RIGHT_CAMERA_YAW));
     }
 }

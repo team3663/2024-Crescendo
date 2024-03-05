@@ -11,19 +11,26 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import java.util.List;
 import java.util.Optional;
 
-public class c2024VisionIo implements VisionIo {
-
+public class C2024VisionIo implements VisionIo {
+    private final Constants constants;
     private final PhotonPoseEstimator estimator;
 
-    public c2024VisionIo(PhotonCamera camera, Transform3d cameraOffsets) {
+    public C2024VisionIo(String cameraName, Transform3d cameraTransform) {
+        this.constants = new Constants(cameraName);
+
+        PhotonCamera camera = new PhotonCamera(cameraName);
         AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
         estimator = new PhotonPoseEstimator(fieldLayout,
-                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, cameraOffsets);
+                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, cameraTransform);
+    }
+
+    @Override
+    public Constants getConstants() {
+        return constants;
     }
 
     public void updateInputs(VisionInputs visionInputs) {
-
         // Assume pose will not be updated.
         visionInputs.poseUpdated = false;
 

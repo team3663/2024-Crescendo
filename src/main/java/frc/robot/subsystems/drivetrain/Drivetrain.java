@@ -5,6 +5,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,7 +18,8 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class Drivetrain extends SubsystemBase {
-    private static final  double max_distance = 1;
+    private static final double MAX_MEASUREMENT_DISTANCE = 1.0;
+
     private final DrivetrainIO io;
     private final DrivetrainInputsAutoLogged inputs = new DrivetrainInputsAutoLogged();
     private final Constants constants;
@@ -60,14 +62,17 @@ public class Drivetrain extends SubsystemBase {
         return inputs.pose;
     }
 
-    public void addVisionMeasurements(List<VisionMeasurement> measurements)
-    {
-        for(VisionMeasurement measurement : measurements) {
-            if(inputs.pose.getTranslation().getDistance(measurement.estimatedPose.toPose2d().getTranslation()) < max_distance) {
+    public void addVisionMeasurements(List<VisionMeasurement> measurements) {
+        Translation2d currentPosition = inputs.pose.getTranslation();
+
+        for (VisionMeasurement measurement : measurements) {
+            Translation2d measuredPosition = measurement.estimatedPose.toPose2d().getTranslation();
+            double distance = currentPosition.getDistance(measuredPosition);
+
+            if (distance < MAX_MEASUREMENT_DISTANCE) {
                 io.addVisionMeasurement(measurement);
             }
         }
-
     }
 
     public Command drive(

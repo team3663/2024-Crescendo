@@ -14,6 +14,7 @@ public class Vision extends SubsystemBase {
 
     public Vision(VisionIo[] io) {
         this.ios = io;
+
         visionInputs = new VisionInputsAutoLogged[ios.length];
         for (int i = 0; i < visionInputs.length; i++) {
             visionInputs[i] = new VisionInputsAutoLogged();
@@ -24,7 +25,7 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         for (int i = 0; i < ios.length; i++) {
             ios[i].updateInputs(visionInputs[i]);
-            Logger.processInputs("Vision/" + Integer.toString(i), visionInputs[i]);
+            Logger.processInputs("Vision/" + ios[i].getConstants().name(), visionInputs[i]);
         }
     }
 
