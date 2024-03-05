@@ -90,6 +90,6 @@ public class Vision extends SubsystemBase {
      * @return Command that consumes vision measurements
      */
     public Command consumeVisionMeasurements(Consumer<List<VisionMeasurement>> visionMeasurementConsumer) {
-        return Commands.run(() -> visionMeasurementConsumer.accept(acceptedMeasurements));
+        return run(() -> visionMeasurementConsumer.accept(acceptedMeasurements));
     }
 }
