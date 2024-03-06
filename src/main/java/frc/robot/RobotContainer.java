@@ -2,13 +2,14 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.climber.Climber;
@@ -16,12 +17,12 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.Led;
-import frc.robot.subsystems.led.LedColor;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.utility.ControllerHelper;
 import frc.robot.utility.RobotMode;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -107,19 +108,19 @@ public class RobotContainer {
         Map<RobotMode.ScoreLocation, Command> robotModeCommandMap = new EnumMap<>(RobotMode.ScoreLocation.class);
         robotModeCommandMap.put(RobotMode.ScoreLocation.AMP, commandFactory.aimAndFireAtAmp(
                 // Allowed to fire when left trigger is held
-                driverController.leftTrigger(),
+                driverController.rightTrigger(),
                 // Drive using normal controls
                 this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
         ));
         robotModeCommandMap.put(RobotMode.ScoreLocation.SPEAKER, commandFactory.aimAndFireAtSpeaker(
                 // Allowed to fire when left trigger is held
-                driverController.leftTrigger(),
+                driverController.rightTrigger(),
                 // Drive using normal controls
                 this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
         ));
         robotModeCommandMap.put(RobotMode.ScoreLocation.SUBWOOFER, commandFactory.aimAndFireAtSubwoofer(
                 // Allowed to fire when left trigger is held
-                driverController.leftTrigger(),
+                driverController.rightTrigger(),
                 // Drive using normal controls
                 this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
         ));
@@ -156,8 +157,23 @@ public class RobotContainer {
 
         testController.a().toggleOnTrue(Commands.parallel(
                 pivot.follow(() -> tuningPivotAngle[0]),
-                shooter.withVelocity(() -> tuningShooterVelocity[0])
+                shooter.withVelocity(() -> tuningShooterVelocity[0]),
+                Commands.run(() -> {
+                    Translation2d speakerPosition = DriverStation.getAlliance()
+                            .map(Constants::getSpeakerPositionForAlliance)
+                            .orElse(new Translation2d());
+
+                    Translation2d robotPosition = drivetrain.getPose().getTranslation();
+
+                    double distance = speakerPosition.getDistance(robotPosition);
+
+                    Logger.recordOutput("Tuning/Distance", distance);
+                    Logger.recordOutput("Tuning/TargetPivotAngle", tuningPivotAngle[0]);
+                    Logger.recordOutput("Tuning/TargetShooterVelocity", tuningShooterVelocity[0]);
+                })
         ));
+
+        testController.rightTrigger().whileTrue(feeder.runWithVoltage(12.0));
 
         testController.povUp().onTrue(Commands.runOnce(() -> tuningShooterVelocity[0] += TUNING_SHOOTER_VELOCITY_CHANGE));
         testController.povDown().onTrue(Commands.runOnce(() -> tuningShooterVelocity[0] -= TUNING_SHOOTER_VELOCITY_CHANGE));

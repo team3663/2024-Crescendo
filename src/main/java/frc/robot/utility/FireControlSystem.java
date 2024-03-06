@@ -17,12 +17,17 @@ public class FireControlSystem {
 
     static {
         DISTANCE_LOOKUP_TABLE.put(feetToMeters(1.0), new LookupEntry(degreesToRadians(50.0), rotationsPerMinuteToRadiansPerSecond(2500.0)));
+        DISTANCE_LOOKUP_TABLE.put(2.0, new LookupEntry(degreesToRadians(40.0), rotationsPerMinuteToRadiansPerSecond(2500.0)));
+        DISTANCE_LOOKUP_TABLE.put(2.5, new LookupEntry(degreesToRadians(32.0), rotationsPerMinuteToRadiansPerSecond(2750.0)));
+        DISTANCE_LOOKUP_TABLE.put(3.0, new LookupEntry(degreesToRadians(28.0), rotationsPerMinuteToRadiansPerSecond(2750.0)));
+        DISTANCE_LOOKUP_TABLE.put(3.5, new LookupEntry(degreesToRadians(23.0), rotationsPerMinuteToRadiansPerSecond(3000.0)));
+        DISTANCE_LOOKUP_TABLE.put(4.0, new LookupEntry(degreesToRadians(19.0), rotationsPerMinuteToRadiansPerSecond(3250.0)));
     }
 
     public FiringSolution calculate(Pose2d currentPose, Translation2d goalPosition) {
         Translation2d delta = goalPosition.minus(currentPose.getTranslation());
 
-        double distance = delta.getDistance(goalPosition);
+        double distance = delta.getNorm();
 
         LookupEntry entry = DISTANCE_LOOKUP_TABLE.get(distance);
 

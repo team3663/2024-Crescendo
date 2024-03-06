@@ -38,8 +38,6 @@ public class C2024ShooterIo implements ShooterIo {
         upperMotor.getConfigurator().apply(config);
 
         // Configuration overrides for lower
-        config.Slot0.kV = 0.021;
-
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         lowerMotor.getConfigurator().apply(config);
     }

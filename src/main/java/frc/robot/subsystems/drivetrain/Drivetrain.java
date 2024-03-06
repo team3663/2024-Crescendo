@@ -2,6 +2,7 @@ package frc.robot.subsystems.drivetrain;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -19,7 +20,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class Drivetrain extends SubsystemBase {
-    private static final double MAX_MEASUREMENT_DISTANCE = 1.0;
+    private static final double MAX_MEASUREMENT_DISTANCE = 100.0;
 
     private final DrivetrainIO io;
     private final DrivetrainInputsAutoLogged inputs = new DrivetrainInputsAutoLogged();
@@ -116,6 +117,9 @@ public class Drivetrain extends SubsystemBase {
             DoubleSupplier angularVelocitySupplier,
             Supplier<Optional<Rotation2d>> angleSupplier
     ) {
+        PIDController controller = new PIDController(10.0, 0.0, 0.0);
+        controller.enableContinuousInput(-Math.PI, Math.PI);
+
         return runEnd(
                 // execute()
                 () -> {
@@ -125,11 +129,15 @@ public class Drivetrain extends SubsystemBase {
                     Optional<Rotation2d> angle = angleSupplier.get();
 
                     // If we were given an angle, drive while facing the angle
-                    if (angle.isPresent())
-                        io.driveFieldOrientedFacingAngle(xVelocity, yVelocity, angle.get());
-                    else
-                        io.driveFieldOriented(xVelocity, yVelocity, angularVelocity);
+                    if (angle.isPresent()) {
+                        // For some reason, driving with a fixed angle is not working
+                        // Instead of that, use a PID controller and use the output as the angular velocity
+                        // for field oriented driving
+//                        io.driveFieldOrientedFacingAngle(xVelocity, yVelocity, angle.get());
+                        angularVelocity = controller.calculate(inputs.pose.getRotation().getRadians(), angle.get().getRadians());
+                    }
 
+                    io.driveFieldOriented(xVelocity, yVelocity, angularVelocity);
                 },
                 // end()
                 io::stop

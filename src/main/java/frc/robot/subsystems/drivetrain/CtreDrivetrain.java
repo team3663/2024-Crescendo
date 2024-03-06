@@ -44,6 +44,10 @@ public class CtreDrivetrain implements DrivetrainIO {
             Constants constants,
             SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants... moduleConstants) {
+        fieldCentricFacingAngleRequest.HeadingController.setPID(10.0, 0.0, 0.0);
+        fieldCentricFacingAngleRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+        fieldCentricFacingAngleRequest.ForwardReference = SwerveRequest.ForwardReference.RedAlliance;
+
         Translation2d[] modulePositions = new Translation2d[moduleConstants.length];
         double maxModuleVelocity = Double.MAX_VALUE;
         double maxDriveBaseRadius = 0.0;
@@ -70,7 +74,7 @@ public class CtreDrivetrain implements DrivetrainIO {
         );
 
         drivetrain = new SwerveDrivetrain(drivetrainConstants, 0.0,
-                VecBuilder.fill(0.05, 0.05, 0.01),
+                VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(10.0, 10.0, 10.0),
                 moduleConstants);
         if (Utils.isSimulation()) {

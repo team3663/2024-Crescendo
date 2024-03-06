@@ -41,13 +41,13 @@ public class C2024PivotIo implements PivotIo {
         config.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(5000);
 
         // PID constants
-        config.Slot0.kP = 20.0;
+        config.Slot0.kP = 30.0;
         config.Slot0.kI = 0.0;
         config.Slot0.kD = 0.0;
         config.Slot0.kS = 0.0;
         config.Slot0.kV = 0.1;
         config.Slot0.kA = 0.0;
-        config.Slot0.kG = 0.7;
+        config.Slot0.kG = 0.8;
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         // Applies config configuration onto the motor

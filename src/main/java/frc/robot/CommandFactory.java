@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -120,9 +121,9 @@ public class CommandFactory {
             DoubleSupplier xVelocitySupplier,
             DoubleSupplier yVelocitySupplier,
             DoubleSupplier angularVelocitySupplier) {
-        final double ALLOWABLE_ROBOT_ROTATION_ERROR = degreesToRadians(2.0);
-        final double ALLOWABLE_PIVOT_ANGLE_ERROR = degreesToRadians(1.0);
-        final double ALLOWABLE_SHOOTER_VELOCITY_ERROR = rotationsPerMinuteToRadiansPerSecond(50.0);
+        final double ALLOWABLE_ROBOT_ROTATION_ERROR = degreesToRadians(3.0);
+        final double ALLOWABLE_PIVOT_ANGLE_ERROR = degreesToRadians(2.5);
+        final double ALLOWABLE_SHOOTER_VELOCITY_ERROR = rotationsPerMinuteToRadiansPerSecond(75.0);
 
         // The current firing solution to use
         // Because we want to re-calculate this inside a lambda expression, this is an array of length 1
@@ -181,7 +182,7 @@ public class CommandFactory {
                         // Only fire when all are met: we have a valid targeting solution, we are facing the correct direction,
                         // the pivot is at the correct angle, the shooter is at the correct velocity, and we are allowed to fire
                         Commands.waitUntil(() -> firingSolution[0].isPresent() &&
-                                (firingSolution[0].get().robotRotation().isPresent() && AngleUtil.angleDifference(drivetrain.getPose().getRotation(), firingSolution[0].get().robotRotation().get()) < ALLOWABLE_ROBOT_ROTATION_ERROR) &&
+                                (firingSolution[0].get().robotRotation().isEmpty() || AngleUtil.angleDifference(drivetrain.getPose().getRotation(), firingSolution[0].get().robotRotation().get()) < ALLOWABLE_ROBOT_ROTATION_ERROR) &&
                                 MathUtil.isNear(firingSolution[0].get().pivotAngle(), pivot.getAngle(), ALLOWABLE_PIVOT_ANGLE_ERROR) &&
                                 MathUtil.isNear(firingSolution[0].get().shooterVelocity(), shooter.getVelocity(), ALLOWABLE_SHOOTER_VELOCITY_ERROR) &&
                                 allowedToFireSupplier.getAsBoolean()
@@ -254,7 +255,13 @@ public class CommandFactory {
         return aimAndFire(
                 // Firing solution calculator
                 () -> DriverStation.getAlliance().map(Constants::getSpeakerPositionForAlliance)
-                        .map(speakerPosition -> fireControlSystem.calculate(drivetrain.getPose(), speakerPosition)),
+                        .map(speakerPosition -> {
+                            Pose2d robotPose = drivetrain.getPose();
+
+                            Logger.recordOutput("FCS/TargetDifference", speakerPosition.minus(robotPose.getTranslation()));
+
+                            return fireControlSystem.calculate(drivetrain.getPose(), speakerPosition);
+                        }),
                 // Fire command
                 feeder.runWithVoltage(12.0),
                 allowedToFireSupplier,
@@ -290,10 +297,10 @@ public class CommandFactory {
             DoubleSupplier angularVelocitySupplier) {
         // Constants to use when at the front of the subwoofer
         final double FRONT_PIVOT_ANGLE = Units.degreesToRadians(50.0);
-        final double FRONT_SHOOTER_VELOCITY = 2500.0;
+        final double FRONT_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
         // Constants to use when at the side of the subwoofer
         final double SIDE_PIVOT_ANGLE = Units.degreesToRadians(40.0);
-        final double SIDE_SHOOTER_VELOCITY = 2500.0;
+        final double SIDE_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getSubwooferRotationsForAlliance).map(subwooferRotations -> {
                     Rotation2d robotRotation = drivetrain.getPose().getRotation();
@@ -301,6 +308,9 @@ public class CommandFactory {
                     Rotation2d nearestRotation = Stream.concat(Stream.of(subwooferRotations.front()), subwooferRotations.sides().stream())
                             .min(Comparator.comparingDouble(rotation -> AngleUtil.angleDifference(robotRotation, rotation)))
                             .orElse(subwooferRotations.front());
+
+                    Logger.recordOutput("FCS/NearestSubwooferRotation", nearestRotation);
+                    Logger.recordOutput("FCS/NearestSubwooferRotationDifference", AngleUtil.angleDifference(robotRotation, nearestRotation));
 
                     if (nearestRotation.equals(subwooferRotations.front()))
                         return new FiringSolution(Optional.empty(), FRONT_PIVOT_ANGLE, FRONT_SHOOTER_VELOCITY);
