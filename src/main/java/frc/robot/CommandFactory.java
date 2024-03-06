@@ -78,8 +78,7 @@ public class CommandFactory {
         // Spin both the feeder and the intake until we detect a piece in the feeder
         return Commands.parallel(
                 Commands.waitSeconds(0.25).andThen(Commands.waitUntil(feeder::isDetected))
-                        .deadlineWith(
-                                intake.runWithVoltage(4.0)),
+                        .deadlineWith(intake.withVoltage(4.0)),
                 feeder.runWithVoltage(6.0)
                         .until(feeder::isDetected)
         );

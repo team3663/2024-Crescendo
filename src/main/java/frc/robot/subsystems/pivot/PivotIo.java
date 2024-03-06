@@ -40,6 +40,7 @@ public interface PivotIo {
      * Brakes the pivot at position
      */
     default void stop() {
+        setVoltage(0.0);
     }
 
     @AutoLog

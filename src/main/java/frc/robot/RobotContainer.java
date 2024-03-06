@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.config.RobotFactory;
 import frc.robot.subsystems.climber.Climber;
@@ -103,7 +104,10 @@ public class RobotContainer {
                 .onTrue(drivetrain.zeroGyroscope());
 
         driverController.leftTrigger()
-                .whileTrue(commandFactory.intakeAndLoad());
+                .whileTrue(commandFactory.intakeAndLoad()
+                        .andThen(ControllerHelper.rumble(driverController)));
+        driverController.leftBumper()
+                .whileTrue(intake.withVoltage(-4.0, 0.0));
 
         Map<RobotMode.ScoreLocation, Command> robotModeCommandMap = new EnumMap<>(RobotMode.ScoreLocation.class);
         robotModeCommandMap.put(RobotMode.ScoreLocation.AMP, commandFactory.aimAndFireAtAmp(
@@ -201,6 +205,10 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return autoChooser.getSelected();
+        return new ProxyCommand(autoChooser.getSelected())
+                // Initially zero the pivot in-place
+                // This is instant, and should give us a good enough zero for autonomous
+                // This means that the pivot MUST be resting at the bottom of travel
+                .beforeStarting(pivot.zeroInPlace());
     }
 }

@@ -18,11 +18,15 @@ public class Intake extends SubsystemBase {
         Logger.processInputs("Intake", inputs);
     }
 
-    public Command runWithVoltage(double voltage) {
+    public Command withVoltage(double voltage) {
+        return withVoltage(voltage, voltage);
+    }
+
+    public Command withVoltage(double rollerVoltage, double centeringVoltage) {
         return runEnd(
                 () -> {
-                    io.setRollerVoltage(voltage);
-                    io.setCenteringVoltage(voltage);
+                    io.setRollerVoltage(rollerVoltage);
+                    io.setCenteringVoltage(centeringVoltage);
                 },
                 () -> {
                     io.setRollerVoltage(0.0);

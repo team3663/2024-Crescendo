@@ -31,9 +31,20 @@ public class ControllerHelper {
      * @return Command that triggers rumble feedback on controller when condition is true.
      */
     public static Command rumble(CommandXboxController controller, BooleanSupplier condition) {
-
         return runEnd(
                 () -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, condition.getAsBoolean() ? 1.0 : 0.0),
+                () -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0)
+        );
+    }
+
+    /**
+     * Create command to enable rumble feedback on XBox controller.
+     * @param controller - XBox controller to rumble
+     * @return Command that triggers rumble feedback on controller.
+     */
+    public static Command rumble(CommandXboxController controller) {
+        return runEnd(
+                () -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0),
                 () -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0)
         );
     }

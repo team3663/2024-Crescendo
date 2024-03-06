@@ -81,6 +81,13 @@ public class Pivot extends SubsystemBase {
                         });
     }
 
+    public Command zeroInPlace() {
+        return Commands.runOnce(() -> {
+            io.resetPosition(constants.restingAngle());
+            zeroed = true;
+        });
+    }
+
     public record Constants(double minAngle, double maxAngle, double restingAngle, double zeroVoltage) {
     }
 }

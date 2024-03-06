@@ -16,7 +16,7 @@ public class SimShooterIo implements ShooterIo {
     private static final DCMotor MOTOR = DCMotor.getKrakenX60(1);
     private static final double GEAR_RATIO = 1.0;
 
-    private static final double MOMENT_OF_INERTIA = 0.05;
+    private static final double MOMENT_OF_INERTIA = 0.01;
 
     private static final double CURRENT_LIMIT = 40.0;
 
