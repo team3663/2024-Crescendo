@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -81,8 +82,11 @@ public class RobotContainer {
             testController = null;
         }
 
-        NamedCommands.registerCommand("shootNote", commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0));
-        NamedCommands.registerCommand("intakeNote", commandFactory.intakeAndLoad().withTimeout(1.5));
+        NamedCommands.registerCommand("shootNote",
+                commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
+                        .until(feeder::isNotDetected));
+        NamedCommands.registerCommand("intakeNote",
+                commandFactory.intakeAndLoad().withTimeout(1.5));
 
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -135,18 +139,31 @@ public class RobotContainer {
         // Scoring location controls
         driverController.x().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.AMP));
         driverController.y().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SPEAKER));
-        driverController.b().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SUBWOOFER));
+        driverController.a().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SUBWOOFER));
     }
 
     private void configureTestBinding() {
-        testController.a().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 255, 0))));
-        testController.b().onTrue(new InstantCommand(() -> led.setColor(new LedColor(255, 0, 0))));
-        testController.x().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 0, 255))));
-        testController.y().onTrue(new InstantCommand(() -> led.setColor(new LedColor(0, 0, 0))));
+        // Shooter tuning button
+        // A button toggles whether we are in tuning mode
+        // POV UP/DOWN increases/decreases the shooter velocity
+        // POV RIGHT/LEFT increases/decreases the pivot angle
 
-        testController.povUp().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.SOLID)));
-        testController.povDown().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.STROBE)));
-        testController.povRight().onTrue(new InstantCommand(() -> led.setPattern(Led.Pattern.LARSON)));
+        final double TUNING_PIVOT_ANGLE_CHANGE = Units.degreesToRadians(1.0);
+        final double TUNING_SHOOTER_VELOCITY_CHANGE = Units.rotationsPerMinuteToRadiansPerSecond(25.0);
+
+        double[] tuningPivotAngle = new double[]{ pivot.getConstants().minAngle() };
+        double[] tuningShooterVelocity = new double[]{ 0.0 };
+
+        testController.a().toggleOnTrue(Commands.parallel(
+                pivot.follow(() -> tuningPivotAngle[0]),
+                shooter.withVelocity(() -> tuningShooterVelocity[0])
+        ));
+
+        testController.povUp().onTrue(Commands.runOnce(() -> tuningShooterVelocity[0] += TUNING_SHOOTER_VELOCITY_CHANGE));
+        testController.povDown().onTrue(Commands.runOnce(() -> tuningShooterVelocity[0] -= TUNING_SHOOTER_VELOCITY_CHANGE));
+
+        testController.povLeft().onTrue(Commands.runOnce(() -> tuningPivotAngle[0] -= TUNING_PIVOT_ANGLE_CHANGE));
+        testController.povRight().onTrue(Commands.runOnce(() -> tuningPivotAngle[0] += TUNING_PIVOT_ANGLE_CHANGE));
     }
 
     private double getDrivetrainXVelocity() {

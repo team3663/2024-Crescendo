@@ -16,6 +16,8 @@ import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.utility.AngleUtil;
+import frc.robot.utility.FireControlSystem;
+import frc.robot.utility.FiringSolution;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Collections;
@@ -183,8 +185,7 @@ public class CommandFactory {
                                 MathUtil.isNear(firingSolution[0].get().pivotAngle(), pivot.getAngle(), ALLOWABLE_PIVOT_ANGLE_ERROR) &&
                                 MathUtil.isNear(firingSolution[0].get().shooterVelocity(), shooter.getVelocity(), ALLOWABLE_SHOOTER_VELOCITY_ERROR) &&
                                 allowedToFireSupplier.getAsBoolean()
-                        ).deadlineWith(preFireGroup).andThen(fireCommand)
-                ).until(feeder::isNotDetected)
+                        ).deadlineWith(preFireGroup).andThen(fireCommand))
                 // Clear the old firing solution before starting
                 .beforeStarting(() -> firingSolution[0] = Optional.empty());
     }
