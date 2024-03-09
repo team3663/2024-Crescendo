@@ -16,6 +16,12 @@
           "data": {
             "name": "shootSubwooferNote"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "zero"
+          }
         }
       ]
     }

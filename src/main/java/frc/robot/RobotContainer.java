@@ -92,6 +92,8 @@ public class RobotContainer {
                         .andThen(pivot.moveTo(pivot.getConstants().restingAngle())));
         NamedCommands.registerCommand("intakeNote",
                 commandFactory.intakeAndLoad());
+        NamedCommands.registerCommand("zero",
+                pivot.zero().alongWith(climber.zero()));
 
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();
