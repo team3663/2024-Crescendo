@@ -2,10 +2,12 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class C2024ShooterIo implements ShooterIo {
     private static final double GEAR_RATIO = 1.0;
@@ -15,7 +17,7 @@ public class C2024ShooterIo implements ShooterIo {
 
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0.0);
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
-    private final CoastOut stopRequest = new CoastOut();
+    private final StaticBrake stopRequest = new StaticBrake();
 
 
     public C2024ShooterIo(TalonFX upperMotor, TalonFX lowerMotor) {
@@ -31,6 +33,7 @@ public class C2024ShooterIo implements ShooterIo {
         config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO / (2.0 * Math.PI);
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         config.Slot0.kP = 0.01;
         config.Slot0.kV = 0.02;

@@ -134,7 +134,10 @@ public class RobotContainer {
                 this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
         ));
 
-        driverController.rightBumper().whileTrue(Commands.select(robotModeCommandMap, RobotMode::getScoreLocation));
+        // Don't allow aiming when the intake button is held
+        driverController.rightBumper()
+                .and(driverController.leftTrigger().negate())
+                .whileTrue(Commands.select(robotModeCommandMap, RobotMode::getScoreLocation));
 
         // Climber controls
         driverController.start()
