@@ -86,9 +86,12 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("shootNote",
                 commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
-                        .until(feeder::isNotDetected));
+                        .andThen(pivot.moveTo(pivot.getConstants().restingAngle())));
+        NamedCommands.registerCommand("shootSubwooferNote",
+                commandFactory.aimAndFireAtSubwoofer(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
+                        .andThen(pivot.moveTo(pivot.getConstants().restingAngle())));
         NamedCommands.registerCommand("intakeNote",
-                commandFactory.intakeAndLoad().withTimeout(1.5));
+                commandFactory.intakeAndLoad());
 
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();

@@ -26,8 +26,8 @@ public class Vision extends SubsystemBase {
     private List<VisionMeasurement> acceptedMeasurements = Collections.emptyList();
 
     static {
-        MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(2.0, 2.0, 2.0));
-        MEASUREMENT_STD_DEV_DISTANCE_MAP.put(4.0, VecBuilder.fill(10.0, 10.0, 10.0));
+        MEASUREMENT_STD_DEV_DISTANCE_MAP.put(1.0, VecBuilder.fill(1.0, 1.0, 1.0));
+        MEASUREMENT_STD_DEV_DISTANCE_MAP.put(8.0, VecBuilder.fill(10.0, 10.0, 10.0));
     }
 
     public Vision(VisionIo[] ios) {

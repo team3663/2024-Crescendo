@@ -11,7 +11,6 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -19,18 +18,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.vision.VisionMeasurement;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Optional;
 
-public class CtreDrivetrain implements DrivetrainIO {
+public class CtreDrivetrain extends SwerveDrivetrain implements DrivetrainIO {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
     private final Drivetrain.Constants constants;
-    private final SwerveDrivetrain drivetrain;
 
     private Notifier simNotifier = null;
     private double lastSimTime;
@@ -44,6 +41,10 @@ public class CtreDrivetrain implements DrivetrainIO {
             Constants constants,
             SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants... moduleConstants) {
+        super(drivetrainConstants, 0.0,
+                VecBuilder.fill(0.1, 0.1, 0.1),
+                VecBuilder.fill(10.0, 10.0, 10.0),
+                moduleConstants);
         fieldCentricFacingAngleRequest.HeadingController.setPID(10.0, 0.0, 0.0);
         fieldCentricFacingAngleRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
         fieldCentricFacingAngleRequest.ForwardReference = SwerveRequest.ForwardReference.RedAlliance;
@@ -73,10 +74,6 @@ public class CtreDrivetrain implements DrivetrainIO {
                         new ReplanningConfig())
         );
 
-        drivetrain = new SwerveDrivetrain(drivetrainConstants, 0.0,
-                VecBuilder.fill(0.1, 0.1, 0.1),
-                VecBuilder.fill(10.0, 10.0, 10.0),
-                moduleConstants);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -91,7 +88,7 @@ public class CtreDrivetrain implements DrivetrainIO {
 
     @Override
     public void updateInputs(DrivetrainInputs inputs) {
-        SwerveDrivetrain.SwerveDriveState state = drivetrain.getState();
+        SwerveDrivetrain.SwerveDriveState state = this.getState();
 
         inputs.successfulDaqs = state.SuccessfulDaqs;
         inputs.failedDaqs = state.FailedDaqs;
@@ -101,17 +98,17 @@ public class CtreDrivetrain implements DrivetrainIO {
         inputs.moduleStates = state.ModuleStates == null ? new SwerveModuleState[0] : state.ModuleStates;
         inputs.moduleTargets = state.ModuleTargets == null ? new SwerveModuleState[0] : state.ModuleTargets;
         inputs.chassisSpeeds = kinematics.toChassisSpeeds(inputs.moduleStates);
-        inputs.rotation = drivetrain.getRotation3d();
+        inputs.rotation = this.getRotation3d();
     }
 
     @Override
     public void drive(ChassisSpeeds chassisSpeeds) {
-        drivetrain.setControl(applyChassisSpeedsRequest.withSpeeds(chassisSpeeds));
+        this.setControl(applyChassisSpeedsRequest.withSpeeds(chassisSpeeds));
     }
 
     @Override
     public void driveFieldOriented(double xVelocity, double yVelocity, double angularVelocity) {
-        drivetrain.setControl(
+        this.setControl(
                 fieldCentricRequest
                         .withVelocityX(xVelocity)
                         .withVelocityY(yVelocity)
@@ -121,7 +118,7 @@ public class CtreDrivetrain implements DrivetrainIO {
 
     @Override
     public void driveFieldOrientedFacingAngle(double xVelocity, double yVelocity, Rotation2d angle) {
-        drivetrain.setControl(
+        this.setControl(
                 fieldCentricFacingAngleRequest
                         .withVelocityX(xVelocity)
                         .withVelocityY(yVelocity)
@@ -131,22 +128,47 @@ public class CtreDrivetrain implements DrivetrainIO {
 
     @Override
     public void stop() {
-        drivetrain.setControl(idleRequest);
+        this.setControl(idleRequest);
     }
 
     @Override
     public void resetPose(Pose2d pose) {
-        drivetrain.seedFieldRelative(pose);
+        this.seedFieldRelative(pose);
+        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            Rotation2d forwardDirection = switch (alliance.get()) {
+                case Red -> Rotation2d.fromDegrees(180.0);
+                case Blue -> Rotation2d.fromDegrees(0.0);
+            };
+
+            this.setOperatorPerspectiveForward(forwardDirection);
+        }
     }
 
     @Override
     public void zeroGyroscope() {
-        drivetrain.seedFieldRelative();
+        boolean flipOrientation = false;
+
+        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            flipOrientation = alliance.get() == DriverStation.Alliance.Red;
+        }
+
+        try {
+            m_stateLock.writeLock().lock();
+
+            m_fieldRelativeOffset =
+                    flipOrientation ?
+                            getState().Pose.getRotation().rotateBy(Rotation2d.fromDegrees(180.0))
+                            : getState().Pose.getRotation();
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
     }
 
     @Override
     public void addVisionMeasurement(double timestamp, Pose2d pose, Matrix<N3, N1> stdDevs) {
-        drivetrain.addVisionMeasurement(pose, timestamp, stdDevs);
+        this.addVisionMeasurement(pose, timestamp, stdDevs);
     }
 
     private void startSimThread() {
@@ -159,7 +181,7 @@ public class CtreDrivetrain implements DrivetrainIO {
             lastSimTime = currentTime;
 
             /* use the measured time delta, get battery voltage from WPILib */
-            drivetrain.updateSimState(deltaTime, RobotController.getBatteryVoltage());
+            this.updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
     }

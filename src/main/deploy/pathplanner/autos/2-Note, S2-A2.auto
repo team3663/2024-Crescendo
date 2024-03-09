@@ -14,13 +14,26 @@
         {
           "type": "named",
           "data": {
-            "name": "shootNote"
+            "name": "shootSubwooferNote"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SC-A2"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "S2-A2"
+                }
+              }
+            ]
           }
         },
         {

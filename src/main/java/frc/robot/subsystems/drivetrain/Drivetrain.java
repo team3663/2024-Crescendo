@@ -2,11 +2,14 @@ package frc.robot.subsystems.drivetrain;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import edu.wpi.first.math.controller.PIDController;
+import com.pathplanner.lib.util.PathPlannerLogging;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,11 +23,26 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class Drivetrain extends SubsystemBase {
-    private static final double MAX_MEASUREMENT_DISTANCE = 100.0;
-
     private final DrivetrainIO io;
     private final DrivetrainInputsAutoLogged inputs = new DrivetrainInputsAutoLogged();
     private final Constants constants;
+
+    private static Pose2d mirrorIfRed(Pose2d pose) {
+        boolean shouldMirror =
+                DriverStation.getAlliance()
+                        .map(alliance -> alliance == DriverStation.Alliance.Red)
+                        .orElse(false);
+
+        if (shouldMirror) {
+            return new Pose2d(
+                    new Translation2d(frc.robot.Constants.FIELD_LAYOUT.getFieldLength() - pose.getX(),
+                            pose.getY()),
+                    Rotation2d.fromDegrees(180.0).rotateBy(pose.getRotation())
+            );
+        } else {
+            return pose;
+        }
+    }
 
     public Drivetrain(DrivetrainIO io) {
         this.io = io;
@@ -44,6 +62,18 @@ public class Drivetrain extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+//        AutoBuilder.configureHolonomic(
+//                () -> mirrorIfRed(inputs.pose),
+//                pose -> io.resetPose(mirrorIfRed(pose)),
+//                () -> inputs.chassisSpeeds,
+//                io::drive,
+//                constants.pathFollowerConfig(),
+//                () -> false,
+//                this // Reference to this subsystem to set requirements
+//        );
+
+        PathPlannerLogging.setLogCurrentPoseCallback(pose -> Logger.recordOutput("Drivetrain/PPCurrent", pose));
+        PathPlannerLogging.setLogTargetPoseCallback(pose -> Logger.recordOutput("Drivetrain/PPTarget", pose));
     }
 
     public Constants getConstants() {
@@ -68,12 +98,7 @@ public class Drivetrain extends SubsystemBase {
         Translation2d currentPosition = inputs.pose.getTranslation();
 
         for (VisionMeasurement measurement : measurements) {
-            Translation2d measuredPosition = measurement.estimatedPose().getTranslation();
-            double distance = currentPosition.getDistance(measuredPosition);
-
-            if (distance < MAX_MEASUREMENT_DISTANCE) {
-                io.addVisionMeasurement(measurement.timestamp(), measurement.estimatedPose(), measurement.standardDeviation());
-            }
+            io.addVisionMeasurement(measurement.timestamp(), measurement.estimatedPose(), measurement.standardDeviation());
         }
     }
 
@@ -117,7 +142,8 @@ public class Drivetrain extends SubsystemBase {
             DoubleSupplier angularVelocitySupplier,
             Supplier<Optional<Rotation2d>> angleSupplier
     ) {
-        PIDController controller = new PIDController(10.0, 0.0, 0.0);
+        ProfiledPIDController controller = new ProfiledPIDController(10.0, 0.0, 1.0,
+                new TrapezoidProfile.Constraints(0.9 * constants.maxAngularVelocity(), Units.degreesToRadians(180.0)));
         controller.enableContinuousInput(-Math.PI, Math.PI);
 
         return runEnd(
@@ -141,7 +167,7 @@ public class Drivetrain extends SubsystemBase {
                 },
                 // end()
                 io::stop
-        );
+        ).beforeStarting(() -> controller.reset(inputs.pose.getRotation().getRadians()));
     }
 
     public Command zeroGyroscope() {

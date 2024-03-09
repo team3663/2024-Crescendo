@@ -10,7 +10,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.function.DoubleSupplier;
 
 public class Pivot extends SubsystemBase {
-    private static final double ANGLE_THRESHOLD = Units.degreesToRadians(0.5);
+    private static final double ANGLE_THRESHOLD = Units.degreesToRadians(2.5);
     public static final double VELOCITY_WAIT_SEC = 0.1;
     public static final double VELOCITY_ZERO_RANGE = 0.01;
 

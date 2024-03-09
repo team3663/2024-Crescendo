@@ -79,7 +79,7 @@ public class CommandFactory {
         return Commands.parallel(
                 Commands.waitSeconds(0.25).andThen(Commands.waitUntil(feeder::isDetected))
                         .deadlineWith(intake.withVoltage(4.0)),
-                feeder.runWithVoltage(6.0)
+                feeder.runWithVoltage(3.0)
                         .until(feeder::isDetected)
         );
     }
@@ -157,7 +157,15 @@ public class CommandFactory {
             preFireGroup.addCommands(shooterCommand);
 
         // Assemble the main command
-        return Commands.parallel(
+        return Commands.deadline(
+                        // Only fire when all are met: we have a valid targeting solution, we are facing the correct direction,
+                        // the pivot is at the correct angle, the shooter is at the correct velocity, and we are allowed to fire
+                        Commands.waitUntil(() -> firingSolution[0].isPresent() &&
+                                (firingSolution[0].get().robotRotation().isEmpty() || AngleUtil.angleDifference(drivetrain.getPose().getRotation(), firingSolution[0].get().robotRotation().get()) < ALLOWABLE_ROBOT_ROTATION_ERROR) &&
+                                MathUtil.isNear(firingSolution[0].get().pivotAngle(), pivot.getAngle(), ALLOWABLE_PIVOT_ANGLE_ERROR) &&
+                                MathUtil.isNear(firingSolution[0].get().shooterVelocity(), shooter.getVelocity(), ALLOWABLE_SHOOTER_VELOCITY_ERROR) &&
+                                allowedToFireSupplier.getAsBoolean()
+                        ).deadlineWith(preFireGroup).andThen(fireCommand),
                         // Constantly re-calculate the firing solution
                         Commands.run(() -> firingSolution[0] = firingSolutionSupplier.get()),
 
@@ -176,16 +184,7 @@ public class CommandFactory {
                                     .map(velocity -> MathUtil.isNear(velocity, shooter.getVelocity(), ALLOWABLE_SHOOTER_VELOCITY_ERROR)).orElse(false));
                             Logger.recordOutput("FCS/AllowedToFire", allowedToFireSupplier.getAsBoolean());
                         }),
-
-                        mainGroup,
-                        // Only fire when all are met: we have a valid targeting solution, we are facing the correct direction,
-                        // the pivot is at the correct angle, the shooter is at the correct velocity, and we are allowed to fire
-                        Commands.waitUntil(() -> firingSolution[0].isPresent() &&
-                                (firingSolution[0].get().robotRotation().isEmpty() || AngleUtil.angleDifference(drivetrain.getPose().getRotation(), firingSolution[0].get().robotRotation().get()) < ALLOWABLE_ROBOT_ROTATION_ERROR) &&
-                                MathUtil.isNear(firingSolution[0].get().pivotAngle(), pivot.getAngle(), ALLOWABLE_PIVOT_ANGLE_ERROR) &&
-                                MathUtil.isNear(firingSolution[0].get().shooterVelocity(), shooter.getVelocity(), ALLOWABLE_SHOOTER_VELOCITY_ERROR) &&
-                                allowedToFireSupplier.getAsBoolean()
-                        ).deadlineWith(preFireGroup).andThen(fireCommand))
+                        mainGroup)
                 // Clear the old firing solution before starting
                 .beforeStarting(() -> firingSolution[0] = Optional.empty());
     }
@@ -214,13 +213,13 @@ public class CommandFactory {
             DoubleSupplier xVelocitySupplier,
             DoubleSupplier yVelocitySupplier,
             DoubleSupplier angularVelocitySupplier) {
-        final double PIVOT_ANGLE = Units.degreesToRadians(120.0);
-        final double SHOOTER_VELOCITY = 1500.0;
+        final double PIVOT_ANGLE = Units.degreesToRadians(119.0);
+        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(1500.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getAmpRotationForAlliance)
                         .map(robotRotation -> new FiringSolution(robotRotation, PIVOT_ANGLE, SHOOTER_VELOCITY)),
                 // Move slightly away from the wall and then fire
-                drivetrain.driveRobotOriented(() -> 0.1, () -> 0.0, () -> 0.0).withTimeout(0.25).andThen(feeder.runWithVoltage(12.0)),
+                drivetrain.driveRobotOriented(() -> 0.1, () -> 0.0, () -> 0.0).withTimeout(0.25).andThen(feeder.runWithVoltage(12.0)).until(feeder::isNotDetected),
                 allowedToFireSupplier,
                 xVelocitySupplier,
                 yVelocitySupplier,
@@ -262,7 +261,7 @@ public class CommandFactory {
                             return fireControlSystem.calculate(drivetrain.getPose(), speakerPosition);
                         }),
                 // Fire command
-                feeder.runWithVoltage(12.0),
+                feeder.runWithVoltage(12.0).until(feeder::isNotDetected),
                 allowedToFireSupplier,
                 xVelocitySupplier,
                 yVelocitySupplier,
@@ -298,7 +297,7 @@ public class CommandFactory {
         final double FRONT_PIVOT_ANGLE = Units.degreesToRadians(50.0);
         final double FRONT_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
         // Constants to use when at the side of the subwoofer
-        final double SIDE_PIVOT_ANGLE = Units.degreesToRadians(40.0);
+        final double SIDE_PIVOT_ANGLE = Units.degreesToRadians(50.0);
         final double SIDE_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getSubwooferRotationsForAlliance).map(subwooferRotations -> {
@@ -316,7 +315,7 @@ public class CommandFactory {
                     else
                         return new FiringSolution(Optional.empty(), SIDE_PIVOT_ANGLE, SIDE_SHOOTER_VELOCITY);
                 }),
-                feeder.runWithVoltage(12.0),
+                feeder.runWithVoltage(12.0).until(feeder::isNotDetected),
                 allowedToFireSupplier,
                 xVelocitySupplier,
                 yVelocitySupplier,

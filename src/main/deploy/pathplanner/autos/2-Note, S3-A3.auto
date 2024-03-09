@@ -14,13 +14,26 @@
         {
           "type": "named",
           "data": {
-            "name": "shootNote"
+            "name": "shootSubwooferNote"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SR-A3"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "S3-A3"
+                }
+              }
+            ]
           }
         },
         {

@@ -14,13 +14,26 @@
         {
           "type": "named",
           "data": {
-            "name": "shootNote"
+            "name": "shootSubwooferNote"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SL-A1"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "S1-A1"
+                }
+              }
+            ]
           }
         },
         {
