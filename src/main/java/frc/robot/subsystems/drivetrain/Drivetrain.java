@@ -142,8 +142,8 @@ public class Drivetrain extends SubsystemBase {
             DoubleSupplier angularVelocitySupplier,
             Supplier<Optional<Rotation2d>> angleSupplier
     ) {
-        ProfiledPIDController controller = new ProfiledPIDController(10.0, 0.0, 1.0,
-                new TrapezoidProfile.Constraints(0.9 * constants.maxAngularVelocity(), Units.degreesToRadians(180.0)));
+        ProfiledPIDController controller = new ProfiledPIDController(10.0, 0.0, 0.0,
+                new TrapezoidProfile.Constraints(0.9 * constants.maxAngularVelocity(), Units.degreesToRadians(720.0)));
         controller.enableContinuousInput(-Math.PI, Math.PI);
 
         return runEnd(
