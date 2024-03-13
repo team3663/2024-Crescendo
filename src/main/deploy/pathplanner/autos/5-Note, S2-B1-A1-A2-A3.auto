@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 6.66
+      "x": 1.36,
+      "y": 5.55
     },
-    "rotation": -120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -32,15 +32,28 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "parallel",
                       "data": {
-                        "pathName": "S1-B1"
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "S2-B1"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "zero"
+                            }
+                          }
+                        ]
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 0.5
                       }
                     }
                   ]
@@ -50,31 +63,19 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "B1-A1.5"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootNote"
-          }
-        },
-        {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B1-A1.5"
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "intakeNote"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "A1.5-A1R"
                 }
               }
             ]
@@ -87,7 +88,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -97,9 +98,22 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "A1R-A2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "A1.5-A1R"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 3.0
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -112,7 +126,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -122,9 +136,60 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "A2-A3R"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "A1R-A2"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 3.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNote"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "A2-A3R"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 3.0
+                      }
+                    }
+                  ]
                 }
               }
             ]
