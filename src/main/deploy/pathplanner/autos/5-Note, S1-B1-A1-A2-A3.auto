@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1.5-A1"
+                  "pathName": "A1.5-A1R"
                 }
               }
             ]
@@ -86,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1-A2"
+                  "pathName": "A1R-A2"
                 }
               }
             ]
@@ -111,7 +111,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A2-A3"
+                  "pathName": "A2-A3R"
                 }
               }
             ]
