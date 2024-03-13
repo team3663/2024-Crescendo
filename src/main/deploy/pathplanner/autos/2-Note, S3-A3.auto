@@ -41,6 +41,12 @@
           "data": {
             "name": "shootNote"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "zero"
+          }
         }
       ]
     }

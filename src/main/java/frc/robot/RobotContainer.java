@@ -92,6 +92,8 @@ public class RobotContainer {
                         .andThen(pivot.moveTo(pivot.getConstants().restingAngle())));
         NamedCommands.registerCommand("intakeNote",
                 commandFactory.intakeAndLoad());
+        NamedCommands.registerCommand("zero",
+                pivot.zero().alongWith(climber.zero()));
 
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -132,7 +134,10 @@ public class RobotContainer {
                 this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
         ));
 
-        driverController.rightBumper().whileTrue(Commands.select(robotModeCommandMap, RobotMode::getScoreLocation));
+        // Don't allow aiming when the intake button is held
+        driverController.rightBumper()
+                .and(driverController.leftTrigger().negate())
+                .whileTrue(Commands.select(robotModeCommandMap, RobotMode::getScoreLocation));
 
         // Climber controls
         driverController.start()

@@ -261,7 +261,9 @@ public class CommandFactory {
                             return fireControlSystem.calculate(drivetrain.getPose(), speakerPosition);
                         }),
                 // Fire command
-                feeder.runWithVoltage(12.0).until(feeder::isNotDetected),
+                Commands.deadline(
+                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(0.25)),
+                        feeder.runWithVoltage(12.0)),
                 allowedToFireSupplier,
                 xVelocitySupplier,
                 yVelocitySupplier,
@@ -315,7 +317,9 @@ public class CommandFactory {
                     else
                         return new FiringSolution(Optional.empty(), SIDE_PIVOT_ANGLE, SIDE_SHOOTER_VELOCITY);
                 }),
-                feeder.runWithVoltage(12.0).until(feeder::isNotDetected),
+                Commands.deadline(
+                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(0.25)),
+                        feeder.runWithVoltage(12.0)),
                 allowedToFireSupplier,
                 xVelocitySupplier,
                 yVelocitySupplier,

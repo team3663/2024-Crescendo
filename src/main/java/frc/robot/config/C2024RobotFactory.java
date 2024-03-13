@@ -184,25 +184,25 @@ public class C2024RobotFactory implements RobotFactory {
         private static final int FRONT_LEFT_DRIVE_MOTOR_ID = 1;
         private static final int FRONT_LEFT_STEER_MOTOR_ID = 2;
         private static final int FRONT_LEFT_ENCODER_ID = 1;
-        private static final double FRONT_LEFT_ENCODER_OFFSET = 0.05908203125;
+        private static final double FRONT_LEFT_ENCODER_OFFSET = Units.degreesToRotations(19.16015625);
 
         // Front Right
         private static final int FRONT_RIGHT_DRIVE_MOTOR_ID = 3;
         private static final int FRONT_RIGHT_STEER_MOTOR_ID = 4;
         private static final int FRONT_RIGHT_ENCODER_ID = 2;
-        private static final double FRONT_RIGHT_ENCODER_OFFSET = -0.359619140625;
+        private static final double FRONT_RIGHT_ENCODER_OFFSET = Units.degreesToRotations(-130.078125);
 
         // Back Left
         private static final int BACK_LEFT_DRIVE_MOTOR_ID = 5;
         private static final int BACK_LEFT_STEER_MOTOR_ID = 6;
         private static final int BACK_LEFT_ENCODER_ID = 3;
-        private static final double BACK_LEFT_ENCODER_OFFSET = 0.314697265625;
+        private static final double BACK_LEFT_ENCODER_OFFSET = Units.degreesToRotations(111.26953125);
 
         // Back Right
         private static final int BACK_RIGHT_DRIVE_MOTOR_ID = 7;
         private static final int BACK_RIGHT_STEER_MOTOR_ID = 8;
         private static final int BACK_RIGHT_ENCODER_ID = 4;
-        private static final double BACK_RIGHT_ENCODER_OFFSET = 0.332763671875;
+        private static final double BACK_RIGHT_ENCODER_OFFSET = Units.degreesToRotations(125.5078125);
 
         public static final SwerveModuleConstants FRONT_LEFT = MODULE_CONSTANTS_FACTORY.createModuleConstants(
                 FRONT_LEFT_STEER_MOTOR_ID, FRONT_LEFT_DRIVE_MOTOR_ID, FRONT_LEFT_ENCODER_ID, FRONT_LEFT_ENCODER_OFFSET, FRONT_MODULE_X_OFFSET, MODULE_Y_OFFSET, INVERT_LEFT_SIDE);
