@@ -12,7 +12,7 @@
         "y": 6.949836023565852
       },
       "isLocked": false,
-      "linkedName": "SL"
+      "linkedName": "S1"
     },
     {
       "anchor": {
@@ -38,8 +38,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.5,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
