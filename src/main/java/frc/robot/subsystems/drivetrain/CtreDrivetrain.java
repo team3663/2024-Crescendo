@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drivetrain;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -45,6 +46,16 @@ public class CtreDrivetrain extends SwerveDrivetrain implements DrivetrainIO {
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(10.0, 10.0, 10.0),
                 moduleConstants);
+
+        for (int i = 0; i < Modules.length; ++i) {
+            CurrentLimitsConfigs config = new CurrentLimitsConfigs();
+            config.SupplyCurrentLimit = 40.0;
+            config.SupplyCurrentLimitEnable = true;
+
+            this.Modules[i].getDriveMotor().getConfigurator()
+                    .apply(config);
+        }
+
         fieldCentricFacingAngleRequest.HeadingController.setPID(10.0, 0.0, 0.0);
         fieldCentricFacingAngleRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
         fieldCentricFacingAngleRequest.ForwardReference = SwerveRequest.ForwardReference.RedAlliance;
