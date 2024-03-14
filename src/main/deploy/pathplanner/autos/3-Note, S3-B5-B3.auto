@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 6.66
+      "y": 4.43
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -32,15 +32,22 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "parallel",
                       "data": {
-                        "pathName": "S1-B1"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "zero"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "S3-B5"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -50,18 +57,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "B1-A1.5"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootNote"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -74,7 +69,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1.5-A1R"
+                  "pathName": "B5-USC"
                 }
               }
             ]
@@ -87,7 +82,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -97,21 +92,22 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "A1R-A2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "USC-B3"
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "shootNote"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -124,7 +120,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A2-A3R"
+                  "pathName": "B3-UAC"
                 }
               }
             ]
