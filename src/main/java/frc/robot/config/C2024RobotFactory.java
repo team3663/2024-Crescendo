@@ -223,7 +223,7 @@ public class C2024RobotFactory implements RobotFactory {
         private static final double LEFT_CAMERA_X = Units.inchesToMeters(5.25);
         private static final double LEFT_CAMERA_Y = Units.inchesToMeters(12.25);
         private static final double LEFT_CAMERA_Z = Units.inchesToMeters(16.5);
-        private static final double LEFT_CAMERA_PITCH = Units.degreesToRadians(-10.00);
+        private static final double LEFT_CAMERA_PITCH = Units.degreesToRadians(-15.00);
         private static final double LEFT_CAMERA_YAW = Units.degreesToRadians(15.220741);
 
         private static final double RIGHT_CAMERA_X = Units.inchesToMeters(5.25);

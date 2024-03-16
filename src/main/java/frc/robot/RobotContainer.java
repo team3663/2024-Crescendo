@@ -85,15 +85,17 @@ public class RobotContainer {
         }
 
         NamedCommands.registerCommand("shootNote",
-                commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
-                        .andThen(pivot.moveTo(pivot.getConstants().restingAngle())));
+                Commands.either(
+                        commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
+                                .andThen(pivot.moveTo(pivot.getConstants().restingAngle())),
+                        Commands.none(),
+                        feeder::isDetected));
         NamedCommands.registerCommand("shootSubwooferNote",
                 commandFactory.aimAndFireAtSubwoofer(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
                         .andThen(pivot.moveTo(pivot.getConstants().restingAngle())));
         NamedCommands.registerCommand("intakeNote",
                 commandFactory.intakeAndLoad());
-        NamedCommands.registerCommand("zero",
-                pivot.zero().alongWith(climber.zero()));
+        NamedCommands.registerCommand("zero", pivot.zero());
 
         // Build an auto chooser. This will use Commands.none() as the default option.
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -164,8 +166,8 @@ public class RobotContainer {
         final double TUNING_PIVOT_ANGLE_CHANGE = Units.degreesToRadians(1.0);
         final double TUNING_SHOOTER_VELOCITY_CHANGE = Units.rotationsPerMinuteToRadiansPerSecond(25.0);
 
-        double[] tuningPivotAngle = new double[]{ pivot.getConstants().minAngle() };
-        double[] tuningShooterVelocity = new double[]{ 0.0 };
+        double[] tuningPivotAngle = new double[]{pivot.getConstants().minAngle()};
+        double[] tuningShooterVelocity = new double[]{0.0};
 
         testController.a().toggleOnTrue(Commands.parallel(
                 pivot.follow(() -> tuningPivotAngle[0]),
@@ -217,6 +219,7 @@ public class RobotContainer {
                 // Initially zero the pivot in-place
                 // This is instant, and should give us a good enough zero for autonomous
                 // This means that the pivot MUST be resting at the bottom of travel
-                .beforeStarting(pivot.zeroInPlace());
+                .beforeStarting(pivot.zeroInPlace())
+                .alongWith(climber.zero());
     }
 }

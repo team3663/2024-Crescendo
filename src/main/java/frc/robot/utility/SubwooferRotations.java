@@ -6,6 +6,7 @@ import java.util.Collection;
 
 public record SubwooferRotations(
         Rotation2d front,
-        Collection<Rotation2d> sides
+        Rotation2d ampSide,
+        Rotation2d sourceSide
 ) {
 }

@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.36,
-        "y": 5.55
+        "x": 2.6,
+        "y": 6.8536861666210935
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3600000000000003,
-        "y": 5.55
+        "x": 2.3163632193504147,
+        "y": 6.362412851640743
       },
       "isLocked": false,
-      "linkedName": "S2"
+      "linkedName": "A1R"
     },
     {
       "anchor": {
@@ -20,7 +20,7 @@
         "y": 5.567892751660769
       },
       "prevControl": {
-        "x": 1.5158413148684704,
+        "x": 1.8158413148684704,
         "y": 5.567892751660769
       },
       "nextControl": null,
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -150.0,
     "velocity": 0
   },
   "useDefaultConstraints": true
