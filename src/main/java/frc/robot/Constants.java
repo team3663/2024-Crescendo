@@ -32,9 +32,9 @@ public final class Constants {
     private static final Translation2d RED_SPEAKER_POSITION = FIELD_LAYOUT.getTagPose(4).orElse(new Pose3d()).toPose2d().getTranslation();
 
     private static final SubwooferRotations BLUE_SUBWOOFER_ROTATIONS = new SubwooferRotations(Rotation2d.fromDegrees(180.0),
-            List.of(Rotation2d.fromDegrees(-120.0), Rotation2d.fromDegrees(120.0)));
+            Rotation2d.fromDegrees(-120.0), Rotation2d.fromDegrees(120.0));
     private static final SubwooferRotations RED_SUBWOOFER_ROTATIONS = new SubwooferRotations(Rotation2d.fromDegrees(0.0),
-            List.of(Rotation2d.fromDegrees(-60.0), Rotation2d.fromDegrees(60.0)));
+            Rotation2d.fromDegrees(-60.0), Rotation2d.fromDegrees(60.0));
 
     // If true code will turn on various test feature like enabling and biding the test controller.
     public static boolean ENABLE_TEST_FEATURES = true;

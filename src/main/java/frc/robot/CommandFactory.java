@@ -19,6 +19,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.utility.AngleUtil;
 import frc.robot.utility.FireControlSystem;
 import frc.robot.utility.FiringSolution;
+import frc.robot.utility.SubwooferRotations;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Collections;
@@ -257,6 +258,8 @@ public class CommandFactory {
                             Pose2d robotPose = drivetrain.getPose();
 
                             Logger.recordOutput("FCS/TargetDifference", speakerPosition.minus(robotPose.getTranslation()));
+                            Logger.recordOutput("FCS/TargetDistance", speakerPosition.getDistance(robotPose.getTranslation()));
+
 
                             return fireControlSystem.calculate(drivetrain.getPose(), speakerPosition);
                         }),
@@ -300,22 +303,40 @@ public class CommandFactory {
         final double FRONT_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
         // Constants to use when at the side of the subwoofer
         final double SIDE_PIVOT_ANGLE = Units.degreesToRadians(50.0);
-        final double SIDE_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
+        final double SIDE_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(3000.0);
+
+        // Constants to use when at the front of the subwoofer when robot is backwards
+        final double FRONT_REVERSE_PIVOT_ANGLE = Units.degreesToRadians(110.0);
+        final double FRONT_REVERSE_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
+        // Constants to use when at the side of the subwoofer when robot is backwards
+        final double SIDE_REVERSE_PIVOT_ANGLE = Units.degreesToRadians(115.0);
+        final double SIDE_REVERSE_SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(3000.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getSubwooferRotationsForAlliance).map(subwooferRotations -> {
                     Rotation2d robotRotation = drivetrain.getPose().getRotation();
 
-                    Rotation2d nearestRotation = Stream.concat(Stream.of(subwooferRotations.front()), subwooferRotations.sides().stream())
-                            .min(Comparator.comparingDouble(rotation -> AngleUtil.angleDifference(robotRotation, rotation)))
-                            .orElse(subwooferRotations.front());
+                    SubwooferRotations reversedSubwooferRotations = new SubwooferRotations(
+                            subwooferRotations.front().rotateBy(Rotation2d.fromDegrees(180.0)),
+                            subwooferRotations.ampSide().rotateBy(Rotation2d.fromDegrees(180.0)),
+                            subwooferRotations.sourceSide().rotateBy(Rotation2d.fromDegrees(180.0)));
+
+                    Rotation2d nearestRotation =
+                            Stream.of(subwooferRotations.front(), subwooferRotations.ampSide(), subwooferRotations.sourceSide(),
+                                            reversedSubwooferRotations.front(), reversedSubwooferRotations.ampSide(), reversedSubwooferRotations.sourceSide())
+                                    .min(Comparator.comparingDouble(rotation -> AngleUtil.angleDifference(robotRotation, rotation)))
+                                    .orElse(subwooferRotations.front());
 
                     Logger.recordOutput("FCS/NearestSubwooferRotation", nearestRotation);
                     Logger.recordOutput("FCS/NearestSubwooferRotationDifference", AngleUtil.angleDifference(robotRotation, nearestRotation));
 
-                    if (nearestRotation.equals(subwooferRotations.front()))
-                        return new FiringSolution(Optional.empty(), FRONT_PIVOT_ANGLE, FRONT_SHOOTER_VELOCITY);
-                    else
+                    if (nearestRotation.equals(subwooferRotations.ampSide()) || nearestRotation.equals(subwooferRotations.sourceSide()))
                         return new FiringSolution(Optional.empty(), SIDE_PIVOT_ANGLE, SIDE_SHOOTER_VELOCITY);
+                    else if (nearestRotation.equals(reversedSubwooferRotations.front()))
+                        return new FiringSolution(Optional.empty(), FRONT_REVERSE_PIVOT_ANGLE, FRONT_REVERSE_SHOOTER_VELOCITY);
+                    else if (nearestRotation.equals(reversedSubwooferRotations.ampSide()) || nearestRotation.equals(reversedSubwooferRotations.sourceSide()))
+                        return new FiringSolution(Optional.empty(), SIDE_REVERSE_PIVOT_ANGLE, SIDE_REVERSE_SHOOTER_VELOCITY);
+                    else
+                        return new FiringSolution(Optional.empty(), FRONT_PIVOT_ANGLE, FRONT_SHOOTER_VELOCITY);
                 }),
                 Commands.deadline(
                         Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(0.25)),
