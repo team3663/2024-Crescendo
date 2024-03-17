@@ -25,6 +25,8 @@ public final class Constants {
 
     public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
 
+    public static final double PIVOT_POST_SHOOT_MOVEMENT_DELAY = 0.1;
+
     private static final Rotation2d BLUE_AMP_ROTATION = Rotation2d.fromDegrees(-90.0);
     private static final Rotation2d RED_AMP_ROTATION = Rotation2d.fromDegrees(-90.0);
 

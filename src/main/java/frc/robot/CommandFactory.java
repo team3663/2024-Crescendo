@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 
 import static edu.wpi.first.math.util.Units.degreesToRadians;
 import static edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond;
+import static frc.robot.Constants.PIVOT_POST_SHOOT_MOVEMENT_DELAY;
 
 public class CommandFactory {
     private final Climber climber;
@@ -265,7 +266,7 @@ public class CommandFactory {
                         }),
                 // Fire command
                 Commands.deadline(
-                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(0.25)),
+                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(PIVOT_POST_SHOOT_MOVEMENT_DELAY)),
                         feeder.runWithVoltage(12.0)),
                 allowedToFireSupplier,
                 xVelocitySupplier,
@@ -339,7 +340,7 @@ public class CommandFactory {
                         return new FiringSolution(Optional.empty(), FRONT_PIVOT_ANGLE, FRONT_SHOOTER_VELOCITY);
                 }),
                 Commands.deadline(
-                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(0.25)),
+                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(PIVOT_POST_SHOOT_MOVEMENT_DELAY)),
                         feeder.runWithVoltage(12.0)),
                 allowedToFireSupplier,
                 xVelocitySupplier,
