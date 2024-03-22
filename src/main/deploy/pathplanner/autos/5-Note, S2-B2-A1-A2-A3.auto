@@ -38,7 +38,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "S2-B1"
+                              "pathName": "S2-B2"
                             }
                           },
                           {
@@ -63,7 +63,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B1-A1.5"
+                  "pathName": "B2-A1.5"
                 }
               },
               {

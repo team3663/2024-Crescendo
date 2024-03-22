@@ -15,7 +15,7 @@ public class FireControlSystem {
             LookupEntry::interpolate
     );
 
-    private static final double SHOOTER_VELOCITY_OFFSET = rotationsPerMinuteToRadiansPerSecond(0.0);
+    private static final double SHOOTER_VELOCITY_OFFSET = rotationsPerMinuteToRadiansPerSecond(250.0);
 
     static {
         DISTANCE_LOOKUP_TABLE.put(feetToMeters(1.0), new LookupEntry(degreesToRadians(50.0), rotationsPerMinuteToRadiansPerSecond(2500.0)));
@@ -24,7 +24,7 @@ public class FireControlSystem {
         DISTANCE_LOOKUP_TABLE.put(3.0, new LookupEntry(degreesToRadians(27.0), rotationsPerMinuteToRadiansPerSecond(3250.0)));
         DISTANCE_LOOKUP_TABLE.put(3.5, new LookupEntry(degreesToRadians(21.0), rotationsPerMinuteToRadiansPerSecond(3500.0)));
         DISTANCE_LOOKUP_TABLE.put(4.0, new LookupEntry(degreesToRadians(18.0), rotationsPerMinuteToRadiansPerSecond(3750.0)));
-        DISTANCE_LOOKUP_TABLE.put(4.5, new LookupEntry(degreesToRadians(16.0), rotationsPerMinuteToRadiansPerSecond(4250.0)));
+        DISTANCE_LOOKUP_TABLE.put(4.5, new LookupEntry(degreesToRadians(15.0), rotationsPerMinuteToRadiansPerSecond(4250.0)));
         DISTANCE_LOOKUP_TABLE.put(5.0, new LookupEntry(degreesToRadians(15.0), rotationsPerMinuteToRadiansPerSecond(4500.0)));
         DISTANCE_LOOKUP_TABLE.put(5.5, new LookupEntry(degreesToRadians(13.0), rotationsPerMinuteToRadiansPerSecond(4750.0)));
 
