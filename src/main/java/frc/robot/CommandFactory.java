@@ -146,7 +146,8 @@ public class CommandFactory {
         else
             preFireGroup.addCommands(driveCommand);
 
-        Command pivotCommand = pivot.follow(() -> firingSolution[0].map(FiringSolution::pivotAngle).orElse(pivot.getConstants().minAngle()));
+        Command pivotCommand = pivot.follow(() -> firingSolution[0].map(FiringSolution::pivotAngle).orElse(pivot.getConstants().minPivotAngle()),
+                () -> firingSolution[0].flatMap(FiringSolution::ampAngle).orElse(0.0));
         if (Collections.disjoint(pivotCommand.getRequirements(), fireCommand.getRequirements()))
             mainGroup.addCommands(pivotCommand);
         else
@@ -215,13 +216,14 @@ public class CommandFactory {
             DoubleSupplier xVelocitySupplier,
             DoubleSupplier yVelocitySupplier,
             DoubleSupplier angularVelocitySupplier) {
-        final double PIVOT_ANGLE = Units.degreesToRadians(119.0);
-        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(1500.0);
+        final double PIVOT_ANGLE = Units.degreesToRadians(123.0);
+        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(1200.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getAmpRotationForAlliance)
-                        .map(robotRotation -> new FiringSolution(robotRotation, PIVOT_ANGLE, SHOOTER_VELOCITY)),
+                        .map(robotRotation -> new FiringSolution(robotRotation, PIVOT_ANGLE, pivot.getConstants().maxAmpAngle(), SHOOTER_VELOCITY)),
                 // Move slightly away from the wall and then fire
-                drivetrain.driveRobotOriented(() -> 0.1, () -> 0.0, () -> 0.0).withTimeout(0.25).andThen(feeder.runWithVoltage(12.0)).until(feeder::isNotDetected),
+                feeder.runWithVoltage(12.0).until(feeder::isNotDetected).andThen(Commands.waitSeconds(0.5)),
+//                drivetrain.driveRobotOriented(() -> 0.1, () -> 0.0, () -> 0.0).withTimeout(0.25).andThen(feeder.runWithVoltage(12.0)).until(feeder::isNotDetected),
                 allowedToFireSupplier,
                 xVelocitySupplier,
                 yVelocitySupplier,
@@ -331,13 +333,13 @@ public class CommandFactory {
                     Logger.recordOutput("FCS/NearestSubwooferRotationDifference", AngleUtil.angleDifference(robotRotation, nearestRotation));
 
                     if (nearestRotation.equals(subwooferRotations.ampSide()) || nearestRotation.equals(subwooferRotations.sourceSide()))
-                        return new FiringSolution(Optional.empty(), SIDE_PIVOT_ANGLE, SIDE_SHOOTER_VELOCITY);
+                        return new FiringSolution(SIDE_PIVOT_ANGLE, SIDE_SHOOTER_VELOCITY);
                     else if (nearestRotation.equals(reversedSubwooferRotations.front()))
-                        return new FiringSolution(Optional.empty(), FRONT_REVERSE_PIVOT_ANGLE, FRONT_REVERSE_SHOOTER_VELOCITY);
+                        return new FiringSolution(FRONT_REVERSE_PIVOT_ANGLE, FRONT_REVERSE_SHOOTER_VELOCITY);
                     else if (nearestRotation.equals(reversedSubwooferRotations.ampSide()) || nearestRotation.equals(reversedSubwooferRotations.sourceSide()))
-                        return new FiringSolution(Optional.empty(), SIDE_REVERSE_PIVOT_ANGLE, SIDE_REVERSE_SHOOTER_VELOCITY);
+                        return new FiringSolution(SIDE_REVERSE_PIVOT_ANGLE, SIDE_REVERSE_SHOOTER_VELOCITY);
                     else
-                        return new FiringSolution(Optional.empty(), FRONT_PIVOT_ANGLE, FRONT_SHOOTER_VELOCITY);
+                        return new FiringSolution(FRONT_PIVOT_ANGLE, FRONT_SHOOTER_VELOCITY);
                 }),
                 Commands.deadline(
                         Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(PIVOT_POST_SHOOT_MOVEMENT_DELAY)),

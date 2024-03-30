@@ -9,6 +9,7 @@ import frc.robot.utility.SimUtil;
 
 import static edu.wpi.first.math.util.Units.degreesToRadians;
 
+/*
 public class SimPivotIo implements PivotIo {
     private static final Pivot.Constants CONSTANTS = new Pivot.Constants(degreesToRadians(0.0), degreesToRadians(150.0), degreesToRadians(2.0), -1.0);;
 
@@ -17,7 +18,7 @@ public class SimPivotIo implements PivotIo {
     private static final double CURRENT_LIMIT = 40.0;
 
     private final SingleJointedArmSim sim =
-            new SingleJointedArmSim(MOTOR, GEAR_RATIO, 2.0, 0.3, CONSTANTS.minAngle(), CONSTANTS.maxAngle(), false, CONSTANTS.minAngle());
+            new SingleJointedArmSim(MOTOR, GEAR_RATIO, 2.0, 0.3, CONSTANTS.minPivotAngle(), CONSTANTS.maxPivotAngle(), false, CONSTANTS.minPivotAngle());
     private final PIDController controller = new PIDController(10.0, 0.0, 0.0);
 
     private double targetAngle = Double.NaN;
@@ -49,28 +50,29 @@ public class SimPivotIo implements PivotIo {
         sim.setInputVoltage(appliedVoltage);
         sim.update(Robot.defaultPeriodSecs);
 
-        inputs.angle = sim.getAngleRads();
-        inputs.angularVelocity = sim.getVelocityRadPerSec();
-        inputs.appliedVolts = appliedVoltage;
-        inputs.currentDrawAmps = Math.abs(MOTOR.getCurrent(inputs.angularVelocity * GEAR_RATIO, appliedVoltage));
+        inputs.pivotAngle = sim.getAngleRads();
+        inputs.pivotAngularVelocity = sim.getVelocityRadPerSec();
+        inputs.pivotAppliedVolts = appliedVoltage;
+        inputs.pivotCurrentDrawAmps = Math.abs(MOTOR.getCurrent(inputs.pivotAngularVelocity * GEAR_RATIO, appliedVoltage));
     }
 
     @Override
-    public void setTargetAngle(double rad) {
+    public void setTargetAngle(double pivotAngle) {
         if (Double.isNaN(targetAngle))
             controller.reset();
-        targetAngle = rad;
+        targetAngle = pivotAngle;
         targetVoltage = Double.NaN;
     }
 
     @Override
-    public void resetPosition(double position) {
-        sim.setState(position, sim.getVelocityRadPerSec());
+    public void resetPosition(double pivotPosition) {
+        sim.setState(pivotPosition, sim.getVelocityRadPerSec());
     }
 
     @Override
-    public void setVoltage(double voltage) {
+    public void setVoltage(double pivotVoltage) {
         targetAngle = Double.NaN;
-        targetVoltage = voltage;
+        targetVoltage = pivotVoltage;
     }
 }
+*/

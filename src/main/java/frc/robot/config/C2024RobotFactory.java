@@ -30,15 +30,15 @@ import frc.robot.subsystems.vision.C2024VisionIo;
 import frc.robot.subsystems.vision.VisionIo;
 
 public class C2024RobotFactory implements RobotFactory {
-    @Override
-    public ClimberIo createClimberIo() {
-        return new C2024ClimberIo(
-                new TalonFX(11, "3663"),
-                new TalonFX(12, "3663"),
-                new Servo(0),
-                new Servo(1)
-        );
-    }
+//    @Override
+//    public ClimberIo createClimberIo() {
+//        return new C2024ClimberIo(
+//                new TalonFX(11, "3663"),
+//                new TalonFX(12, "3663"),
+//                new Servo(0),
+//                new Servo(1)
+//        );
+//    }
 
     @Override
     public DrivetrainIO createDrivetrainIO() {
@@ -75,7 +75,8 @@ public class C2024RobotFactory implements RobotFactory {
     @Override
     public PivotIo createPivotIo() {
         return new C2024PivotIo(
-                new TalonFX(10, "3663")
+                new TalonFX(10, "3663"),
+                new TalonFX(4)
         );
     }
 

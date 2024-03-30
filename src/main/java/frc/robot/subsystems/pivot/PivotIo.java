@@ -6,7 +6,10 @@ import org.littletonrobotics.junction.AutoLog;
 public interface PivotIo {
 
     default Pivot.Constants getConstants() {
-        return new Pivot.Constants(0.0, Units.degreesToRadians(90.0), 0.0, -1.0);
+        return new Pivot.Constants(
+                0.0, Units.degreesToRadians(90.0), 0.0, -1.0,
+                0.0, Units.degreesToRadians(90.0), 0.0, -1.0,
+                Units.degreesToRadians(80.0), Units.degreesToRadians(70.0));
     }
 
     default void updateInputs(PivotInputs inputs) {
@@ -15,40 +18,55 @@ public interface PivotIo {
     /**
      * Sets a desired pivot angle
      *
-     * @param rad The target pivot angle
+     * @param targetPivotAngle The target pivot angle
+     * @param targetAmpAngle   The target amp angle
      */
-    default void setTargetAngle(double rad) {
+    default void setTargetAngle(double targetPivotAngle, double targetAmpAngle) {
     }
 
     /**
      * Sets the sensor position
      *
-     * @param position The new position in radians
+     * @param pivotPosition The new position in radians
      */
-    default void resetPosition(double position) {
+    default void resetPivotPosition(double pivotPosition) {
+    }
+
+    /**
+     * Sets the sensor position
+     *
+     * @param ampPosition The new position in radians
+     */
+    default void resetAmpPosition(double ampPosition) {
     }
 
     /**
      * Runs the motor at given voltage
      *
-     * @param voltage The voltage motor runs on
+     * @param pivotVoltage The voltage motor runs on
      */
-    default void setVoltage(double voltage) {
+    default void setVoltage(double pivotVoltage, double ampVoltage) {
     }
 
     /**
      * Brakes the pivot at position
      */
     default void stop() {
-        setVoltage(0.0);
+        setVoltage(0.0, 0.0);
     }
 
     @AutoLog
     class PivotInputs {
-        public double angle;
-        public double angularVelocity;
-        public double appliedVolts;
-        public double currentDrawAmps;
-        public double motorTemp;
+        public double pivotAngle;
+        public double pivotAngularVelocity;
+        public double pivotAppliedVolts;
+        public double pivotCurrentDrawAmps;
+        public double pivotMotorTemp;
+
+        public double ampAngle;
+        public double ampAngularVelocity;
+        public double ampAppliedVolts;
+        public double ampCurrentDrawAmps;
+        public double ampMotorTemp;
     }
 }

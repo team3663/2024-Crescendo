@@ -8,8 +8,6 @@ import frc.robot.subsystems.drivetrain.DrivetrainIO;
 import frc.robot.subsystems.drivetrain.SimpleSimDrivetrain;
 import frc.robot.subsystems.feeder.C2024FeederIo;
 import frc.robot.subsystems.feeder.FeederIo;
-import frc.robot.subsystems.pivot.PivotIo;
-import frc.robot.subsystems.pivot.SimPivotIo;
 import frc.robot.subsystems.shooter.ShooterIo;
 import frc.robot.subsystems.shooter.SimShooterIo;
 
@@ -32,10 +30,10 @@ public class SimRobotFactory implements RobotFactory {
         );
     }
 
-    @Override
-    public PivotIo createPivotIo() {
-        return new SimPivotIo();
-    }
+//    @Override
+//    public PivotIo createPivotIo() {
+//        return new SimPivotIo();
+//    }
 
     @Override
     public ShooterIo createShooterIo() {
