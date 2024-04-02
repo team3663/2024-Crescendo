@@ -147,7 +147,7 @@ public class CommandFactory {
             preFireGroup.addCommands(driveCommand);
 
         Command pivotCommand = pivot.follow(() -> firingSolution[0].map(FiringSolution::pivotAngle).orElse(pivot.getConstants().minPivotAngle()),
-                () -> firingSolution[0].flatMap(FiringSolution::ampAngle).orElse(0.0));
+                () -> firingSolution[0].flatMap(FiringSolution::ampAngle).orElse(pivot.getConstants().restingAmpAngle()));
         if (Collections.disjoint(pivotCommand.getRequirements(), fireCommand.getRequirements()))
             mainGroup.addCommands(pivotCommand);
         else

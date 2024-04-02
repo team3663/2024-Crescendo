@@ -12,7 +12,7 @@ import edu.wpi.first.math.util.Units;
 
 public class C2024PivotIo implements PivotIo {
     private static final double PIVOT_GEAR_RATIO = 54.0;
-    private static final double AMP_GEAR_RATIO = 48.0 / 14.0;
+    private static final double AMP_GEAR_RATIO = 60.0 / 24.0;
 
     private static final Pivot.Constants CONSTANTS = new Pivot.Constants(
             Units.degreesToRadians(0.0),
@@ -20,7 +20,7 @@ public class C2024PivotIo implements PivotIo {
             Units.degreesToRadians(2.0),
             -1.0,
             Units.degreesToRadians(0.0),
-            Units.degreesToRadians(142.0),
+            Units.degreesToRadians(160.0),
             Units.degreesToRadians(2.0),
             -0.5,
             Units.degreesToRadians(70.0),
