@@ -39,7 +39,7 @@ public final class Constants {
             Rotation2d.fromDegrees(-60.0), Rotation2d.fromDegrees(60.0));
 
     // If true code will turn on various test feature like enabling and biding the test controller.
-    public static boolean ENABLE_TEST_FEATURES = true;
+    public static boolean ENABLE_TEST_FEATURES = false;
 
     public static Rotation2d getAmpRotationForAlliance(DriverStation.Alliance alliance) {
         return switch (alliance) {

@@ -18,6 +18,10 @@ public class Intake extends SubsystemBase {
         Logger.processInputs("Intake", inputs);
     }
 
+    public boolean isDetected() {
+        return inputs.beamBreakSignaled;
+    }
+
     public Command withVoltage(double voltage) {
         return withVoltage(voltage, voltage);
     }

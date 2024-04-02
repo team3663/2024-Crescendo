@@ -216,11 +216,12 @@ public class CommandFactory {
             DoubleSupplier xVelocitySupplier,
             DoubleSupplier yVelocitySupplier,
             DoubleSupplier angularVelocitySupplier) {
-        final double PIVOT_ANGLE = Units.degreesToRadians(123.0);
-        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(1200.0);
+        final double PIVOT_ANGLE = Units.degreesToRadians(125.0);
+        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(1100.0);
+        final double AMP_ANGLE = pivot.getConstants().maxAmpAngle() - Units.degreesToRadians(2.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getAmpRotationForAlliance)
-                        .map(robotRotation -> new FiringSolution(robotRotation, PIVOT_ANGLE, pivot.getConstants().maxAmpAngle(), SHOOTER_VELOCITY)),
+                        .map(robotRotation -> new FiringSolution(robotRotation, PIVOT_ANGLE, AMP_ANGLE, SHOOTER_VELOCITY)),
                 // Move slightly away from the wall and then fire
                 feeder.runWithVoltage(12.0).until(feeder::isNotDetected).andThen(Commands.waitSeconds(0.5)),
 //                drivetrain.driveRobotOriented(() -> 0.1, () -> 0.0, () -> 0.0).withTimeout(0.25).andThen(feeder.runWithVoltage(12.0)).until(feeder::isNotDetected),

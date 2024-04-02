@@ -1,5 +1,6 @@
 package frc.robot.config;
 
+import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -22,6 +23,8 @@ import frc.robot.subsystems.feeder.C2024FeederIo;
 import frc.robot.subsystems.feeder.FeederIo;
 import frc.robot.subsystems.intake.C2024IntakeIo;
 import frc.robot.subsystems.intake.IntakeIo;
+import frc.robot.subsystems.led.LedCandleIo;
+import frc.robot.subsystems.led.LedIo;
 import frc.robot.subsystems.pivot.C2024PivotIo;
 import frc.robot.subsystems.pivot.PivotIo;
 import frc.robot.subsystems.shooter.C2024ShooterIo;
@@ -30,15 +33,15 @@ import frc.robot.subsystems.vision.C2024VisionIo;
 import frc.robot.subsystems.vision.VisionIo;
 
 public class C2024RobotFactory implements RobotFactory {
-//    @Override
-//    public ClimberIo createClimberIo() {
-//        return new C2024ClimberIo(
-//                new TalonFX(11, "3663"),
-//                new TalonFX(12, "3663"),
-//                new Servo(0),
-//                new Servo(1)
-//        );
-//    }
+    @Override
+    public ClimberIo createClimberIo() {
+        return new C2024ClimberIo(
+                new TalonFX(11, "3663"),
+                new TalonFX(12, "3663"),
+                new Servo(0),
+                new Servo(1)
+        );
+    }
 
     @Override
     public DrivetrainIO createDrivetrainIO() {
@@ -60,7 +63,8 @@ public class C2024RobotFactory implements RobotFactory {
         return new C2024IntakeIo(
                 new TalonFX(9, "3663"),
                 new TalonFX(13, "3663"),
-                new TalonFX(14, "3663")
+                new TalonFX(14, "3663"),
+                new DigitalInput(1)
         );
     }
 
@@ -69,6 +73,13 @@ public class C2024RobotFactory implements RobotFactory {
         return new C2024FeederIo(
                 new TalonFX(3),
                 new DigitalInput(0)
+        );
+    }
+
+    @Override
+    public LedIo createLedIo() {
+        return new LedCandleIo(
+                new CANdle(1)
         );
     }
 

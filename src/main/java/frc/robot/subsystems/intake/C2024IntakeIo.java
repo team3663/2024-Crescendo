@@ -4,19 +4,23 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 
 public class C2024IntakeIo implements IntakeIo {
     private final TalonFX rollerMotor;
     private final TalonFX leftCenteringMotor;
     private final TalonFX rightCenteringMotor;
+    private final DigitalInput beamBreak;
 
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
 
-    public C2024IntakeIo(TalonFX rollerMotor, TalonFX leftCenteringMotor, TalonFX rightCenteringMotor) {
+    public C2024IntakeIo(TalonFX rollerMotor, TalonFX leftCenteringMotor, TalonFX rightCenteringMotor,
+                         DigitalInput beamBreak) {
         this.rollerMotor = rollerMotor;
         this.leftCenteringMotor = leftCenteringMotor;
         this.rightCenteringMotor = rightCenteringMotor;
+        this.beamBreak = beamBreak;
 
         TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
         rollerConfig.CurrentLimits.SupplyCurrentLimit = 15.0;
@@ -49,6 +53,8 @@ public class C2024IntakeIo implements IntakeIo {
         inputs.rightCenteringCurrentDrawAmps = rightCenteringMotor.getSupplyCurrent().getValueAsDouble();
         inputs.rightCenteringAppliedVolts = rightCenteringMotor.getMotorVoltage().getValueAsDouble();
         inputs.rightCenteringMotorTemp = rightCenteringMotor.getDeviceTemp().getValueAsDouble();
+
+        inputs.beamBreakSignaled = beamBreak.get();
     }
 
     @Override

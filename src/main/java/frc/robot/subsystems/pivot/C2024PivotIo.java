@@ -22,9 +22,9 @@ public class C2024PivotIo implements PivotIo {
             Units.degreesToRadians(0.0),
             Units.degreesToRadians(142.0),
             Units.degreesToRadians(2.0),
-            -1.5,
+            -0.5,
             Units.degreesToRadians(70.0),
-            Units.degreesToRadians(116.0)
+            Units.degreesToRadians(90.0)
     );
 
     private final TalonFX pivotMotor;
@@ -47,7 +47,7 @@ public class C2024PivotIo implements PivotIo {
         pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         pivotConfig.MotionMagic.MotionMagicCruiseVelocity = Units.degreesToRadians(1200);
-        pivotConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(360);
+        pivotConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(720);
 
         // PID constants
         pivotConfig.Slot0.kP = 30.0;
@@ -71,14 +71,14 @@ public class C2024PivotIo implements PivotIo {
         ampConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         ampConfig.MotionMagic.MotionMagicCruiseVelocity = Units.degreesToRadians(1500);
-        ampConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(120);
+        ampConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(900);
 
         // PID constants
-        ampConfig.Slot0.kP = 60.0;
+        ampConfig.Slot0.kP = 20.0;
         ampConfig.Slot0.kI = 0.0;
         ampConfig.Slot0.kD = 0.0;
         ampConfig.Slot0.kS = 0.0;
-        ampConfig.Slot0.kV = 0.0;
+        ampConfig.Slot0.kV = 1.0;
         ampConfig.Slot0.kA = 0.0;
         ampConfig.Slot0.kG = 0.0;
         ampConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
@@ -109,7 +109,7 @@ public class C2024PivotIo implements PivotIo {
     @Override
     public void setTargetAngle(double targetPivotAngle, double targetAmpAngle) {
         pivotMotor.setControl(positionRequest.withPosition(targetPivotAngle));
-//        ampMotor.setControl(positionRequest.withPosition(targetAmpAngle));
+        ampMotor.setControl(positionRequest.withPosition(targetAmpAngle));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class C2024PivotIo implements PivotIo {
     @Override
     public void setVoltage(double pivotVoltage, double ampVoltage) {
         pivotMotor.setControl(voltageRequest.withOutput(pivotVoltage));
-//        ampMotor.setControl(voltageRequest.withOutput(ampVoltage));
+        ampMotor.setControl(voltageRequest.withOutput(ampVoltage));
     }
 
     @Override

@@ -2,6 +2,7 @@ package frc.robot.subsystems.led;
 
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.CANdleConfiguration;
 
 
 public class LedCandleIo implements LedIo {
@@ -12,6 +13,9 @@ public class LedCandleIo implements LedIo {
 
     public LedCandleIo(CANdle candle) {
         this.candle = candle;
+        CANdleConfiguration config = new CANdleConfiguration();
+        config.stripType = CANdle.LEDStripType.RGB;
+        candle.configAllSettings(config);
     }
 
     @Override
