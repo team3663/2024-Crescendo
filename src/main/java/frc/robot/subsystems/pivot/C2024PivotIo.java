@@ -22,7 +22,7 @@ public class C2024PivotIo implements PivotIo {
             Units.degreesToRadians(0.0),
             Units.degreesToRadians(160.0),
             Units.degreesToRadians(2.0),
-            -0.5,
+            -1.0,
             Units.degreesToRadians(70.0),
             Units.degreesToRadians(90.0)
     );
