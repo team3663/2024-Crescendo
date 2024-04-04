@@ -67,7 +67,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(drivetrain.drive(this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity));
 
         // When nothing is happening, return to the resting angle
-        pivot.setDefaultCommand(pivot.follow(() -> pivot.getConstants().restingAngle()));
+        pivot.setDefaultCommand(pivot.follow(() -> pivot.getConstants().restingPivotAngle()));
+
+        led.setDefaultCommand(led.signalCommand(intake::isDetected, feeder::isDetected).ignoringDisable(true));
 
         // Periodically adds the vision measurement to drivetrain for pose estimation
         vision.setDefaultCommand(
@@ -87,12 +89,12 @@ public class RobotContainer {
         NamedCommands.registerCommand("shootNote",
                 Commands.either(
                         commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
-                                .andThen(pivot.moveTo(pivot.getConstants().restingAngle())),
+                                .andThen(pivot.moveTo(pivot.getConstants().restingPivotAngle())),
                         Commands.none(),
                         feeder::isDetected));
         NamedCommands.registerCommand("shootSubwooferNote",
                 commandFactory.aimAndFireAtSubwoofer(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
-                        .andThen(pivot.moveTo(pivot.getConstants().restingAngle())));
+                        .andThen(pivot.moveTo(pivot.getConstants().restingPivotAngle())));
         NamedCommands.registerCommand("intakeNote",
                 commandFactory.intakeAndLoad());
         NamedCommands.registerCommand("zero", pivot.zero());
@@ -163,10 +165,10 @@ public class RobotContainer {
         // POV UP/DOWN increases/decreases the shooter velocity
         // POV RIGHT/LEFT increases/decreases the pivot angle
 
-        final double TUNING_PIVOT_ANGLE_CHANGE = Units.degreesToRadians(1.0);
-        final double TUNING_SHOOTER_VELOCITY_CHANGE = Units.rotationsPerMinuteToRadiansPerSecond(25.0);
+        final double TUNING_PIVOT_ANGLE_CHANGE = Units.degreesToRadians(0.25);
+        final double TUNING_SHOOTER_VELOCITY_CHANGE = Units.rotationsPerMinuteToRadiansPerSecond(50.0);
 
-        double[] tuningPivotAngle = new double[]{pivot.getConstants().minAngle()};
+        double[] tuningPivotAngle = new double[]{pivot.getConstants().minPivotAngle()};
         double[] tuningShooterVelocity = new double[]{0.0};
 
         testController.a().toggleOnTrue(Commands.parallel(

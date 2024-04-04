@@ -28,5 +28,7 @@ public interface IntakeIo {
         public double rightCenteringAppliedVolts;
         public double rightCenteringCurrentDrawAmps;
         public double rightCenteringMotorTemp;
+
+        public boolean beamBreakSignaled;
     }
 }

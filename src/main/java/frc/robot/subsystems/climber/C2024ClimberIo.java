@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Servo;
 
 public class C2024ClimberIo implements ClimberIo {
 
-    private static final double GEAR_RATIO = 9.66;
+    private static final double GEAR_RATIO = 13.86;
     private static final double PULLEY_RADIUS = Units.inchesToMeters(0.6);
     private static final double LOCKED_THRESHOLD = 0.5;
 
@@ -49,7 +49,7 @@ public class C2024ClimberIo implements ClimberIo {
 
     @Override
     public Climber.Constants getConstants() {
-        return new Climber.Constants(0.0, 0.75, -1.0);
+        return new Climber.Constants(0.0, 1.0, -1.0);
     }
 
     @Override

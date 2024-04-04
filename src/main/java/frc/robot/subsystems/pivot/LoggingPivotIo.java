@@ -8,8 +8,10 @@ public class LoggingPivotIo implements PivotIo {
     public LoggingPivotIo(PivotIo inner) {
         this.inner = inner;
 
-        Logger.recordOutput("Pivot/TargetAngle", Double.NaN);
-        Logger.recordOutput("Pivot/TargetVoltage", Double.NaN);
+        Logger.recordOutput("Pivot/TargetPivotAngle", Double.NaN);
+        Logger.recordOutput("Pivot/TargetPivotVoltage", Double.NaN);
+        Logger.recordOutput("Pivot/TargetAmpAngle", Double.NaN);
+        Logger.recordOutput("Pivot/TargetAmpVoltage", Double.NaN);
     }
 
     @Override
@@ -23,30 +25,41 @@ public class LoggingPivotIo implements PivotIo {
     }
 
     @Override
-    public void resetPosition(double position) {
-        inner.resetPosition(position);
+    public void resetPivotPosition(double pivotPosition) {
+        inner.resetPivotPosition(pivotPosition);
     }
 
     @Override
-    public void setTargetAngle(double rad) {
-        Logger.recordOutput("Pivot/TargetAngle", rad);
-        Logger.recordOutput("Pivot/TargetVoltage", Double.NaN);
-
-        inner.setTargetAngle(rad);
+    public void resetAmpPosition(double ampPosition) {
+        inner.resetAmpPosition(ampPosition);
     }
 
     @Override
-    public void setVoltage(double voltage) {
-        Logger.recordOutput("Pivot/TargetAngle", Double.NaN);
-        Logger.recordOutput("Pivot/TargetVoltage", voltage);
+    public void setTargetAngle(double targetPivotAngle, double targetAmpAngle) {
+        Logger.recordOutput("Pivot/TargetPivotAngle", targetPivotAngle);
+        Logger.recordOutput("Pivot/TargetPivotVoltage", Double.NaN);
+        Logger.recordOutput("Pivot/TargetAmpAngle", targetAmpAngle);
+        Logger.recordOutput("Pivot/TargetAmpVoltage", Double.NaN);
 
-        inner.setVoltage(voltage);
+        inner.setTargetAngle(targetPivotAngle, targetAmpAngle);
+    }
+
+    @Override
+    public void setVoltage(double pivotVoltage, double ampVoltage) {
+        Logger.recordOutput("Pivot/TargetPivotAngle", Double.NaN);
+        Logger.recordOutput("Pivot/TargetPivotVoltage", pivotVoltage);
+        Logger.recordOutput("Pivot/TargetAmpAngle", Double.NaN);
+        Logger.recordOutput("Pivot/TargetAmpVoltage", ampVoltage);
+
+        inner.setVoltage(pivotVoltage, ampVoltage);
     }
 
     @Override
     public void stop() {
-        Logger.recordOutput("Pivot/TargetAngle", Double.NaN);
-        Logger.recordOutput("Pivot/TargetVoltage", Double.NaN);
+        Logger.recordOutput("Pivot/TargetPivotAngle", Double.NaN);
+        Logger.recordOutput("Pivot/TargetPivotVoltage", Double.NaN);
+        Logger.recordOutput("Pivot/TargetAmpAngle", Double.NaN);
+        Logger.recordOutput("Pivot/TargetAmpVoltage", Double.NaN);
 
         inner.stop();
     }

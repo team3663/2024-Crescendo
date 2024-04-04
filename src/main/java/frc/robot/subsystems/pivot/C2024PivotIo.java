@@ -2,56 +2,88 @@ package frc.robot.subsystems.pivot;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 
 public class C2024PivotIo implements PivotIo {
-    private static final double GEAR_RATIO = 54.0;
+    private static final double PIVOT_GEAR_RATIO = 54.0;
+    private static final double AMP_GEAR_RATIO = 60.0 / 24.0;
 
     private static final Pivot.Constants CONSTANTS = new Pivot.Constants(
             Units.degreesToRadians(0.0),
             Units.degreesToRadians(125.0),
             Units.degreesToRadians(2.0),
-            -1.0
+            -1.0,
+            Units.degreesToRadians(0.0),
+            Units.degreesToRadians(160.0),
+            Units.degreesToRadians(2.0),
+            -1.0,
+            Units.degreesToRadians(70.0),
+            Units.degreesToRadians(90.0)
     );
 
-    private final TalonFX motor;
+    private final TalonFX pivotMotor;
+    private final TalonFX ampMotor;
 
     private final VoltageOut voltageRequest = new VoltageOut(0);
     // Uses Slot 0 PID constants
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withSlot(0);
     private final StaticBrake brakeRequest = new StaticBrake();
 
-    public C2024PivotIo(TalonFX motor) {
-        this.motor = motor;
+    public C2024PivotIo(TalonFX pivotMotor, TalonFX ampMotor) {
+        this.pivotMotor = pivotMotor;
+        this.ampMotor = ampMotor;
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.CurrentLimits.SupplyCurrentLimit = 30.0;
-        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
+        pivotConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
+        pivotConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        config.Feedback.SensorToMechanismRatio = GEAR_RATIO / (2.0 * Math.PI);
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        pivotConfig.Feedback.SensorToMechanismRatio = PIVOT_GEAR_RATIO / (2.0 * Math.PI);
+        pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = Units.degreesToRadians(1200);
-        config.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(5000);
+        pivotConfig.MotionMagic.MotionMagicCruiseVelocity = Units.degreesToRadians(1200);
+        pivotConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(720);
 
         // PID constants
-        config.Slot0.kP = 30.0;
-        config.Slot0.kI = 0.0;
-        config.Slot0.kD = 0.0;
-        config.Slot0.kS = 0.0;
-        config.Slot0.kV = 0.1;
-        config.Slot0.kA = 0.0;
-        config.Slot0.kG = 0.8;
-        config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+        pivotConfig.Slot0.kP = 30.0;
+        pivotConfig.Slot0.kI = 0.0;
+        pivotConfig.Slot0.kD = 0.0;
+        pivotConfig.Slot0.kS = 0.0;
+        pivotConfig.Slot0.kV = 0.1;
+        pivotConfig.Slot0.kA = 0.0;
+        pivotConfig.Slot0.kG = 0.8;
+        pivotConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         // Applies config configuration onto the motor
-        motor.getConfigurator().apply(config);
+        pivotMotor.getConfigurator().apply(pivotConfig);
+
+        TalonFXConfiguration ampConfig = new TalonFXConfiguration();
+        ampConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
+        ampConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+        ampConfig.Feedback.SensorToMechanismRatio = AMP_GEAR_RATIO / (2.0 * Math.PI);
+        ampConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        ampConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        ampConfig.MotionMagic.MotionMagicCruiseVelocity = Units.degreesToRadians(1500);
+        ampConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(900);
+
+        // PID constants
+        ampConfig.Slot0.kP = 20.0;
+        ampConfig.Slot0.kI = 0.0;
+        ampConfig.Slot0.kD = 0.0;
+        ampConfig.Slot0.kS = 0.0;
+        ampConfig.Slot0.kV = 1.0;
+        ampConfig.Slot0.kA = 0.0;
+        ampConfig.Slot0.kG = 0.0;
+        ampConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+
+        ampMotor.getConfigurator().apply(ampConfig);
     }
 
     @Override
@@ -61,30 +93,44 @@ public class C2024PivotIo implements PivotIo {
 
     @Override
     public void updateInputs(PivotInputs inputs) {
-        inputs.angle = motor.getPosition().getValueAsDouble();
-        inputs.angularVelocity = motor.getVelocity().getValueAsDouble();
-        inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
-        inputs.currentDrawAmps = motor.getSupplyCurrent().getValueAsDouble();
-        inputs.motorTemp = motor.getDeviceTemp().getValueAsDouble();
+        inputs.pivotAngle = pivotMotor.getPosition().getValueAsDouble();
+        inputs.pivotAngularVelocity = pivotMotor.getVelocity().getValueAsDouble();
+        inputs.pivotAppliedVolts = pivotMotor.getMotorVoltage().getValueAsDouble();
+        inputs.pivotCurrentDrawAmps = pivotMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.pivotMotorTemp = pivotMotor.getDeviceTemp().getValueAsDouble();
+
+        inputs.ampAngle = ampMotor.getPosition().getValueAsDouble();
+        inputs.ampAngularVelocity = ampMotor.getVelocity().getValueAsDouble();
+        inputs.ampAppliedVolts = ampMotor.getMotorVoltage().getValueAsDouble();
+        inputs.ampCurrentDrawAmps = ampMotor.getSupplyCurrent().getValueAsDouble();
+        inputs.ampMotorTemp = ampMotor.getDeviceTemp().getValueAsDouble();
     }
 
     @Override
-    public void setTargetAngle(double targetRad) {
-        motor.setControl(positionRequest.withPosition(targetRad));
+    public void setTargetAngle(double targetPivotAngle, double targetAmpAngle) {
+        pivotMotor.setControl(positionRequest.withPosition(targetPivotAngle));
+        ampMotor.setControl(positionRequest.withPosition(targetAmpAngle));
     }
 
     @Override
-    public void resetPosition(double position) {
-        motor.setPosition(position);
+    public void resetPivotPosition(double pivotPosition) {
+        pivotMotor.setPosition(pivotPosition);
     }
 
     @Override
-    public void setVoltage(double voltage) {
-        motor.setControl(voltageRequest.withOutput(voltage));
+    public void resetAmpPosition(double ampPosition) {
+        ampMotor.setPosition(ampPosition);
+    }
+
+    @Override
+    public void setVoltage(double pivotVoltage, double ampVoltage) {
+        pivotMotor.setControl(voltageRequest.withOutput(pivotVoltage));
+        ampMotor.setControl(voltageRequest.withOutput(ampVoltage));
     }
 
     @Override
     public void stop() {
-        motor.setControl(brakeRequest);
+        pivotMotor.setControl(brakeRequest);
+        ampMotor.setControl(brakeRequest);
     }
 }

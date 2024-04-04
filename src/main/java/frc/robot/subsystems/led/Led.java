@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.BooleanSupplier;
+
 public class Led extends SubsystemBase {
 
     public enum Pattern {
@@ -15,7 +17,7 @@ public class Led extends SubsystemBase {
     }
     private final double ANIMATION_SPEED = 0.001;
     private final double LED_BRIGHTNESS = 0.01;
-    private final int NUM_LEDS = 8;
+    private final int NUM_LEDS = 30;
     private final int POCKET_SIZE = 3;
 
     private final LedIo io;
@@ -79,5 +81,23 @@ public class Led extends SubsystemBase {
         return runOnce(
                 () -> io.setColor(color)
         );
+    }
+
+    public Command signalCommand(BooleanSupplier intakeDetectedSupplier, BooleanSupplier feederDetectedSupplier) {
+        return run(() -> {
+            boolean intakeDetected = intakeDetectedSupplier.getAsBoolean();
+            boolean feederDetected = feederDetectedSupplier.getAsBoolean();
+
+            if (feederDetected) {
+                setColor(new LedColor(0, 255, 0));
+                setPattern(Pattern.SOLID);
+            } else if (intakeDetected) {
+                setColor(new LedColor(255, 128, 0));
+                setPattern(Pattern.STROBE);
+            } else {
+                setColor(new LedColor(255, 0, 0));
+                setPattern(Pattern.SOLID);
+            }
+        });
     }
 }

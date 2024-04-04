@@ -44,6 +44,7 @@ public class C2024VisionIo implements VisionIo {
 
         EstimatedRobotPose newEstimate = newPose.get();
         visionInputs.estimatedPose = newEstimate.estimatedPose;
+        visionInputs.estimatedPose2d = visionInputs.estimatedPose.toPose2d();
         visionInputs.timestampSeconds = newEstimate.timestampSeconds;
 
         // Get the list of targets used in the current estimate and store their Ids in our Inputs.
