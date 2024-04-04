@@ -24,7 +24,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
@@ -88,7 +88,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
@@ -139,7 +139,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {

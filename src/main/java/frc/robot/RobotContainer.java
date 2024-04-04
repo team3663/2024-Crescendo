@@ -97,6 +97,8 @@ public class RobotContainer {
                         .andThen(pivot.moveTo(pivot.getConstants().restingPivotAngle())));
         NamedCommands.registerCommand("intakeNote",
                 commandFactory.intakeAndLoad());
+        NamedCommands.registerCommand("intakeQuick",
+                commandFactory.intakeQuick());
         NamedCommands.registerCommand("zero", pivot.zero());
 
         // Build an auto chooser. This will use Commands.none() as the default option.

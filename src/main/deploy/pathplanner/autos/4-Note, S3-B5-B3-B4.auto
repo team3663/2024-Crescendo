@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.36,
-      "y": 5.55
+      "x": 0.73,
+      "y": 4.43
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -36,15 +36,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "path",
-                            "data": {
-                              "pathName": "S2-B2"
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "zero"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "S3-B5"
                             }
                           }
                         ]
@@ -63,7 +63,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B2-A1.5"
+                  "pathName": "B5-USC"
                 }
               },
               {
@@ -88,7 +88,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
@@ -98,16 +98,29 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "A1.5-A1R"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
+                        "pathName": "USC-B3"
                       }
                     }
                   ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B3-UAC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
                 }
               }
             ]
@@ -120,70 +133,38 @@
           }
         },
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "A1R-A2"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    }
-                  ]
+                  "pathName": "UAC-B4"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "shootNote"
-          }
-        },
-        {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B4-UAC"
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "intakeNote"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "A2-A3R"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    }
-                  ]
                 }
               }
             ]
