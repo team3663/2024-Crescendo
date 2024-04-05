@@ -102,7 +102,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("waitForIntake",
                 Commands.either(
                         Commands.waitUntil(feeder::isDetected).withTimeout(2),
-                        Commands.none(),
+                        Commands.waitUntil(intake::isDetected).withTimeout(0.25)
+                                .andThen(Commands.waitUntil(feeder::isDetected)
+                                        .withTimeout(2)
+                                        .onlyIf(intake::isDetected)),
                         intake::isDetected
                 ));
         NamedCommands.registerCommand("zero", pivot.zero());
