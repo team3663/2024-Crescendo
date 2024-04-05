@@ -237,7 +237,7 @@ public class CommandFactory {
             DoubleSupplier yVelocitySupplier,
             DoubleSupplier angularVelocitySupplier) {
         final double PIVOT_ANGLE = Units.degreesToRadians(125.0);
-        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(1300.0);
+        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(1100.0);
         final double AMP_ANGLE = pivot.getConstants().maxAmpAngle() - Units.degreesToRadians(2.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getAmpRotationForAlliance)

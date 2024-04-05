@@ -99,6 +99,12 @@ public class RobotContainer {
                 commandFactory.intakeAndLoad());
         NamedCommands.registerCommand("intakeQuick",
                 commandFactory.intakeQuick());
+        NamedCommands.registerCommand("waitForIntake",
+                Commands.either(
+                        Commands.waitUntil(feeder::isDetected).withTimeout(2),
+                        Commands.none(),
+                        intake::isDetected
+                ));
         NamedCommands.registerCommand("zero", pivot.zero());
 
         // Build an auto chooser. This will use Commands.none() as the default option.
