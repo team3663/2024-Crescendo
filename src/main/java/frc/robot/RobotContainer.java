@@ -97,6 +97,17 @@ public class RobotContainer {
                         .andThen(pivot.moveTo(pivot.getConstants().restingPivotAngle())));
         NamedCommands.registerCommand("intakeNote",
                 commandFactory.intakeAndLoad());
+        NamedCommands.registerCommand("intakeQuick",
+                commandFactory.intakeQuick());
+        NamedCommands.registerCommand("waitForIntake",
+                Commands.either(
+                        Commands.waitUntil(feeder::isDetected).withTimeout(2),
+                        Commands.waitUntil(intake::isDetected).withTimeout(0.25)
+                                .andThen(Commands.waitUntil(feeder::isDetected)
+                                        .withTimeout(2)
+                                        .onlyIf(intake::isDetected)),
+                        intake::isDetected
+                ));
         NamedCommands.registerCommand("zero", pivot.zero());
 
         // Build an auto chooser. This will use Commands.none() as the default option.

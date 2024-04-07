@@ -24,7 +24,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
@@ -102,9 +102,9 @@
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 2.0
+                        "name": "waitForIntake"
                       }
                     }
                   ]
@@ -140,9 +140,9 @@
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 2.0
+                        "name": "waitForIntake"
                       }
                     }
                   ]
@@ -178,9 +178,9 @@
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 2.0
+                        "name": "waitForIntake"
                       }
                     }
                   ]

@@ -86,6 +86,26 @@ public class CommandFactory {
         );
     }
 
+    /**
+     * Intakes a note from the ground but does not wait for it go load into the feeder.
+     * <p>
+     * Uses:
+     * <ul>
+     *     <li>Feeder</li>
+     *     <li>Intake</li>
+     * </ul>
+     * Finish condition: When a note is detected in the intake.
+     */
+    public Command intakeQuick() {
+        // Spin both the feeder and the intake until we detect a piece in the feeder
+        return Commands.parallel(
+                Commands.waitSeconds(0.25).andThen(Commands.waitUntil(intake::isDetected))
+                        .deadlineWith(intake.withVoltage(4.0)),
+                feeder.runWithVoltage(3.0)
+                        .until(intake::isDetected)
+        );
+    }
+
     public Command shoot() {
         return Commands.deadline(
                 Commands.sequence(

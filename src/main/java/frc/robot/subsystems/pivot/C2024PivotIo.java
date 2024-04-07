@@ -47,7 +47,7 @@ public class C2024PivotIo implements PivotIo {
         pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         pivotConfig.MotionMagic.MotionMagicCruiseVelocity = Units.degreesToRadians(1200);
-        pivotConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(720);
+        pivotConfig.MotionMagic.MotionMagicAcceleration = Units.degreesToRadians(1440);
 
         // PID constants
         pivotConfig.Slot0.kP = 30.0;

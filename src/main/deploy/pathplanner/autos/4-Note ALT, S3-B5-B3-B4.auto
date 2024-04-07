@@ -114,7 +114,51 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B3-UAC"
+                  "pathName": "B3-USC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNote"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeQuick"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "USC-B4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B4-USC"
                 }
               },
               {

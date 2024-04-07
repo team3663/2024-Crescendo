@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3,
-        "y": 6.271879191525923
+        "x": 3.0,
+        "y": 2.8650245796066818
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8136459297723704,
-        "y": 6.312605679782585
+        "x": 5.374751899944378,
+        "y": 4.205281861895767
       },
       "isLocked": false,
-      "linkedName": "A1.5"
+      "linkedName": "USC"
     },
     {
       "anchor": {
-        "x": 2.7,
-        "y": 6.9
+        "x": 7.954632811920491,
+        "y": 2.645460246672707
       },
       "prevControl": {
-        "x": 2.4416434642933074,
-        "y": 6.69636755871669
+        "x": 6.35364288427502,
+        "y": 4.177836320279019
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "A1R"
+      "linkedName": "B4"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -150.0,
+    "rotation": 152.77640564515056,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -161.0514108422155,
+    "rotation": 140.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

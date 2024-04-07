@@ -44,7 +44,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "S3-B5"
+                              "pathName": "S3-B4"
                             }
                           }
                         ]
@@ -63,7 +63,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B5-USC"
+                  "pathName": "B4A-USC"
                 }
               },
               {
@@ -98,7 +98,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "USC-B3"
+                        "pathName": "USC-B5"
                       }
                     }
                   ]
@@ -114,7 +114,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B3-UAC"
+                  "pathName": "B5-USC"
                 }
               },
               {

@@ -24,7 +24,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
@@ -57,19 +57,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeNote"
-                }
-              },
               {
                 "type": "path",
                 "data": {
                   "pathName": "B5-USC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
                 }
               }
             ]
@@ -88,7 +88,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
@@ -108,19 +108,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeNote"
-                }
-              },
               {
                 "type": "path",
                 "data": {
                   "pathName": "B3-UAC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeNote"
                 }
               }
             ]
@@ -133,13 +133,13 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "intakeNote"
+                  "name": "intakeQuick"
                 }
               },
               {
