@@ -285,7 +285,7 @@ public class CommandFactory {
                             Logger.recordOutput("FCS/TargetDistance", speakerPosition.getDistance(robotPose.getTranslation()));
 
 
-                            return fireControlSystem.calculate(drivetrain.getPose(), speakerPosition);
+                            return fireControlSystem.calculate(drivetrain.getPose(), drivetrain.getVelocity(), speakerPosition);
                         }),
                 // Fire command
                 Commands.deadline(
