@@ -148,6 +148,13 @@ public class RobotContainer {
                 // Drive using normal controls
                 this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
         ));
+        robotModeCommandMap.put(RobotMode.ScoreLocation.PASS, commandFactory.aimAndPass(
+                // Allowed to fire when left trigger is held
+                driverController.rightTrigger(),
+                // Drive using normal controls
+                this::getDrivetrainXVelocity, this::getDrivetrainYVelocity, this::getDrivetrainAngularVelocity
+        ));
+
 
         // Don't allow aiming when the intake button is held
         driverController.rightBumper()
@@ -168,6 +175,8 @@ public class RobotContainer {
         driverController.x().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.AMP));
         driverController.y().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SPEAKER));
         driverController.a().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.SUBWOOFER));
+        driverController.b().onTrue(RobotMode.scoreLocation(RobotMode.ScoreLocation.PASS));
+
     }
 
     private void configureTestBinding() {

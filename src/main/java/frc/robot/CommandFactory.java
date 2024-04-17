@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -245,6 +246,32 @@ public class CommandFactory {
                 // Move slightly away from the wall and then fire
                 feeder.runWithVoltage(12.0).until(feeder::isNotDetected).andThen(Commands.waitSeconds(0.5)),
 //                drivetrain.driveRobotOriented(() -> 0.1, () -> 0.0, () -> 0.0).withTimeout(0.25).andThen(feeder.runWithVoltage(12.0)).until(feeder::isNotDetected),
+                allowedToFireSupplier,
+                xVelocitySupplier,
+                yVelocitySupplier,
+                angularVelocitySupplier
+        );
+    }
+
+    public Command aimAndPass(
+            BooleanSupplier allowedToFireSupplier,
+            DoubleSupplier xVelocitySupplier,
+            DoubleSupplier yVelocitySupplier,
+            DoubleSupplier angularVelocitySupplier) {
+        final double PASS_ANGLE = pivot.getConstants().restingPivotAngle();
+        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
+
+        return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getPassPositionForAlliance)
+                        .map(goalPosition -> {
+                            Translation2d delta = goalPosition.minus(drivetrain.getPose().getTranslation());
+                            Rotation2d robotRotation = delta.getAngle();
+
+                            return new FiringSolution(robotRotation, PASS_ANGLE, SHOOTER_VELOCITY);
+                        }),
+                // Fire command
+                Commands.deadline(
+                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(PIVOT_POST_SHOOT_MOVEMENT_DELAY)),
+                        feeder.runWithVoltage(12.0)),
                 allowedToFireSupplier,
                 xVelocitySupplier,
                 yVelocitySupplier,

@@ -15,12 +15,14 @@ public class RobotMode {
     public enum ScoreLocation {
         SPEAKER,
         AMP,
-        SUBWOOFER
+        SUBWOOFER,
+        PASS
     }
 
     private static GenericEntry scoreSpeakerEntry;
     private static GenericEntry scoreSubwooferEntry;
     private static GenericEntry scoreAmpEntry;
+    private static GenericEntry scorePassEntry;
     private static ScoreLocation scoreLocation;
 
     static {
@@ -37,6 +39,7 @@ public class RobotMode {
         scoreSpeakerEntry.setBoolean(scoreLocation == ScoreLocation.SPEAKER);
         scoreSubwooferEntry.setBoolean(scoreLocation == ScoreLocation.SUBWOOFER);
         scoreAmpEntry.setBoolean(scoreLocation == ScoreLocation.AMP);
+        scorePassEntry.setBoolean(scoreLocation == ScoreLocation.PASS);
     }
 
     private static void setupShuffleboard() {
@@ -61,6 +64,13 @@ public class RobotMode {
                 .withSize(1, 1)
                 .withWidget(BuiltInWidgets.kBooleanBox)
                 .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#FFFFFF"))
+                .getEntry();
+
+        scorePassEntry = tab.add("Pass", scoreLocation == ScoreLocation.PASS)
+                .withPosition(7, 0)
+                .withSize(1,1)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withProperties(Map.of("Color when true", "#00FF00", "Color when false", "#FFFFFF"))
                 .getEntry();
     }
 

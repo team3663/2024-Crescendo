@@ -27,9 +27,11 @@ public final class Constants {
 
     public static final double PIVOT_POST_SHOOT_MOVEMENT_DELAY = 0.1;
 
+    private static final Translation2d BLUE_AMP_POSITION = FIELD_LAYOUT.getTagPose(6).orElse(new Pose3d()).toPose2d().getTranslation();
+    private static final Translation2d RED_AMP_POSITION = FIELD_LAYOUT.getTagPose(5).orElse(new Pose3d()).toPose2d().getTranslation();
+
     private static final Rotation2d BLUE_AMP_ROTATION = Rotation2d.fromDegrees(-90.0);
     private static final Rotation2d RED_AMP_ROTATION = Rotation2d.fromDegrees(-90.0);
-
     private static final Translation2d BLUE_SPEAKER_POSITION = FIELD_LAYOUT.getTagPose(7).orElse(new Pose3d()).toPose2d().getTranslation();
     private static final Translation2d RED_SPEAKER_POSITION = FIELD_LAYOUT.getTagPose(4).orElse(new Pose3d()).toPose2d().getTranslation();
 
@@ -45,6 +47,13 @@ public final class Constants {
         return switch (alliance) {
             case Red -> Constants.RED_AMP_ROTATION;
             case Blue -> Constants.BLUE_AMP_ROTATION;
+        };
+    }
+
+    public static Translation2d getPassPositionForAlliance(DriverStation.Alliance alliance) {
+        return switch (alliance) {
+            case Red -> RED_AMP_POSITION.interpolate(RED_SPEAKER_POSITION, 0.5);
+            case Blue -> BLUE_AMP_POSITION.interpolate(BLUE_SPEAKER_POSITION, 0.5);
         };
     }
 
