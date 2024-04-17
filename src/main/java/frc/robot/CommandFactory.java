@@ -259,7 +259,7 @@ public class CommandFactory {
             DoubleSupplier yVelocitySupplier,
             DoubleSupplier angularVelocitySupplier) {
         final double PASS_ANGLE = pivot.getConstants().restingPivotAngle();
-        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
+        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2250.0);
 
         return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getPassPositionForAlliance)
                         .map(goalPosition -> {

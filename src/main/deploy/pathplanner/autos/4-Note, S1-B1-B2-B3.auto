@@ -5,7 +5,7 @@
       "x": 0.73,
       "y": 6.66
     },
-    "rotation": 120.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -44,7 +44,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "S3-B5"
+                              "pathName": "S1-B1"
                             }
                           }
                         ]
@@ -63,7 +63,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B5-USC"
+                  "pathName": "B1-UAC"
                 }
               },
               {
@@ -98,7 +98,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "USC-B3"
+                        "pathName": "UAC-B2"
                       }
                     }
                   ]
@@ -114,7 +114,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B3-UAC"
+                  "pathName": "B2-UAC"
                 }
               },
               {
@@ -145,7 +145,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "UAC-B4"
+                  "pathName": "UAC-B3"
                 }
               }
             ]
@@ -158,7 +158,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B4-UAC"
+                  "pathName": "B3-UAC"
                 }
               },
               {
