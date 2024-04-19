@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.config.*;
@@ -13,6 +14,7 @@ import frc.robot.utility.RobotIdUtil.RobotId;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,6 +55,9 @@ public class Robot extends LoggedRobot {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer(factory);
+
+        // Pre-initialize the PPTrajectory class so we don't call into the classloader in autoInit
+        PathPlannerTrajectory ignored = new PathPlannerTrajectory(List.of(new PathPlannerTrajectory.State()));
     }
 
     /**
