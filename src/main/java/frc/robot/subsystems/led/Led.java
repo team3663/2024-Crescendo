@@ -83,12 +83,17 @@ public class Led extends SubsystemBase {
         );
     }
 
-    public Command signalCommand(BooleanSupplier intakeDetectedSupplier, BooleanSupplier feederDetectedSupplier) {
+    public Command signalCommand(BooleanSupplier intakeDetectedSupplier, BooleanSupplier feederDetectedSupplier,
+                                 BooleanSupplier controllerCheckSupplier) {
         return run(() -> {
             boolean intakeDetected = intakeDetectedSupplier.getAsBoolean();
             boolean feederDetected = feederDetectedSupplier.getAsBoolean();
+            boolean controllerCheck = controllerCheckSupplier.getAsBoolean();
 
-            if (feederDetected) {
+            if (controllerCheck) {
+                setColor(new LedColor(0, 0, 255));
+                setPattern(Pattern.SOLID);
+            } else if (feederDetected) {
                 setColor(new LedColor(0, 255, 0));
                 setPattern(Pattern.SOLID);
             } else if (intakeDetected) {

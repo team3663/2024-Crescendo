@@ -69,7 +69,8 @@ public class RobotContainer {
         // When nothing is happening, return to the resting angle
         pivot.setDefaultCommand(pivot.follow(() -> pivot.getConstants().restingPivotAngle()));
 
-        led.setDefaultCommand(led.signalCommand(intake::isDetected, feeder::isDetected).ignoringDisable(true));
+        led.setDefaultCommand(led.signalCommand(intake::isDetected, feeder::isDetected, driverController.povLeft())
+                .ignoringDisable(true));
 
         // Periodically adds the vision measurement to drivetrain for pose estimation
         vision.setDefaultCommand(
