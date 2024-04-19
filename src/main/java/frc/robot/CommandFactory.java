@@ -258,6 +258,40 @@ public class CommandFactory {
             DoubleSupplier xVelocitySupplier,
             DoubleSupplier yVelocitySupplier,
             DoubleSupplier angularVelocitySupplier) {
+        return aimAndPassHigh(allowedToFireSupplier, xVelocitySupplier, yVelocitySupplier, angularVelocitySupplier);
+    }
+
+    public Command aimAndPassHigh(
+            BooleanSupplier allowedToFireSupplier,
+            DoubleSupplier xVelocitySupplier,
+            DoubleSupplier yVelocitySupplier,
+            DoubleSupplier angularVelocitySupplier) {
+        final double PASS_ANGLE = Units.degreesToRadians(40.0);
+        final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2500.0);
+
+        return aimAndFire(() -> DriverStation.getAlliance().map(Constants::getPassPositionForAlliance)
+                        .map(goalPosition -> {
+                            Translation2d delta = goalPosition.minus(drivetrain.getPose().getTranslation());
+                            Rotation2d robotRotation = delta.getAngle();
+
+                            return new FiringSolution(robotRotation, PASS_ANGLE, SHOOTER_VELOCITY);
+                        }),
+                // Fire command
+                Commands.deadline(
+                        Commands.waitUntil(feeder::isNotDetected).andThen(Commands.waitSeconds(PIVOT_POST_SHOOT_MOVEMENT_DELAY)),
+                        feeder.runWithVoltage(12.0)),
+                allowedToFireSupplier,
+                xVelocitySupplier,
+                yVelocitySupplier,
+                angularVelocitySupplier
+        );
+    }
+
+    public Command aimAndPassLow(
+            BooleanSupplier allowedToFireSupplier,
+            DoubleSupplier xVelocitySupplier,
+            DoubleSupplier yVelocitySupplier,
+            DoubleSupplier angularVelocitySupplier) {
         final double PASS_ANGLE = pivot.getConstants().restingPivotAngle();
         final double SHOOTER_VELOCITY = Units.rotationsPerMinuteToRadiansPerSecond(2250.0);
 

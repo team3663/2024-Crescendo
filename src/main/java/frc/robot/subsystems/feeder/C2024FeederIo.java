@@ -36,7 +36,7 @@ public class C2024FeederIo implements FeederIo {
         inputs.angularVelocity = motor.getVelocity().getValueAsDouble();
         inputs.currentDrawAmps = motor.getSupplyCurrent().getValueAsDouble();
         inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
-        inputs.motorTemp = motor.getExpiration();
+        inputs.motorTemp = motor.getDeviceTemp().getValueAsDouble();
         inputs.beamBreakSignaled = beamBreak.get();
     }
 
