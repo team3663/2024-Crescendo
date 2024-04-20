@@ -88,11 +88,18 @@ public class RobotContainer {
         }
 
         NamedCommands.registerCommand("shootNote",
-                Commands.either(
-                        commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
-                                .andThen(pivot.moveTo(pivot.getConstants().restingPivotAngle())),
-                        Commands.none(),
-                        feeder::isDetected));
+                Commands.sequence(
+                        Commands.either(
+                                commandFactory.intakeAndLoad().withTimeout(4.0),
+                                Commands.none(),
+                                intake::isDetected
+                        ),
+                        Commands.either(
+                                commandFactory.aimAndFireAtSpeaker(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
+                                        .andThen(pivot.moveTo(pivot.getConstants().restingPivotAngle())),
+                                Commands.none(),
+                                feeder::isDetected)
+                ));
         NamedCommands.registerCommand("shootSubwooferNote",
                 commandFactory.aimAndFireAtSubwoofer(() -> true, () -> 0.0, () -> 0.0, () -> 0.0)
                         .andThen(pivot.moveTo(pivot.getConstants().restingPivotAngle())));
