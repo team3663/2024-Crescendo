@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.0,
+        "y": 2.8650245796066818
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.8504530096356144,
+        "y": 2.3437703085484243
+      },
+      "isLocked": false,
+      "linkedName": "USC"
+    },
+    {
+      "anchor": {
+        "x": 7.863147673198001,
+        "y": 2.4350444276109795
+      },
+      "prevControl": {
+        "x": 6.010463234553155,
+        "y": 1.0407206619949088
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "B4A"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.5,
+    "maxAcceleration": 6.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 160.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
